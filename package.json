@@ -1,0 +1,29 @@
+{
+  "name": "n-params-processor",
+  "version": "1.0.0",
+  "description": "Express.js parameters parser/validator/filter builder",
+  "main": "index.js",
+  "scripts": {
+    "lint": "jshint index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexanderMac/n-params-processor.git"
+  },
+  "keywords": [
+    "params",
+    "parameters",
+    "validator",
+    "parser",
+    "processor"
+  ],
+  "author": "AlexanderMac",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AlexanderMac/n-params-processor/issues"
+  },
+  "homepage": "https://github.com/AlexanderMac/n-params-processor#readme",
+  "devDependencies": {
+    "jshint": "^2.9.2"
+  }
+}
