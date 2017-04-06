@@ -23,6 +23,11 @@
     "url": "https://github.com/AlexanderMac/n-params-processor/issues"
   },
   "homepage": "https://github.com/AlexanderMac/n-params-processor#readme",
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "moment": "^2.18.1",
+    "n-custom-errors": "^1.0.1"
+  },
   "devDependencies": {
     "jshint": "^2.9.2"
   }
