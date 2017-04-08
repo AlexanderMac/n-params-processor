@@ -1,21 +1,21 @@
 'use strict';
 
-var _              = require('lodash');
-var moment         = require('moment');
-var customErrors   = require('n-custom-errors');
-var validationUtil = require('./validationUtil');
+var _            = require('lodash');
+var moment       = require('moment');
+var customErrors = require('n-custom-errors');
+var validations  = require('./validations');
 
 // TODO: test it
-exports.getEmptyParams = (site) => {
+exports.getEmptyParams = (filter) => {
     return {
-        filter: { site },
+        filter: filter || {},
         fields: []
     };
 };
 
 // TODO: test it
-exports.getEmptyObjectData = (site) => {
-    return { site };
+exports.getEmptyObjectData = (data) => {
+    return data || {};
 };
 
 // TODO: test it
@@ -90,7 +90,7 @@ exports.processId = (opts, output) => {
 
     if (!_.isNil(id)) {
         id = parseInt(id);
-        if (!validationUtil.isValidId(id)) {
+        if (!validations.isValidId(id)) {
             _throwUnprocessableRequestError(`${opts.name} must be a valid ID`);
         }
         output[opts.name] = id;
@@ -105,7 +105,7 @@ exports.processIdList = (opts, output) => {
     _testIsRequired(opts, ids);
 
     if (!_.isNil(ids)) {
-        if (!validationUtil.isAllWithValidId(ids)) {
+        if (!validations.isAllWithValidId(ids)) {
             _throwUnprocessableRequestError(`${opts.name} must be a valid list of IDs`);
         }
         output[opts.name] = ids;
@@ -120,7 +120,7 @@ exports.processObjectId = (opts, output) => {
     _testIsRequired(opts, id);
 
     if (!_.isNil(id)) {
-        if (!validationUtil.isValidObjectId(id)) {
+        if (!validations.isValidObjectId(id)) {
             _throwUnprocessableRequestError(`${opts.name} must be a valid ObjectId`);
         }
         output[opts.name] = id;
@@ -136,7 +136,7 @@ exports.processIn = (opts, output) => {
 
     if (!_.isNil($in)) {
         $in = _.map($in, val => parseInt(val));
-        if (!validationUtil.isAllWithValidId($in)) {
+        if (!validations.isAllWithValidId($in)) {
             _throwUnprocessableRequestError('in must contain a list of valid ids');
         }
         let field = opts.field || 'id';
@@ -154,7 +154,7 @@ exports.processNin = (opts, output) => {
 
     if (!_.isNil($nin)) {
         $nin = _.map($nin, val => parseInt(val));
-        if (!validationUtil.isAllWithValidId($nin)) {
+        if (!validations.isAllWithValidId($nin)) {
             _throwUnprocessableRequestError('nin must contain a list of valid ids');
         }
         let field = opts.field || 'id';
@@ -181,7 +181,7 @@ exports.processFields = (opts, output) => {
     let fields = opts.from.fields || opts.def;
 
     if (!_.isNil(fields)) {
-        if (!validationUtil.isAllowedAttrs(fields, opts.allowed)) {
+        if (!validations.isAllowedAttrs(fields, opts.allowed)) {
             _throwUnprocessableRequestError('fields must be a space separated string of fields');
         }
         output.fields = fields.split(' ');
