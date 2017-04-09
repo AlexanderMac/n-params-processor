@@ -190,7 +190,7 @@ exports.processFields = (opts, output) => {
 
 // TODO: test it
 function _testIsRequired(opts, val) {
-    if (opts.isRequired && _.isNil(val)) {
+    if (opts.required && _.isNil(val)) {
         _throwUnprocessableRequestError(`${opts.name} is required`);
     }
 }
