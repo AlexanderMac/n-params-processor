@@ -1,7 +1,7 @@
 {
   "name": "n-params-processor",
   "version": "1.0.3",
-  "description": "Express.js parameters parser/validator/filter builder",
+  "description": "Node.js parameters parser/validator/filter builder",
   "main": "index.js",
   "files": [
     "lib"
@@ -27,7 +27,8 @@
   "homepage": "https://github.com/AlexanderMac/n-params-processor#readme",
   "dependencies": {
     "lodash": "^4.17.4",
-    "moment": "^2.18.1"
+    "moment": "^2.18.1",
+    "n-validators": "^1.0.2"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
