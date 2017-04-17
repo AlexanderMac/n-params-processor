@@ -3,9 +3,9 @@
   "version": "1.0.3",
   "description": "Express.js parameters parser/validator/filter builder",
   "main": "index.js",
-  "scripts": {
-    "lint": "jshint index.js"
-  },
+  "files": [
+    "lib"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AlexanderMac/n-params-processor.git"
@@ -15,7 +15,9 @@
     "parameters",
     "validator",
     "parser",
-    "processor"
+    "processor",
+    "filter",
+    "builder"
   ],
   "author": "AlexanderMac",
   "license": "MIT",
@@ -25,10 +27,19 @@
   "homepage": "https://github.com/AlexanderMac/n-params-processor#readme",
   "dependencies": {
     "lodash": "^4.17.4",
-    "moment": "^2.18.1",
-    "n-custom-errors": "^1.0.1"
+    "moment": "^2.18.1"
   },
   "devDependencies": {
-    "jshint": "^2.9.2"
+    "gulp": "^3.9.1",
+    "gulp-istanbul": "^1.1.1",
+    "gulp-jshint": "^2.0.4",
+    "gulp-mocha": "^3.0.1",
+    "jshint": "^2.9.2",
+    "jshint-stylish": "^2.2.1",
+    "mocha": "^3.2.0",
+    "require-dir": "^0.3.1",
+    "rewire": "^2.5.2",
+    "should": "^11.2.1",
+    "yargs": "^7.1.0"
   }
 }
