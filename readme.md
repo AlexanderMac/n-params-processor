@@ -23,5 +23,5 @@ TODO
 ### Author
 Alexander Mac
 
-### Licence
-Licensed under the MIT license.
+### License
+[MIT License](license)
