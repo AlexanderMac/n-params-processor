@@ -13,13 +13,7 @@ gulp.task('lint-lib', () => {
     ], '.jshintrc');
 });
 
-gulp.task('lint-test', () => {
-  return _lint([
-      paths.test + filters.jsDeep
-    ], './test/.jshintrc');
-});
-
-gulp.task('lint', ['lint-lib', 'lint-test']);
+gulp.task('lint', ['lint-lib']);
 
 let _lint = (scriptPaths, jshintPath) => {
   return gulp
