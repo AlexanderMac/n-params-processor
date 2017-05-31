@@ -1,6 +1,6 @@
 {
   "name": "n-params-processor",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Express.js parameters parser/validator/filter builder",
   "main": "index.js",
   "files": [
