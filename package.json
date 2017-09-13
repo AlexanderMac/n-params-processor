@@ -1,11 +1,20 @@
 {
   "name": "n-params-processor",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Express.js parameters parser/validator/filter builder",
   "main": "index.js",
   "files": [
     "lib"
   ],
+  "engines": {
+    "node": ">=4"
+  },
+  "scripts": {
+    "test": "npm run lint && npm run tests",
+    "lint": "eslint --ext .js index.js lib/ test/ || true",
+    "tests": "NODE_ENV=test mocha || true",
+    "coverage": "nyc npm run tests"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AlexanderMac/n-params-processor.git"
@@ -19,7 +28,7 @@
     "filter",
     "builder"
   ],
-  "author": "AlexanderMac",
+  "author": "Alexander Mac",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/AlexanderMac/n-params-processor/issues"
@@ -30,16 +39,10 @@
     "moment": "^2.18.1"
   },
   "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-istanbul": "^1.1.1",
-    "gulp-jshint": "^2.0.4",
-    "gulp-mocha": "^3.0.1",
-    "jshint": "^2.9.2",
-    "jshint-stylish": "^2.2.1",
-    "mocha": "^3.2.0",
-    "require-dir": "^0.3.1",
-    "rewire": "^2.5.2",
-    "should": "^11.2.1",
-    "yargs": "^7.1.0"
+    "eslint": "^4.3.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.4.2",
+    "nyc": "^11.1.0",
+    "should": "^13.0.1"
   }
 }
