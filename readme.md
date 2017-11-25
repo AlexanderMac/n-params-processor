@@ -21,10 +21,10 @@ $ npm run coverage
 // Create a new user
 exports.createUser = async (req, res, next) => {
   try {
-    let userData = paramsProc.getEmptyObjectData();
-    paramsProc.processString({ from: req.body, name: 'firstName', required: true }, userData);
-    paramsProc.processString({ from: req.body, name: 'lastName', required: true }, userData);
-    paramsProc.processInt({ from: req.body, name: 'age', min: 0, required: true }, userData);
+    let userData = paramsProc.getEmptyDataObject();
+    paramsProc.parseString({ from: req.body, name: 'firstName', required: true }, userData);
+    paramsProc.parseString({ from: req.body, name: 'lastName', required: true }, userData);
+    paramsProc.parseInt({ from: req.body, name: 'age', min: 0, required: true }, userData);
 
     let user = await usersSrvc.createUser(userData);
     res.send(user);
@@ -39,8 +39,8 @@ exports.getPaymentById = async (req, res, next) => {
     const ALLOWED_FIELDS = 'id firstName lastName age';
     const DEFAULT_FIELDS = 'id firstName lastName';
     let filter = paramsProc.getEmptyParams();
-    paramsProc.processId({ from: req.params, required: true }, params.filter);
-    paramsProc.processFields({ from: req.query, def: DEFAULT_FIELDS, allowed: ALLOWED_FIELDS }, params);
+    paramsProc.parseId({ from: req.params, required: true }, params.filter);
+    paramsProc.parseFields({ from: req.query, def: DEFAULT_FIELDS, allowed: ALLOWED_FIELDS }, params);
 
     let user = await usersSrvc.getUser(params);
     res.send(user);
@@ -59,76 +59,76 @@ Registers the custom error type which should be thrown in the case of invalid pa
 - **getEmptyParams()**<br>
 Returns empty object with two fields: `filter` and `fields`.
 
-- **getEmptyObjectData(data)**<br>
+- **getEmptyDataObject(data)**<br>
 Returns extended by data empty object.
 
   - `data` - object to extend.
 
-- **parseObjectData(opts, data)**<br>
+- **parseDataObject(opts, data)**<br>
 Takes allowed fields `opts.allowed` from `opts.from` and extends `data` by allowed fields.
 
   - `opts` - options (`from` - source object, `allowed` - an array of allowed fields).
   - `data` - object to extend.
 
-- **processStringParam(opts, output)**<br>
+- **parseString(opts, output)**<br>
 Parses, converts to `String` and validates parameter. Adds output field to `output` object.
 
   - `opts` - options (`from` - source object, `name` - parameter name, `required` - indicates that parameter is mandatory, `allowed` - validates that parameter value is in `allowed` array).
   - `output` - output object.
 
-- **processIntParam(opts, output)**<br>
+- **parseInt(opts, output)**<br>
 Parses, converts to `IntegerNumber` and validates parameter. Adds output field to `output` object.
 
   - `opts` - options (`from` - source object, `name` - parameter name, `required` - indicates that parameter is mandatory, `min` - the lowest possible value, `max` - the largest possible value).
   - `output` - output object.
 
-- **processFloatParam(opts, output)**<br>
+- **parseFloat(opts, output)**<br>
 Parses, converts to `FloatNumber` and validates parameter. Adds output field to `output` object.
 
   - `opts` - options (`from` - source object, `name` - parameter name, `required` - indicates that parameter is mandatory, `min` - the lowest possible value, `max` - the largest possible value).
   - `output` - output object.
 
-- **processDateParam(opts, output)**<br>
+- **parseDate(opts, output)**<br>
 Parses, converts to `Date` and validates parameter. Adds output field to `output` object.<br>
 *The date must be in YYYY-MM-DD HH:mm:ss format.*
 
   - `opts` - options (`from` - source object, `name` - parameter name, `required` - indicates that parameter is mandatory).
   - `output` - output object.
 
-- **processId(opts, output)**<br>
+- **parseId(opts, output)**<br>
 Parses, converts to `id` and validates parameter. Adds output field to `output` object.
 *RDBMS record id - positive integer.*
 
   - `opts` - options (`from` - source object, `name` - parameter name (`id` be default), `required` - indicates that parameter is mandatory).
   - `output` - output object.
 
-- **processIdList(opts, output)**<br>
+- **parseIdList(opts, output)**<br>
 Parses, converts to `IdList` and validates parameter. Adds output field to `output` object.
 *RDBMS record id - positive integer.*
 
   - `opts` - options (`from` - source object, `name` - parameter name, `required` - indicates that parameter is mandatory).
   - `output` - output object.
 
-- **processObjectId(opts, output)**<br>
+- **parseObjectId(opts, output)**<br>
 Parses, converts to `ObjectId` and validates parameter. Adds output field to `output` object.
 *MongoDb document objectId.*
 
   - `opts` - options (`from` - source object, `name` - parameter name, `required` - indicates that parameter is mandatory).
   - `output` - output object.
 
-- **processIn(opts, output)**<br>
+- **parseIn(opts, output)**<br>
 Parses, converts to `$in` query and validates parameter. Adds output field to `output` object.
 
   - `opts` - options (`from` - source object, `name` - parameter name (`in` by default), `required` - indicates that parameter is mandatory).
   - `output` - output object.
 
-- **processNin(opts, output)**<br>
+- **parseNin(opts, output)**<br>
 Parses, converts to `$notIn` query and validates parameter. Adds output field to `output` object.
 
   - `opts` - options (`from` - source object, `name` - parameter name (`nin` by default), `required` - indicates that parameter is mandatory).
   - `output` - output object.
 
-- **processFields(opts, output)**<br>
+- **parseFields(opts, output)**<br>
 Parses, converts and validates fields parameter. Adds output field to `output` object.
 
   - `opts` - options (`from.fields` - space separated string of parsing fields, `def` - space separated string of default fields, `allowed` - space separated string of allowed fields).

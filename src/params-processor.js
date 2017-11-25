@@ -17,18 +17,16 @@ exports.getEmptyParams = (filter) => {
   };
 };
 
-// TODO: rename to getEmptyDataObject
-exports.getEmptyObjectData = (data) => {
+exports.getEmptyDataObject = (data) => {
   return data || {};
 };
 
-// TODO: rename to parseDataObject
-exports.parseObjectData = (opts, data) => {
+exports.parseDataObject = (opts, data) => {
   let newData = _.pick(opts.from, opts.allowed);
   _.extend(data, newData);
 };
 
-exports.processStringParam = (opts, output) => {
+exports.parseString = (opts, output) => {
   _testOptsAreValid(opts.from, opts.name);
 
   let val = opts.from[opts.name];
@@ -44,7 +42,7 @@ exports.processStringParam = (opts, output) => {
   }
 };
 
-exports.processIntParam = (opts, output) => {
+exports.parseInt = (opts, output) => {
   _testOptsAreValid(opts.from, opts.name);
 
   let val = opts.from[opts.name];
@@ -60,7 +58,7 @@ exports.processIntParam = (opts, output) => {
   }
 };
 
-exports.processFloatParam = (opts, output) => {
+exports.parseFloat = (opts, output) => {
   _testOptsAreValid(opts.from, opts.name);
 
   let val = opts.from[opts.name];
@@ -76,7 +74,7 @@ exports.processFloatParam = (opts, output) => {
   }
 };
 
-exports.processDateParam = (opts, output) => {
+exports.parseDate = (opts, output) => {
   _testOptsAreValid(opts.from, opts.name);
 
   let val = opts.from[opts.name];
@@ -90,7 +88,7 @@ exports.processDateParam = (opts, output) => {
   }
 };
 
-exports.processId = (opts, output) => {
+exports.parseId = (opts, output) => {
   opts.name = opts.name || 'id'; // TODO: don't use default param
   _testOptsAreValid(opts.from, opts.name);
 
@@ -107,7 +105,7 @@ exports.processId = (opts, output) => {
   }
 };
 
-exports.processIdList = (opts, output) => {
+exports.parseIdList = (opts, output) => {
   _testOptsAreValid(opts.from, opts.name);
 
   let ids = opts.from[opts.name];
@@ -122,7 +120,7 @@ exports.processIdList = (opts, output) => {
   }
 };
 
-exports.processObjectId = (opts, output) => {
+exports.parseObjectId = (opts, output) => {
   opts.name = opts.name || 'id'; // TODO: don't use default param
   _testOptsAreValid(opts.from, opts.name);
 
@@ -138,7 +136,7 @@ exports.processObjectId = (opts, output) => {
   }
 };
 
-exports.processIn = (opts, output) => {
+exports.parseIn = (opts, output) => {
   opts.name = opts.name || 'in'; // TODO: don't use default param
   _testOptsAreValid(opts.from, opts.name);
 
@@ -157,7 +155,7 @@ exports.processIn = (opts, output) => {
   }
 };
 
-exports.processNin = (opts, output) => {
+exports.parseNin = (opts, output) => {
   opts.name = opts.name || 'nin'; // TODO: don't use default param
   _testOptsAreValid(opts.from, opts.name);
 
@@ -176,21 +174,7 @@ exports.processNin = (opts, output) => {
   }
 };
 
-/**
- * @deprecated Since version 1.0. Will be deleted in version 2.0.
- */
-exports.processFilterByName = (opts, output) => {
-  opts.name = 'filter';
-  let filter = opts.from.filter;
-
-  _testIsRequired(opts, filter);
-
-  if (!_.isNil(filter)) {
-    output.name = { $like: `%${filter}%` };
-  }
-};
-
-exports.processFields = (opts, output) => {
+exports.parseFields = (opts, output) => {
   opts.name = 'fields'; // TODO: don't use default param
   _testOptsAreValid(opts.from, opts.name);
 

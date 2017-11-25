@@ -115,9 +115,9 @@ describe('params-processor', () => {
     });
   });
 
-  describe('getEmptyObjectData', () => {
+  describe('getEmptyDataObject', () => {
     function test(params, expected) {
-      let actual = paramsProc.getEmptyObjectData(params);
+      let actual = paramsProc.getEmptyDataObject(params);
       should(actual).eql(expected);
     }
 
@@ -130,9 +130,9 @@ describe('params-processor', () => {
     });
   });
 
-  describe('parseObjectData', () => {
+  describe('parseDataObject', () => {
     function test(opts, data, expected) {
-      paramsProc.parseObjectData(opts, data);
+      paramsProc.parseDataObject(opts, data);
       should(data).eql(expected);
     }
 
@@ -170,7 +170,9 @@ describe('params-processor', () => {
     });
   });
 
-  describe('processStringParam', () => {
+  describe('parseString', () => {
+    let parseFnName = 'parseString';
+
     function getOpts(overrides) {
       let def = {
         from: { login: 'u1' },
@@ -179,10 +181,10 @@ describe('params-processor', () => {
       return _.extend(def, overrides);
     }
 
-    registerCommonParseParamTests('processStringParam');
+    registerCommonParseParamTests(parseFnName);
 
     registerParseParamTest({
-      parseFnName: 'processStringParam',
+      parseFnName,
       testName: 'should throw Error when opts.allowed is defined and val is not in it',
       opts: getOpts({ allowed: ['u2', 'u3'] }),
       output: { id: 1 },
@@ -190,7 +192,7 @@ describe('params-processor', () => {
     });
 
     registerParseParamTest({
-      parseFnName: 'processStringParam',
+      parseFnName,
       testName: 'should add parsed value to output when all opts are valid',
       opts: getOpts(),
       output: { id: 1 },
@@ -198,7 +200,15 @@ describe('params-processor', () => {
     });
 
     registerParseParamTest({
-      parseFnName: 'processStringParam',
+      parseFnName,
+      testName: 'should add parsed value to output when all opts are valid and val is empty string',
+      opts: getOpts({ from: { login: '' }}),
+      output: { id: 1 },
+      expected: { id: 1, login: '' }
+    });
+
+    registerParseParamTest({
+      parseFnName,
       testName: 'should add parsed value to output when all opts are valid and val was a number',
       opts: getOpts({ from: { age: '25' }, name: 'age' }),
       output: { id: 1 },
@@ -206,7 +216,9 @@ describe('params-processor', () => {
     });
   });
 
-  describe('processIntParam', () => {
+  describe('parseInt', () => {
+    let parseFnName = 'parseInt';
+
     function getOpts(overrides) {
       let def = {
         from: { age: '25' },
@@ -215,10 +227,10 @@ describe('params-processor', () => {
       return _.extend(def, overrides);
     }
 
-    registerCommonParseParamTests('processIntParam');
+    registerCommonParseParamTests(parseFnName);
 
     registerParseParamTest({
-      parseFnName: 'processIntParam',
+      parseFnName,
       testName: 'should throw Error when provided val can\'t be convered to integer',
       opts: getOpts({ from: { age: 'not an IntegerNumber' }}),
       output: { id: 1 },
@@ -226,7 +238,7 @@ describe('params-processor', () => {
     });
 
     registerParseParamTest({
-      parseFnName: 'processIntParam',
+      parseFnName,
       testName: 'should throw Error when opts.min is defined and provided val is less than opts.min',
       opts: getOpts({ min: 30 }),
       output: { id: 1 },
@@ -234,7 +246,7 @@ describe('params-processor', () => {
     });
 
     registerParseParamTest({
-      parseFnName: 'processIntParam',
+      parseFnName,
       testName: 'should throw Error when opts.max is defined and provided val is greater than opts.max',
       opts: getOpts({ max: 20 }),
       output: { id: 1 },
@@ -242,7 +254,15 @@ describe('params-processor', () => {
     });
 
     registerParseParamTest({
-      parseFnName: 'processIntParam',
+      parseFnName,
+      testName: 'should add parsed value to output when all opts are valid and val is zero',
+      opts: getOpts({ from: { age: 0 }}),
+      output: { id: 1 },
+      expected: { id: 1, age: 0 }
+    });
+
+    registerParseParamTest({
+      parseFnName,
       testName: 'should add parsed value to output when all opts are valid',
       opts: getOpts(),
       output: { id: 1 },
@@ -250,7 +270,9 @@ describe('params-processor', () => {
     });
   });
 
-  describe('processFloatParam', () => {
+  describe('parseFloat', () => {
+    let parseFnName = 'parseFloat';
+
     function getOpts(overrides) {
       let def = {
         from: { age: '25.5' },
@@ -259,10 +281,10 @@ describe('params-processor', () => {
       return _.extend(def, overrides);
     }
 
-    registerCommonParseParamTests('processFloatParam');
+    registerCommonParseParamTests(parseFnName);
 
     registerParseParamTest({
-      parseFnName: 'processFloatParam',
+      parseFnName,
       testName: 'should throw Error when provided val can\'t be convered to float',
       opts: getOpts({ from: { age: 'not a FloatNumber' }}),
       output: { id: 1 },
@@ -270,7 +292,7 @@ describe('params-processor', () => {
     });
 
     registerParseParamTest({
-      parseFnName: 'processFloatParam',
+      parseFnName,
       testName: 'should throw Error when opts.min is defined and provided val is less than opts.min',
       opts: getOpts({ min: 30 }),
       output: { id: 1 },
@@ -278,7 +300,7 @@ describe('params-processor', () => {
     });
 
     registerParseParamTest({
-      parseFnName: 'processFloatParam',
+      parseFnName,
       testName: 'should throw Error when opts.max is defined and provided val is greater than opts.max',
       opts: getOpts({ max: 20 }),
       output: { id: 1 },
@@ -286,7 +308,7 @@ describe('params-processor', () => {
     });
 
     registerParseParamTest({
-      parseFnName: 'processFloatParam',
+      parseFnName,
       testName: 'should add parsed value to output when all opts are valid',
       opts: getOpts(),
       output: { id: 1 },
@@ -294,7 +316,9 @@ describe('params-processor', () => {
     });
   });
 
-  describe('processDateParam', () => {
+  describe('parseDate', () => {
+    let parseFnName = 'parseDate';
+
     function getOpts(overrides) {
       let def = {
         from: { birthDate: '1998-11-07' },
@@ -303,10 +327,10 @@ describe('params-processor', () => {
       return _.extend(def, overrides);
     }
 
-    registerCommonParseParamTests('processDateParam');
+    registerCommonParseParamTests(parseFnName);
 
     registerParseParamTest({
-      parseFnName: 'processDateParam',
+      parseFnName,
       testName: 'should throw Error when provided val can\'t be convered to date',
       opts: getOpts({ from: { birthDate: 'not a Date' }}),
       output: { id: 1 },
@@ -314,7 +338,7 @@ describe('params-processor', () => {
     });
 
     registerParseParamTest({
-      parseFnName: 'processDateParam',
+      parseFnName,
       testName: 'should add parsed value to output when all opts are valid',
       opts: getOpts(),
       output: { id: 1 },
@@ -322,7 +346,9 @@ describe('params-processor', () => {
     });
   });
 
-  describe('processId', () => {
+  describe('parseId', () => {
+    let parseFnName = 'parseId';
+
     function getOpts(overrides) {
       let def = {
         from: { id: 11 },
@@ -331,10 +357,10 @@ describe('params-processor', () => {
       return _.extend(def, overrides);
     }
 
-    registerCommonParseParamTests('processId', { assertName: false });
+    registerCommonParseParamTests(parseFnName, { assertName: false });
 
     registerParseParamTest({
-      parseFnName: 'processId',
+      parseFnName,
       testName: 'should throw Error when provided val is not a correct RDBMS id',
       opts: getOpts({ from: { id: 'not valid id' }}),
       output: {},
@@ -342,7 +368,7 @@ describe('params-processor', () => {
     });
 
     registerParseParamTest({
-      parseFnName: 'processId',
+      parseFnName,
       testName: 'should add parsed value to output when all opts are valid',
       opts: getOpts(),
       output: {},
@@ -350,7 +376,9 @@ describe('params-processor', () => {
     });
   });
 
-  describe('processIdList', () => {
+  describe('parseIdList', () => {
+    let parseFnName = 'parseIdList';
+
     function getOpts(overrides) {
       let def = {
         from: { ids: [11, 12] },
@@ -359,10 +387,10 @@ describe('params-processor', () => {
       return _.extend(def, overrides);
     }
 
-    registerCommonParseParamTests('processIdList');
+    registerCommonParseParamTests(parseFnName);
 
     registerParseParamTest({
-      parseFnName: 'processIdList',
+      parseFnName,
       testName: 'should throw Error when provided val contains incorrect RDBMS id',
       opts: getOpts({ from: { ids: [11, 'not valid id', 13] }}),
       output: {},
@@ -370,7 +398,7 @@ describe('params-processor', () => {
     });
 
     registerParseParamTest({
-      parseFnName: 'processIdList',
+      parseFnName,
       testName: 'should add parsed value to output when all opts are valid',
       opts: getOpts(),
       output: {},
@@ -378,7 +406,9 @@ describe('params-processor', () => {
     });
   });
 
-  describe('processObjectId', () => {
+  describe('parseObjectId', () => {
+    let parseFnName = 'parseObjectId';
+
     function getOpts(overrides) {
       let def = {
         from: { id: '583c9a0906c20c1c91103fb4' },
@@ -387,10 +417,10 @@ describe('params-processor', () => {
       return _.extend(def, overrides);
     }
 
-    registerCommonParseParamTests('processObjectId', { assertName: false });
+    registerCommonParseParamTests(parseFnName, { assertName: false });
 
     registerParseParamTest({
-      parseFnName: 'processObjectId',
+      parseFnName,
       testName: 'should throw Error when provided val is not a correct MongoDB ObjectId',
       opts: getOpts({ from: { id: 'not valid ObjectId' }}),
       output: {},
@@ -398,7 +428,7 @@ describe('params-processor', () => {
     });
 
     registerParseParamTest({
-      parseFnName: 'processObjectId',
+      parseFnName,
       testName: 'should add parsed value to output when all opts are valid',
       opts: getOpts(),
       output: {},
@@ -406,7 +436,9 @@ describe('params-processor', () => {
     });
   });
 
-  describe('processIn', () => {
+  describe('parseIn', () => {
+    let parseFnName = 'parseIn';
+
     function getOpts(overrides) {
       let def = {
         from: { in: [11, 12] },
@@ -415,10 +447,10 @@ describe('params-processor', () => {
       return _.extend(def, overrides);
     }
 
-    registerCommonParseParamTests('processIn', { assertName: false });
+    registerCommonParseParamTests(parseFnName, { assertName: false });
 
     registerParseParamTest({
-      parseFnName: 'processIn',
+      parseFnName,
       testName: 'should throw Error when provided val contains incorrect RDBMS id',
       opts: getOpts({ from: { in: [11, 'not valid id', 13] }}),
       output: {},
@@ -426,7 +458,7 @@ describe('params-processor', () => {
     });
 
     registerParseParamTest({
-      parseFnName: 'processIn',
+      parseFnName,
       testName: 'should add parsed value to output when all opts are valid',
       opts: getOpts(),
       output: {},
@@ -434,7 +466,9 @@ describe('params-processor', () => {
     });
   });
 
-  describe('processNin', () => {
+  describe('parseNin', () => {
+    let parseFnName = 'parseNin';
+
     function getOpts(overrides) {
       let def = {
         from: { nin: [11, 12] },
@@ -443,10 +477,10 @@ describe('params-processor', () => {
       return _.extend(def, overrides);
     }
 
-    registerCommonParseParamTests('processNin', { assertName: false });
+    registerCommonParseParamTests(parseFnName, { assertName: false });
 
     registerParseParamTest({
-      parseFnName: 'processNin',
+      parseFnName,
       testName: 'should throw Error when provided val contains incorrect RDBMS id',
       opts: getOpts({ from: { nin: [11, 'not valid id', 13] }}),
       output: {},
@@ -454,7 +488,7 @@ describe('params-processor', () => {
     });
 
     registerParseParamTest({
-      parseFnName: 'processNin',
+      parseFnName,
       testName: 'should add parsed value to output when all opts are valid',
       opts: getOpts(),
       output: {},
@@ -462,7 +496,9 @@ describe('params-processor', () => {
     });
   });
 
-  describe('processFields', () => {
+  describe('parseFields', () => {
+    let parseFnName = 'parseFields';
+
     function getOpts(overrides) {
       let def = {
         from: { fields: 'id name' },
@@ -473,10 +509,10 @@ describe('params-processor', () => {
       return _.extend(def, overrides);
     }
 
-    registerCommonParseParamTests('processFields', { assertName: false, assertRequiedAndUndefined: false, assertNotRequiedAndUndefined: false });
+    registerCommonParseParamTests(parseFnName, { assertName: false, assertRequiedAndUndefined: false, assertNotRequiedAndUndefined: false });
 
     registerParseParamTest({
-      parseFnName: 'processFields',
+      parseFnName,
       testName: 'should throw Error when provided val is not a string with space separated values',
       opts: getOpts({ from: { fields: 11 }}),
       output: {},
@@ -484,7 +520,7 @@ describe('params-processor', () => {
     });
 
     registerParseParamTest({
-      parseFnName: 'processFields',
+      parseFnName,
       testName: 'should throw Error when provided val is contains not allowed field',
       opts: getOpts({ from: { fields: 'id password' }}),
       output: {},
@@ -492,7 +528,7 @@ describe('params-processor', () => {
     });
 
     registerParseParamTest({
-      parseFnName: 'processFields',
+      parseFnName,
       testName: 'should add default value to output when all opts are valid and from.fields is undefined',
       opts: getOpts({ from: {}}),
       output: {},
@@ -500,7 +536,7 @@ describe('params-processor', () => {
     });
 
     registerParseParamTest({
-      parseFnName: 'processFields',
+      parseFnName,
       testName: 'should add parsed value to output when all opts are valid',
       opts: getOpts(),
       output: {},
