@@ -22,8 +22,8 @@ $ npm run coverage
 exports.createUser = async (req, res, next) => {
   try {
     let userData = paramsProc.getEmptyObjectData();
-    paramsProc.processString({ from: req.body, name: 'firstName', required: true }, userData);
-    paramsProc.processString({ from: req.body, name: 'lastName', required: true }, userData);
+    paramsProc.processStringParam({ from: req.body, name: 'firstName', required: true }, userData);
+    paramsProc.processStringParam({ from: req.body, name: 'lastName', required: true }, userData);
     paramsProc.processInt({ from: req.body, name: 'age', min: 0, required: true }, userData);
 
     let user = await usersSrvc.createUser(userData);
