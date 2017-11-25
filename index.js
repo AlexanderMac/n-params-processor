@@ -1,5 +1,5 @@
 'use strict';
 
-let paramsProcessor = require('./lib/params-processor');
+const paramsProcessor = require('./src/params-processor');
 
 module.exports = paramsProcessor;

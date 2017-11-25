@@ -2,7 +2,7 @@
 
 const moment      = require('moment');
 const should      = require('should');
-const validations = require('../../src/validations');
+const validations = require('../src/validations');
 
 describe('validations', () => {
   describe('isValidDateString', () => {
