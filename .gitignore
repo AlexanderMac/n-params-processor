@@ -3,6 +3,7 @@ logs
 *.log
 tmp
 .tmp
+todo
 .DS_STORE
 
 # Runtime data
