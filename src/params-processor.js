@@ -169,7 +169,9 @@ exports.processNin = (opts, output) => {
   }
 };
 
-// TODO: test it
+/**
+ * @deprecated Since version 1.0. Will be deleted in version 2.0.
+ */
 exports.processFilterByName = (opts, output) => {
   opts.name = 'filter';
   let filter = opts.from.filter;
