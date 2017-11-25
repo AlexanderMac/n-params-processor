@@ -1,17 +1,15 @@
 'use strict';
 
-var _          = require('lodash');
-var moment     = require('moment');
-var validators = require('n-validators');
+const _          = require('lodash');
+const moment     = require('moment');
+const validators = require('./validators');
 
 let _CustomErrorType = Error;
 
-// TODO: test it
 exports.registerCustomErrorType = (CustomErrorType) => {
   _CustomErrorType = CustomErrorType;
 };
 
-// TODO: test it
 exports.getEmptyParams = (filter) => {
   return {
     filter: filter || {},
@@ -19,24 +17,26 @@ exports.getEmptyParams = (filter) => {
   };
 };
 
-// TODO: test it
+// TODO: rename to getEmptyDataObject
 exports.getEmptyObjectData = (data) => {
   return data || {};
 };
 
-// TODO: test it
-exports.parseObjectData = (opts, data)  => {
+// TODO: rename to parseDataObject
+exports.parseObjectData = (opts, data) => {
   let newData = _.pick(opts.from, opts.allowed);
   _.extend(data, newData);
 };
 
-// TODO: test it
 exports.processStringParam = (opts, output) => {
+  _testOptsAreValid(opts.from, opts.name);
+
   let val = opts.from[opts.name];
 
   _testIsRequired(opts, val);
 
   if (!_.isNil(val)) {
+    val = val.toString();
     if (opts.allowed && !_.includes(opts.allowed, val)) {
       _throwUnprocessableRequestError(`${opts.name} has incorrect value`);
     }
@@ -44,8 +44,9 @@ exports.processStringParam = (opts, output) => {
   }
 };
 
-// TODO: test it
 exports.processIntParam = (opts, output) => {
+  _testOptsAreValid(opts.from, opts.name);
+
   let val = opts.from[opts.name];
 
   _testIsRequired(opts, val);
@@ -59,8 +60,9 @@ exports.processIntParam = (opts, output) => {
   }
 };
 
-// TODO: test it
 exports.processFloatParam = (opts, output) => {
+  _testOptsAreValid(opts.from, opts.name);
+
   let val = opts.from[opts.name];
 
   _testIsRequired(opts, val);
@@ -74,22 +76,24 @@ exports.processFloatParam = (opts, output) => {
   }
 };
 
-// TODO: test it
 exports.processDateParam = (opts, output) => {
+  _testOptsAreValid(opts.from, opts.name);
+
   let val = opts.from[opts.name];
 
   _testIsRequired(opts, val);
 
   if (!_.isNil(val)) {
-    val = moment(val, moment.defaultFormat);
+    val = moment(val, moment.defaultFormat); // TODO: convert to date
     _testIsDate(opts, val);
     output[opts.name] = val;
   }
 };
 
-// TODO: test it
 exports.processId = (opts, output) => {
-  opts.name = opts.name || 'id';
+  opts.name = opts.name || 'id'; // TODO: don't use default param
+  _testOptsAreValid(opts.from, opts.name);
+
   let id = opts.from[opts.name];
 
   _testIsRequired(opts, id);
@@ -103,24 +107,25 @@ exports.processId = (opts, output) => {
   }
 };
 
-// TODO: test it
 exports.processIdList = (opts, output) => {
-  opts.name = opts.name;
+  _testOptsAreValid(opts.from, opts.name);
+
   let ids = opts.from[opts.name];
 
   _testIsRequired(opts, ids);
 
   if (!_.isNil(ids)) {
-    if (!validators.isAllValidId(ids)) {
+    if (!validators.isAllWithValidId(ids)) {
       _throwUnprocessableRequestError(`${opts.name} must be a valid list of IDs`);
     }
     output[opts.name] = ids;
   }
 };
 
-// TODO: test it
 exports.processObjectId = (opts, output) => {
-  opts.name = opts.name || 'id';
+  opts.name = opts.name || 'id'; // TODO: don't use default param
+  _testOptsAreValid(opts.from, opts.name);
+
   let id = opts.from[opts.name];
 
   _testIsRequired(opts, id);
@@ -133,17 +138,18 @@ exports.processObjectId = (opts, output) => {
   }
 };
 
-// TODO: test it
 exports.processIn = (opts, output) => {
-  opts.name = opts.name || 'in';
+  opts.name = opts.name || 'in'; // TODO: don't use default param
+  _testOptsAreValid(opts.from, opts.name);
+
   let $in = opts.from[opts.name];
 
   _testIsRequired(opts, $in);
 
   if (!_.isNil($in)) {
     $in = _.map($in, val => parseInt(val));
-    if (!validators.isAllValidId($in)) {
-      _throwUnprocessableRequestError('in must contain a list of valid ids');
+    if (!validators.isAllWithValidId($in)) {
+      _throwUnprocessableRequestError('in must contain a list of valid IDs');
     }
     let field = opts.field || 'id';
     output[field] = output[field] || {};
@@ -151,17 +157,18 @@ exports.processIn = (opts, output) => {
   }
 };
 
-// TODO: test it
 exports.processNin = (opts, output) => {
-  opts.name = opts.name || 'nin';
+  opts.name = opts.name || 'nin'; // TODO: don't use default param
+  _testOptsAreValid(opts.from, opts.name);
+
   let $nin = opts.from[opts.name];
 
   _testIsRequired(opts, $nin);
 
   if (!_.isNil($nin)) {
     $nin = _.map($nin, val => parseInt(val));
-    if (!validators.isAllValidId($nin)) {
-      _throwUnprocessableRequestError('nin must contain a list of valid ids');
+    if (!validators.isAllWithValidId($nin)) {
+      _throwUnprocessableRequestError('nin must contain a list of valid IDs');
     }
     let field = opts.field || 'id';
     output[field] = output[field] || {};
@@ -169,7 +176,9 @@ exports.processNin = (opts, output) => {
   }
 };
 
-// TODO: test it
+/**
+ * @deprecated Since version 1.0. Will be deleted in version 2.0.
+ */
 exports.processFilterByName = (opts, output) => {
   opts.name = 'filter';
   let filter = opts.from.filter;
@@ -181,9 +190,10 @@ exports.processFilterByName = (opts, output) => {
   }
 };
 
-// TODO: test it
 exports.processFields = (opts, output) => {
-  opts.name = 'fields';
+  opts.name = 'fields'; // TODO: don't use default param
+  _testOptsAreValid(opts.from, opts.name);
+
   let fields = opts.from.fields || opts.def;
 
   if (!_.isNil(fields)) {
@@ -193,6 +203,16 @@ exports.processFields = (opts, output) => {
     output.fields = fields.split(' ');
   }
 };
+
+// TODO: test it
+function _testOptsAreValid(from, name) {
+  if (_.isNil(from)) {
+    throw new Error('Impossible parse parameter. From is not provided');
+  }
+  if (_.isNil(name)) {
+    throw new Error('Impossible parse parameter. Name is not provided');
+  }
+}
 
 // TODO: test it
 function _testIsRequired(opts, val) {
@@ -231,6 +251,5 @@ function _testMax(opts, val) {
 
 // TODO: test it
 function _throwUnprocessableRequestError(message) {
-  /* jshint newcap: false */
   throw new _CustomErrorType(message);
 }
