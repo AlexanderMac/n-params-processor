@@ -3,7 +3,7 @@
 const _      = require('lodash');
 const moment = require('moment');
 
-class Validations {
+class Validators {
   isValidDateString(val) {
     return _.isString(val) && moment(val, moment.defaultFormat).isValid();
   }
@@ -38,7 +38,7 @@ class Validations {
     return _.isArray(checked) &&  _.difference(checked, allowed).length === 0;
   }
 
-  isAllowedAttrs(checked, allowed) {
+  isAllowedStringFields(checked, allowed) {
     if (!_.isString(checked)) {
       return false;
     }
@@ -48,4 +48,4 @@ class Validations {
   }
 }
 
-module.exports = new Validations();
+module.exports = new Validators();
