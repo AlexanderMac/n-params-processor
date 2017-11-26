@@ -4,236 +4,240 @@ const _          = require('lodash');
 const moment     = require('moment');
 const validators = require('./validators');
 
-let _CustomErrorType = Error;
+let _ErrorType = Error;
 
-exports.registerCustomErrorType = (CustomErrorType) => {
-  _CustomErrorType = CustomErrorType;
-};
+class ParamsProcessor {
+  static registerErrorType(ErrorType) {
+    _ErrorType = ErrorType;
+  }
 
-exports.getEmptyParams = (filter) => {
-  return {
-    filter: filter || {},
-    fields: []
-  };
-};
+  getEmptyParams(filter) {
+    return {
+      filter: filter || {},
+      fields: []
+    };
+  }
 
-exports.getEmptyDataObject = (data) => {
-  return data || {};
-};
+  getEmptyDataObject(data) {
+    return data || {};
+  }
 
-exports.parseDataObject = (opts, data) => {
-  let newData = _.pick(opts.from, opts.allowed);
-  _.extend(data, newData);
-};
+  parseDataObject(opts, data) {
+    let newData = _.pick(opts.from, opts.allowed);
+    _.extend(data, newData);
+  }
 
-exports.parseString = (opts, output) => {
-  _testOptsAreValid(opts.from, opts.name);
+  parseString(opts, output) {
+    this._testOptsAreValid(opts.from, opts.name);
 
-  let val = opts.from[opts.name];
+    let val = opts.from[opts.name];
 
-  _testIsRequired(opts, val);
+    this._testIsRequired(opts, val);
 
-  if (!_.isNil(val)) {
-    val = val.toString();
-    if (opts.allowed && !_.includes(opts.allowed, val)) {
-      _throwUnprocessableRequestError(`${opts.name} has incorrect value`);
+    if (!_.isNil(val)) {
+      val = val.toString();
+      if (opts.allowed && !_.includes(opts.allowed, val)) {
+        this._throwUnprocessableRequestError(`${opts.name} has incorrect value`);
+      }
+      output[opts.name] = val;
     }
-    output[opts.name] = val;
   }
-};
 
-exports.parseInt = (opts, output) => {
-  _testOptsAreValid(opts.from, opts.name);
+  parseInt(opts, output) {
+    this._testOptsAreValid(opts.from, opts.name);
 
-  let val = opts.from[opts.name];
+    let val = opts.from[opts.name];
 
-  _testIsRequired(opts, val);
+    this._testIsRequired(opts, val);
 
-  if (!_.isNil(val)) {
-    val = parseInt(val);
-    _testIsNumber(opts, val);
-    _testMin(opts, val);
-    _testMax(opts, val);
-    output[opts.name] = val;
-  }
-};
-
-exports.parseFloat = (opts, output) => {
-  _testOptsAreValid(opts.from, opts.name);
-
-  let val = opts.from[opts.name];
-
-  _testIsRequired(opts, val);
-
-  if (!_.isNil(val)) {
-    val = parseFloat(val);
-    _testIsNumber(opts, val);
-    _testMin(opts, val);
-    _testMax(opts, val);
-    output[opts.name] = val;
-  }
-};
-
-exports.parseDate = (opts, output) => {
-  _testOptsAreValid(opts.from, opts.name);
-
-  let val = opts.from[opts.name];
-
-  _testIsRequired(opts, val);
-
-  if (!_.isNil(val)) {
-    val = moment(val, moment.defaultFormat); // TODO: convert to date
-    _testIsDate(opts, val);
-    output[opts.name] = val;
-  }
-};
-
-exports.parseId = (opts, output) => {
-  opts.name = opts.name || 'id'; // TODO: don't use default param
-  _testOptsAreValid(opts.from, opts.name);
-
-  let id = opts.from[opts.name];
-
-  _testIsRequired(opts, id);
-
-  if (!_.isNil(id)) {
-    id = parseInt(id);
-    if (!validators.isValidId(id)) {
-      _throwUnprocessableRequestError(`${opts.name} must be a valid ID`);
+    if (!_.isNil(val)) {
+      val = parseInt(val);
+      this._testIsNumber(opts, val);
+      this._testMin(opts, val);
+      this._testMax(opts, val);
+      output[opts.name] = val;
     }
-    output[opts.name] = id;
   }
-};
 
-exports.parseIdList = (opts, output) => {
-  _testOptsAreValid(opts.from, opts.name);
+  parseFloat(opts, output) {
+    this._testOptsAreValid(opts.from, opts.name);
 
-  let ids = opts.from[opts.name];
+    let val = opts.from[opts.name];
 
-  _testIsRequired(opts, ids);
+    this._testIsRequired(opts, val);
 
-  if (!_.isNil(ids)) {
-    if (!validators.isAllWithValidId(ids)) {
-      _throwUnprocessableRequestError(`${opts.name} must be a valid list of IDs`);
+    if (!_.isNil(val)) {
+      val = parseFloat(val);
+      this._testIsNumber(opts, val);
+      this._testMin(opts, val);
+      this._testMax(opts, val);
+      output[opts.name] = val;
     }
-    output[opts.name] = ids;
   }
-};
 
-exports.parseObjectId = (opts, output) => {
-  opts.name = opts.name || 'id'; // TODO: don't use default param
-  _testOptsAreValid(opts.from, opts.name);
+  parseDate(opts, output) {
+    this._testOptsAreValid(opts.from, opts.name);
 
-  let id = opts.from[opts.name];
+    let val = opts.from[opts.name];
 
-  _testIsRequired(opts, id);
+    this._testIsRequired(opts, val);
 
-  if (!_.isNil(id)) {
-    if (!validators.isValidObjectId(id)) {
-      _throwUnprocessableRequestError(`${opts.name} must be a valid ObjectId`);
+    if (!_.isNil(val)) {
+      val = moment(val, moment.defaultFormat); // TODO: convert to date
+      this._testIsDate(opts, val);
+      output[opts.name] = val;
     }
-    output[opts.name] = id;
   }
-};
 
-exports.parseIn = (opts, output) => {
-  opts.name = opts.name || 'in'; // TODO: don't use default param
-  _testOptsAreValid(opts.from, opts.name);
+  parseId(opts, output) {
+    opts.name = opts.name || 'id'; // TODO: don't use default param
+    this._testOptsAreValid(opts.from, opts.name);
 
-  let $in = opts.from[opts.name];
+    let id = opts.from[opts.name];
 
-  _testIsRequired(opts, $in);
+    this._testIsRequired(opts, id);
 
-  if (!_.isNil($in)) {
-    $in = _.map($in, val => parseInt(val));
-    if (!validators.isAllWithValidId($in)) {
-      _throwUnprocessableRequestError('in must contain a list of valid IDs');
+    if (!_.isNil(id)) {
+      id = parseInt(id);
+      if (!validators.isValidId(id)) {
+        this._throwUnprocessableRequestError(`${opts.name} must be a valid ID`);
+      }
+      output[opts.name] = id;
     }
-    let field = opts.field || 'id';
-    output[field] = output[field] || {};
-    output[field].$in = $in;
   }
-};
 
-exports.parseNin = (opts, output) => {
-  opts.name = opts.name || 'nin'; // TODO: don't use default param
-  _testOptsAreValid(opts.from, opts.name);
+  parseIdList(opts, output) {
+    this._testOptsAreValid(opts.from, opts.name);
 
-  let $nin = opts.from[opts.name];
+    let ids = opts.from[opts.name];
 
-  _testIsRequired(opts, $nin);
+    this._testIsRequired(opts, ids);
 
-  if (!_.isNil($nin)) {
-    $nin = _.map($nin, val => parseInt(val));
-    if (!validators.isAllWithValidId($nin)) {
-      _throwUnprocessableRequestError('nin must contain a list of valid IDs');
+    if (!_.isNil(ids)) {
+      if (!validators.isAllWithValidId(ids)) {
+        this._throwUnprocessableRequestError(`${opts.name} must be a valid list of IDs`);
+      }
+      output[opts.name] = ids;
     }
-    let field = opts.field || 'id';
-    output[field] = output[field] || {};
-    output[field].$notIn = $nin;
   }
-};
 
-exports.parseFields = (opts, output) => {
-  opts.name = 'fields'; // TODO: don't use default param
-  _testOptsAreValid(opts.from, opts.name);
+  parseObjectId(opts, output) {
+    opts.name = opts.name || 'id'; // TODO: don't use default param
+    this._testOptsAreValid(opts.from, opts.name);
 
-  let fields = opts.from.fields || opts.def;
+    let id = opts.from[opts.name];
 
-  if (!_.isNil(fields)) {
-    if (!validators.isAllowedStringFields(fields, opts.allowed)) {
-      _throwUnprocessableRequestError('fields must be a space separated string of fields');
+    this._testIsRequired(opts, id);
+
+    if (!_.isNil(id)) {
+      if (!validators.isValidObjectId(id)) {
+        this._throwUnprocessableRequestError(`${opts.name} must be a valid ObjectId`);
+      }
+      output[opts.name] = id;
     }
-    output.fields = fields.split(' ');
   }
-};
 
-// TODO: test it
-function _testOptsAreValid(from, name) {
-  if (_.isNil(from)) {
-    throw new Error('Impossible parse parameter. From is not provided');
+  parseIn(opts, output) {
+    opts.name = opts.name || 'in'; // TODO: don't use default param
+    this._testOptsAreValid(opts.from, opts.name);
+
+    let $in = opts.from[opts.name];
+
+    this._testIsRequired(opts, $in);
+
+    if (!_.isNil($in)) {
+      $in = _.map($in, val => parseInt(val));
+      if (!validators.isAllWithValidId($in)) {
+        this._throwUnprocessableRequestError('in must contain a list of valid IDs');
+      }
+      let field = opts.field || 'id';
+      output[field] = output[field] || {};
+      output[field].$in = $in;
+    }
   }
-  if (_.isNil(name)) {
-    throw new Error('Impossible parse parameter. Name is not provided');
+
+  parseNin(opts, output) {
+    opts.name = opts.name || 'nin'; // TODO: don't use default param
+    this._testOptsAreValid(opts.from, opts.name);
+
+    let $nin = opts.from[opts.name];
+
+    this._testIsRequired(opts, $nin);
+
+    if (!_.isNil($nin)) {
+      $nin = _.map($nin, val => parseInt(val));
+      if (!validators.isAllWithValidId($nin)) {
+        this._throwUnprocessableRequestError('nin must contain a list of valid IDs');
+      }
+      let field = opts.field || 'id';
+      output[field] = output[field] || {};
+      output[field].$notIn = $nin;
+    }
+  }
+
+  parseFields(opts, output) {
+    opts.name = 'fields'; // TODO: don't use default param
+    this._testOptsAreValid(opts.from, opts.name);
+
+    let fields = opts.from.fields || opts.def;
+
+    if (!_.isNil(fields)) {
+      if (!validators.isAllowedStringFields(fields, opts.allowed)) {
+        this._throwUnprocessableRequestError('fields must be a space separated string of fields');
+      }
+      output.fields = fields.split(' ');
+    }
+  }
+
+  // TODO: test it
+  _testOptsAreValid(from, name) {
+    if (_.isNil(from)) {
+      throw new Error('Impossible parse parameter. From is not provided');
+    }
+    if (_.isNil(name)) {
+      throw new Error('Impossible parse parameter. Name is not provided');
+    }
+  }
+
+  // TODO: test it
+  _testIsRequired(opts, val) {
+    if (opts.required && _.isNil(val)) {
+      this._throwUnprocessableRequestError(`${opts.name} is required`);
+    }
+  }
+
+  // TODO: test it
+  _testIsNumber(opts, val) {
+    if (isNaN(val)) {
+      this._throwUnprocessableRequestError(`${opts.name} must be a number`);
+    }
+  }
+
+  // TODO: test it
+  _testIsDate(opts, val) {
+    if (!moment(val).isValid()) {
+      this._throwUnprocessableRequestError(`${opts.name} must be a date`);
+    }
+  }
+
+  // TODO: test it
+  _testMin(opts, val) {
+    if (!_.isNil(opts.min) && val < opts.min) {
+      this._throwUnprocessableRequestError(`${opts.name} must be greater than or equal to ${opts.min}`);
+    }
+  }
+
+  // TODO: test it
+  _testMax(opts, val) {
+    if (!_.isNil(opts.max) && val > opts.max) {
+      this._throwUnprocessableRequestError(`${opts.name} must be less than or equal to ${opts.max}`);
+    }
+  }
+
+  // TODO: test it
+  _throwUnprocessableRequestError(message) {
+    throw new _ErrorType(message);
   }
 }
 
-// TODO: test it
-function _testIsRequired(opts, val) {
-  if (opts.required && _.isNil(val)) {
-    _throwUnprocessableRequestError(`${opts.name} is required`);
-  }
-}
-
-// TODO: test it
-function _testIsNumber(opts, val) {
-  if (isNaN(val)) {
-    _throwUnprocessableRequestError(`${opts.name} must be a number`);
-  }
-}
-
-// TODO: test it
-function _testIsDate(opts, val) {
-  if (!moment(val).isValid()) {
-    _throwUnprocessableRequestError(`${opts.name} must be a date`);
-  }
-}
-
-// TODO: test it
-function _testMin(opts, val) {
-  if (!_.isNil(opts.min) && val < opts.min) {
-    _throwUnprocessableRequestError(`${opts.name} must be greater than or equal to ${opts.min}`);
-  }
-}
-
-// TODO: test it
-function _testMax(opts, val) {
-  if (!_.isNil(opts.max) && val > opts.max) {
-    _throwUnprocessableRequestError(`${opts.name} must be less than or equal to ${opts.max}`);
-  }
-}
-
-// TODO: test it
-function _throwUnprocessableRequestError(message) {
-  throw new _CustomErrorType(message);
-}
+module.exports = ParamsProcessor;

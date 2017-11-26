@@ -3,16 +3,17 @@
 const _          = require('lodash');
 const moment     = require('moment');
 const should     = require('should');
-const rewire     = require('rewire');
-const paramsProc = rewire('../src/params-processor');
+const ParamsProc = require('../src/params-processor');
 
 describe('params-processor', () => {
+  let _instance;
+
   function registerParseParamTest({ parseFnName, testName, opts, output, expected }) {
     it(testName, () => {
       if (expected instanceof Error) {
-        should(() => paramsProc[parseFnName](opts, output)).throw(expected.message);
+        should(() => _instance[parseFnName](opts, output)).throw(expected.message);
       } else {
-        paramsProc[parseFnName](opts, output);
+        _instance[parseFnName](opts, output);
         should(output).eql(expected);
       }
     });
@@ -66,31 +67,13 @@ describe('params-processor', () => {
     }
   }
 
-  describe('registerCustomErrorType', () => {
-    function test(expected) {
-      let actual = paramsProc.__get__('_CustomErrorType');
-      should(actual).eql(expected);
-    }
-
-    afterEach(() => {
-      paramsProc.__set__('_CustomErrorType', Error);
-    });
-
-    it('should use defaul Error type when register function is not called', () => {
-      test(Error);
-    });
-
-    it('should use CustomError type when register function is called', () => {
-      let CustomErrorType = () => {};
-      paramsProc.registerCustomErrorType(CustomErrorType);
-
-      test(CustomErrorType);
-    });
+  beforeEach(() => {
+    _instance = new ParamsProc(Error);
   });
 
   describe('getEmptyParams', () => {
     function test(params, expected) {
-      let actual = paramsProc.getEmptyParams(params);
+      let actual = _instance.getEmptyParams(params);
       should(actual).eql(expected);
     }
 
@@ -117,7 +100,7 @@ describe('params-processor', () => {
 
   describe('getEmptyDataObject', () => {
     function test(params, expected) {
-      let actual = paramsProc.getEmptyDataObject(params);
+      let actual = _instance.getEmptyDataObject(params);
       should(actual).eql(expected);
     }
 
@@ -132,7 +115,7 @@ describe('params-processor', () => {
 
   describe('parseDataObject', () => {
     function test(opts, data, expected) {
-      paramsProc.parseDataObject(opts, data);
+      _instance.parseDataObject(opts, data);
       should(data).eql(expected);
     }
 
