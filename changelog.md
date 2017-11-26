@@ -1,3 +1,8 @@
+# <sub>v1.1.1</sub>
+#### _Nov. 26, 2017_
+
+  * Fix package.json, add `src` folder to `files` section.
+
 # <sub>v1.1.0</sub>
 #### _Nov. 25, 2017_
 
