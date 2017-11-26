@@ -4,7 +4,8 @@
   "description": "Node.js parameters parser/validator/ mongodb/sequelize filter builder",
   "main": "index.js",
   "files": [
-    "index.js"
+    "index.js",
+    "src"
   ],
   "engines": {
     "node": ">=6"
