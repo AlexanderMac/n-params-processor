@@ -2,7 +2,7 @@
 
 const _          = require('lodash');
 const moment     = require('moment');
-const validators = require('./validators');
+const validators = require('n-validators');
 
 let _ErrorType = Error;
 
@@ -99,7 +99,7 @@ class ParamsProcessor {
 
     if (!_.isNil(id)) {
       id = parseInt(id);
-      if (!validators.isValidId(id)) {
+      if (!validators.isId(id)) {
         this._throwUnprocessableRequestError(`${opts.name} must be a valid ID`);
       }
       output[opts.name] = id;
@@ -114,7 +114,7 @@ class ParamsProcessor {
     this._testIsRequired(opts, ids);
 
     if (!_.isNil(ids)) {
-      if (!validators.isAllWithValidId(ids)) {
+      if (!validators.everyIsUniqueId(ids)) {
         this._throwUnprocessableRequestError(`${opts.name} must be a valid list of IDs`);
       }
       output[opts.name] = ids;
@@ -130,7 +130,7 @@ class ParamsProcessor {
     this._testIsRequired(opts, id);
 
     if (!_.isNil(id)) {
-      if (!validators.isValidObjectId(id)) {
+      if (!validators.isObjectId(id)) {
         this._throwUnprocessableRequestError(`${opts.name} must be a valid ObjectId`);
       }
       output[opts.name] = id;
@@ -147,7 +147,7 @@ class ParamsProcessor {
 
     if (!_.isNil($in)) {
       $in = _.map($in, val => parseInt(val));
-      if (!validators.isAllWithValidId($in)) {
+      if (!validators.everyIsUniqueId($in)) {
         this._throwUnprocessableRequestError('in must contain a list of valid IDs');
       }
       let field = opts.field || 'id';
@@ -166,7 +166,7 @@ class ParamsProcessor {
 
     if (!_.isNil($nin)) {
       $nin = _.map($nin, val => parseInt(val));
-      if (!validators.isAllWithValidId($nin)) {
+      if (!validators.everyIsUniqueId($nin)) {
         this._throwUnprocessableRequestError('nin must contain a list of valid IDs');
       }
       let field = opts.field || 'id';
@@ -182,7 +182,7 @@ class ParamsProcessor {
     let fields = opts.from.fields || opts.def;
 
     if (!_.isNil(fields)) {
-      if (!validators.isAllowedStringFields(fields, opts.allowed)) {
+      if (!validators.isFieldsString(fields, opts.allowed)) {
         this._throwUnprocessableRequestError('fields must be a space separated string of fields');
       }
       output.fields = fields.split(' ');
