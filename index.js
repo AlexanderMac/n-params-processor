@@ -1,5 +1,7 @@
 'use strict';
 
-const paramsProcessor = require('./src/params-processor');
-
-module.exports = paramsProcessor;
+module.exports = {
+  consts: require('./src/consts'),
+  QueryBuilder: require('./src/query-builder'),
+  DataBuilder: require('./src/data-builder')
+};

@@ -18,15 +18,18 @@ $ npm run coverage
 
 ### Usage
 ```js
+const DataBuilder  = require('n-params-processor').DataBuilder;
+const QueryBuilder = require('n-params-processor').QueryBuilder;
+
 // Create a new user
 exports.createUser = async (req, res, next) => {
   try {
-    let userData = paramsProc.getEmptyDataObject();
-    paramsProc.parseString({ from: req.body, name: 'firstName', required: true }, userData);
-    paramsProc.parseString({ from: req.body, name: 'lastName', required: true }, userData);
-    paramsProc.parseInt({ from: req.body, name: 'age', min: 0, required: true }, userData);
+    let builder = new DataBuilder({ source: req.body });
+    builder.parseString({ name: 'firstName', required: true });
+    builder.parseString({ name: 'lastName', required: true });
+    builder.parseInt({ name: 'age', min: 0, required: true });
 
-    let user = await usersSrvc.createUser(userData);
+    let user = await usersSrvc.createUser(builder.build());
     res.send(user);
   } catch (err) {
     next(err);
@@ -38,11 +41,11 @@ exports.getPaymentById = async (req, res, next) => {
   try {
     const ALLOWED_FIELDS = 'id firstName lastName age';
     const DEFAULT_FIELDS = 'id firstName lastName';
-    let filter = paramsProc.getEmptyParams();
-    paramsProc.parseId({ from: req.params, required: true }, params.filter);
-    paramsProc.parseFields({ from: req.query, def: DEFAULT_FIELDS, allowed: ALLOWED_FIELDS }, params);
+    let builder = new QueryBuilder();
+    builder.parseId({ from: req.params, required: true });
+    builder.parseFields({ from: req.query, def: DEFAULT_FIELDS, allowed: ALLOWED_FIELDS });
 
-    let user = await usersSrvc.getUser(params);
+    let user = await usersSrvc.getUser(builder.build(consts.DB_PROVIDERS.mongoose));
     res.send(user);
   } catch (err) {
     next(err);
