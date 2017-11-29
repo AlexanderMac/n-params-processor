@@ -24,7 +24,7 @@ class ParamsProcessor {
   }
   */
 
-  parseString({ source, name, allowed, required }) {
+  parseString({ source, name, allowed, min, max, required }) {
     let val = this._validateParamsAndGetValue({ source, name, required });
     if (_.isNil(val)) {
       return;
@@ -34,6 +34,8 @@ class ParamsProcessor {
     if (allowed && !_.includes(allowed, val)) {
       this._throwUnprocessableRequestError(`${name} has incorrect value`);
     }
+    this._testMin({ name, val: val.length, min });
+    this._testMax({ name, val: val.length, max });
     this.dest[name] = val;
   }
 
@@ -63,15 +65,17 @@ class ParamsProcessor {
     this.dest[name] = val;
   }
 
-  parseDate({ source, name, required }) {
+  parseDate({ source, name, format, min, max, required }) {
     let val = this._validateParamsAndGetValue({ source, name, required });
     if (_.isNil(val)) {
       return;
     }
 
-    // TODO: use format
-    val = moment(val, moment.defaultFormat);
+    format = format || moment.defaultFormat;
+    val = moment(val, format);
     this._testIsValidMoment({ name, val });
+    this._testMin({ name, val, min: moment.isMoment(min) ? min : moment(min, format) });
+    this._testMax({ name, val, max: moment.isMoment(max) ? max : moment(max, format) });
     this.dest[name] = val;
   }
 
@@ -88,6 +92,7 @@ class ParamsProcessor {
     this.dest[name] = val;
   }
 
+  // TODO: join with queryBuilder parseIn, parseNin
   parseIdList({ source, name, required }) {
     let val = this._validateParamsAndGetValue({ source, name, required });
     if (_.isNil(val)) {

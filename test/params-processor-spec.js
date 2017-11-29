@@ -79,6 +79,20 @@ describe('params-processor', () => {
 
     registerParseParamTest({
       parseFnName,
+      testName: 'should throw Error when op.min is defined and provided val.length is less than min',
+      params: getParams({ min: 3 }),
+      expected: new Error('login must be greater than or equal to 3')
+    });
+
+    registerParseParamTest({
+      parseFnName,
+      testName: 'should throw Error when max is defined and provided val.length is greater than max',
+      params: getParams({ max: 1 }),
+      expected: new Error('login must be less than or equal to 1')
+    });
+
+    registerParseParamTest({
+      parseFnName,
       testName: 'should set parsed value to instance.dest when pameter is valid and val is an empty string',
       params: getParams({ source: { login: '' }}),
       expected: { login: '' }
@@ -205,7 +219,28 @@ describe('params-processor', () => {
 
     registerParseParamTest({
       parseFnName,
-      testName: 'should set parsed value to instance.dest when parameter is valid and val is zero',
+      testName: 'should throw Error when op.min is defined and provided val is less than min',
+      params: getParams({ min: '1998-11-08' }),
+      expected: new Error('birthDate must be greater than or equal to Sun Nov 08 1998 00:00:00 GMT+0700')
+    });
+
+    registerParseParamTest({
+      parseFnName,
+      testName: 'should throw Error when max is defined and provided val is greater than max',
+      params: getParams({ max: '1998-11-06' }),
+      expected: new Error('birthDate must be less than or equal to Fri Nov 06 1998 00:00:00 GMT+0700')
+    });
+
+    registerParseParamTest({
+      parseFnName,
+      testName: 'should set parsed value to instance.dest when parameter is valid and format is provided',
+      params: getParams({ format: 'YYYY-MM-DD' }),
+      expected: { birthDate: moment('1998-11-07', 'YYYY-MM-DD') }
+    });
+
+    registerParseParamTest({
+      parseFnName,
+      testName: 'should set parsed value to instance.dest when parameter is valid',
       params: getParams(),
       expected: { birthDate: moment('1998-11-07', moment.defaultFormat) }
     });
