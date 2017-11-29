@@ -1,10 +1,6 @@
 'use strict';
 
-const DB_PROVIDERS = {
+module.exports = {
   mongoose: 'mongoose',
   sequelize: 'sequelize'
-};
-
-module.exports = {
-  DB_PROVIDERS
 };
