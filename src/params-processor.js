@@ -1,14 +1,14 @@
 'use strict';
 
-const _          = require('lodash');
-const moment     = require('moment');
-const validators = require('n-validators');
+const _       = require('lodash');
+const parsers = require('./parsers');
 
 let _ErrorType = Error;
 
 class ParamsProcessor {
   static registerErrorType(ErrorType) {
     _ErrorType = ErrorType;
+    parsers.BaseParser.registerErrorType(ErrorType);
   }
 
   constructor({ source, dest } = {}) {
@@ -16,112 +16,50 @@ class ParamsProcessor {
     this.dest = dest;
   }
 
-  /* TODO: not implemented
-  // TODO: test it
-  // TODO: implement it
-  parse() {
-
-  }
-  */
-
-  parseString({ source, name, allowed, min, max, required }) {
-    let val = this._validateParamsAndGetValue({ source, name, required });
-    if (_.isNil(val)) {
-      return;
-    }
-
-    val = val.toString();
-    if (allowed && !_.includes(allowed, val)) {
-      this._throwUnprocessableRequestError(`${name} has incorrect value`);
-    }
-    this._testMin({ name, val: val.length, min });
-    this._testMax({ name, val: val.length, max });
-    this.dest[name] = val;
-  }
-
-  parseInt({ source, name, min, max, required }) {
-    let val = this._validateParamsAndGetValue({ source, name, required });
-    if (_.isNil(val)) {
-      return;
-    }
-
-    val = parseInt(val);
-    this._testNotIsNaN({ name, val });
-    this._testMin({ name, val, min });
-    this._testMax({ name, val, max });
-    this.dest[name] = val;
-  }
-
-  parseFloat({ source, name, min, max, required }) {
-    let val = this._validateParamsAndGetValue({ source, name, required });
-    if (_.isNil(val)) {
-      return;
-    }
-
-    val = parseFloat(val);
-    this._testNotIsNaN({ name, val });
-    this._testMin({ name, val, min });
-    this._testMax({ name, val, max });
-    this.dest[name] = val;
-  }
-
-  parseDate({ source, name, format, min, max, required }) {
-    let val = this._validateParamsAndGetValue({ source, name, required });
-    if (_.isNil(val)) {
-      return;
-    }
-
-    format = format || moment.defaultFormat;
-    val = moment(val, format);
-    this._testIsValidMoment({ name, val });
-    this._testMin({ name, val, min: moment.isMoment(min) ? min : moment(min, format) });
-    this._testMax({ name, val, max: moment.isMoment(max) ? max : moment(max, format) });
-    this.dest[name] = val;
-  }
-
-  parseId({ source, name, required }) {
-    let val = this._validateParamsAndGetValue({ source, name, required });
-    if (_.isNil(val)) {
-      return;
-    }
-
-    val = parseInt(val);
-    if (!validators.isId(val)) {
-      this._throwUnprocessableRequestError(`${name} must be a valid ID`);
-    }
-    this.dest[name] = val;
-  }
-
-  // TODO: join with queryBuilder parseIn, parseNin
-  parseIdList({ source, name, required }) {
-    let val = this._validateParamsAndGetValue({ source, name, required });
-    if (_.isNil(val)) {
-      return;
-    }
-
-    if (!validators.everyIsUniqueId(val)) {
-      this._throwUnprocessableRequestError(`${name} must be a valid list of IDs`);
-    }
-    this.dest[name] = val;
-  }
-
-  parseObjectId({ source, name, required }) {
-    let val = this._validateParamsAndGetValue({ source, name, required });
-    if (_.isNil(val)) {
-      return;
-    }
-
-    if (!validators.isObjectId(val)) {
-      this._throwUnprocessableRequestError(`${name} must be a valid ObjectId`);
-    }
-    this.dest[name] = val;
-  }
-
-  _validateParamsAndGetValue({ source, name, required }) {
-    this._testParameterIsProvided({ param: name, paramName: 'name' });
+  parseString({ source, name, outName, min, max, allowed, required }) {
     let val = this._getValue({ source, name });
-    this._testIsRequired({ required, name, val });
-    return val;
+    this.dest[outName || name] = parsers.StringParser.parse({ val, name, min, max, allowed, required });
+  }
+
+  parseInt({ source, name, outName, min, max, allowed, required }) {
+    let val = this._getValue({ source, name });
+    this.dest[outName || name] = parsers.IntParser.parse({ val, name, min, max, allowed, required });
+  }
+
+  parseFloat({ source, name, outName, min, max, allowed, required }) {
+    let val = this._getValue({ source, name });
+    this.dest[outName || name] = parsers.FloatParser.parse({ val, name, min, max, allowed, required });
+  }
+
+  parseId({ source, name, outName, min, max, allowed, required }) {
+    let val = this._getValue({ source, name });
+    this.dest[outName || name] = parsers.IdParser.parse({ val, name, min, max, allowed, required });
+  }
+
+  parseDate({ source, name, outName, format, min, max, required }) {
+    let val = this._getValue({ source, name });
+    this.dest[outName || name] = parsers.DateParser.parse({ val, name, format, min, max, required });
+  }
+
+  parseObjectId({ source, name, outName, required }) {
+    let val = this._getValue({ source, name });
+    this.dest[outName || name] = parsers.ObjectIdParser.parse({ val, name, required });
+  }
+
+  parseJson({ source, name, outName, required }) {
+    let val = this._getValue({ source, name });
+    this.dest[outName || name] = parsers.JsonParser.parse({ val, name, required });
+  }
+
+  parseBool({ source, name, outName, required }) {
+    let val = this._getValue({ source, name });
+    this.dest[outName || name] = parsers.BoolParser.parse({ val, name, required });
+  }
+
+  parseArray({ source, name, outName, required, items, itemType }) {
+    let val = this._getValue({ source, name });
+    let ItemParser = parsers[`${itemType}Parser`];
+    this.dest[outName || name] = parsers.ArrayParser.parse({ val, name, required, items, ItemParser });
   }
 
   _getValue({ source, name }) {
@@ -129,42 +67,28 @@ class ParamsProcessor {
     return currentSource[name];
   }
 
-  _testParameterIsProvided({ param, paramName }) {
+  // TODO: obsolete
+  _validateParamsAndGetValue({ source, name, required }) {
+    let val = this._getValue({ source, name });
+    this._validateRequired({ required, name, val });
+    return val;
+  }
+
+  // TODO: obsolete
+  _validateParameterProvided({ param, paramName }) {
     if (_.isNil(param)) {
       throw new Error(`Incorrect parse parameter, ${paramName} is not provided`);
     }
   }
 
-  _testIsRequired({ name, val, required }) {
+  // TODO: obsolete
+  _validateRequired({ name, val, required }) {
     if (required && _.isNil(val)) {
       this._throwUnprocessableRequestError(`${name} is required`);
     }
   }
 
-  _testNotIsNaN({ name, val }) {
-    if (_.isNaN(val)) {
-      this._throwUnprocessableRequestError(`${name} must be a number`);
-    }
-  }
-
-  _testIsValidMoment({ name, val }) {
-    if (!moment(val).isValid()) {
-      this._throwUnprocessableRequestError(`${name} must be a date`);
-    }
-  }
-
-  _testMin({ name, val, min }) {
-    if (!_.isNil(min) && val < min) {
-      this._throwUnprocessableRequestError(`${name} must be greater than or equal to ${min}`);
-    }
-  }
-
-  _testMax({ name, val, max }) {
-    if (!_.isNil(max) && val > max) {
-      this._throwUnprocessableRequestError(`${name} must be less than or equal to ${max}`);
-    }
-  }
-
+  // TODO: obsolete
   _throwUnprocessableRequestError(message) {
     throw new _ErrorType(message);
   }

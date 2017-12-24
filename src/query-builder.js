@@ -35,7 +35,7 @@ class QueryBuilder extends ParamsProc {
     if (_.isNil(val)) {
       return;
     }
-    this._testParameterIsProvided({ param: field, paramName: 'field' });
+    this._validateParameterProvided({ param: field, paramName: 'field' });
 
     val = _.map(val, item => parseInt(item));
     if (!validators.everyIsUniqueId(val)) {

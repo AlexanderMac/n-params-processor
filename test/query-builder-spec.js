@@ -32,14 +32,6 @@ describe('query-builder', () => {
     registerParseParamTest({
       parseFnName,
       dataFieldName,
-      testName: 'should throw Error when name is not provided',
-      params: getParams({ name: undefined }),
-      expected: new Error('Incorrect parse parameter, name is not provided')
-    });
-
-    registerParseParamTest({
-      parseFnName,
-      dataFieldName,
       testName: 'should throw Error when required is true and val is undefined',
       params: getParams({ source: { login: undefined }, required: true }),
       expected: new Error('login is required')
@@ -212,7 +204,7 @@ describe('query-builder', () => {
     registerParseParamTest({
       parseFnName,
       dataFieldName,
-      testName: 'should don\'t chane instance.fields when required is false and val is undefined',
+      testName: 'should don\'t change instance.fields when required is false and val is undefined',
       params: getParams({ source: { fields: null }, required: false }),
       expected: 'id'
     });

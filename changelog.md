@@ -8,12 +8,12 @@
   * Rename `processFloatParam` to `parseFloat`.
   * Rename `processDateParam` to `parseDate`.
   * Rename `processId` to `parseId`.
-  * Rename `processIdList` to `parseIdList`.
   * Rename `processObjectId` to `parseObjectId`.
-  * Rename `processIn` to `parseIn`.
-  * Rename `processNin` to `parseNin`.
+  * Rename `processIn` to `parseIn`. TODO
+  * Rename `processNin` to `parseNin`. TODO
   * Rename `processFields` to `parseFields`.
   * Remove `processFilterByName`.
+  * Replace `parseIdList` to `parseArray` with `itemType = 'Id'`.
 
 # <sub>v1.1.1</sub>
 #### _Nov. 26, 2017_
