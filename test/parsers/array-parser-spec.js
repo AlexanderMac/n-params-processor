@@ -121,7 +121,7 @@ describe('parsers / array-parser', () => {
     }
 
     beforeEach(() => {
-      sinon.stub(IntParser, 'parse').callsFake(opts => opts.val);
+      sinon.stub(IntParser, 'parse').callsFake(params => params.val);
     });
 
     afterEach(() => {

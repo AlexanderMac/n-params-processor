@@ -5,19 +5,19 @@ const moment     = require('moment');
 const BaseParser = require('./base-parser');
 
 class DateParser extends BaseParser {
-  static parse(opts) {
-    let instance = new DateParser(opts);
+  static parse(params) {
+    let instance = new DateParser(params);
     return instance.parse();
   }
 
-  constructor(opts) {
-    super(opts);
-    this.format = opts.format || moment.defaultFormat;
+  constructor(params) {
+    super(params);
+    this.format = params.format || moment.defaultFormat;
     if (this.min) {
-      this.min = moment.isMoment(opts.min) ? opts.min : moment(opts.min, this.format);
+      this.min = moment.isMoment(params.min) ? params.min : moment(params.min, this.format);
     }
     if (this.max) {
-      this.max = moment.isMoment(opts.max) ? opts.max : moment(opts.max, this.format);
+      this.max = moment.isMoment(params.max) ? params.max : moment(params.max, this.format);
     }
   }
 

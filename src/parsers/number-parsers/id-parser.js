@@ -3,13 +3,13 @@
 const NumberParser = require('./number-parser');
 
 class IdParser extends NumberParser {
-  static parse(opts) {
-    let instance = new IdParser(opts);
+  static parse(params) {
+    let instance = new IdParser(params);
     return instance.parse();
   }
 
-  constructor(opts) {
-    super(opts);
+  constructor(params) {
+    super(params);
     this.min = this.min >= 1 ? this.min : 1;
   }
 

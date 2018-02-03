@@ -4,15 +4,14 @@ const _          = require('lodash');
 const BaseParser = require('./base-parser');
 
 class ArrayParser extends BaseParser {
-  static parse(opts) {
-    let instance = new ArrayParser(opts);
+  static parse(params) {
+    let instance = new ArrayParser(params);
     return instance.parse();
   }
 
-  constructor(opts) {
-    super(opts);
-    this.items = opts.items;
-    this.ItemParser = opts.ItemParser;
+  constructor(params) {
+    super(params);
+    this.ItemParser = params.ItemParser;
   }
 
   parse() {

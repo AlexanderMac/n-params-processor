@@ -3,8 +3,8 @@
 const NumberParser = require('./number-parser');
 
 class IntParser extends NumberParser {
-  static parse(opts) {
-    let instance = new IntParser(opts);
+  static parse(params) {
+    let instance = new IntParser(params);
     return instance.parse();
   }
 

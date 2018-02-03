@@ -4,8 +4,8 @@ const _          = require('lodash');
 const BaseParser = require('../base-parser');
 
 class NumberParser extends BaseParser {
-  static parse(opts) {
-    let instance = new NumberParser(opts);
+  static parse(params) {
+    let instance = new NumberParser(params);
     return instance.parse();
   }
 
