@@ -2,6 +2,7 @@
 
 const _          = require('lodash');
 const BaseParser = require('./base-parser');
+const parsers    = require('./');
 
 class ArrayParser extends BaseParser {
   static parse(params) {
@@ -9,9 +10,9 @@ class ArrayParser extends BaseParser {
     return instance.parse();
   }
 
-  constructor(params) {
+  constructor({ itemType, ...params }) {
     super(params);
-    this.ItemParser = params.ItemParser;
+    this.ItemParser = parsers[`${itemType}Parser`];
   }
 
   parse() {

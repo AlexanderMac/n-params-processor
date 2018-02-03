@@ -3,6 +3,7 @@
 const _           = require('lodash');
 const sinon       = require('sinon');
 const should      = require('should');
+const nassert     = require('n-assert');
 const testUtil    = require('../test-util');
 const BaseParser  = require('../../src/parsers/base-parser');
 const IntParser   = require('../../src/parsers/number-parsers/int-parser');
@@ -18,7 +19,7 @@ describe('parsers / array-parser', () => {
     let def = {
       val: [1, 2, 3],
       name: 'clients',
-      ItemParser: IntParser
+      itemType: 'Int'
     };
     return _.extend(def, ex);
   }
@@ -26,15 +27,17 @@ describe('parsers / array-parser', () => {
   describe('constructor', () => {
     function test({ params, expected }) {
       let instance = new ArrayParser(params);
-      should(instance.val).equal(expected.val);
-      should(instance.name).equal(expected.name);
-      should(instance.items).equal(expected.items);
-      should(instance.ItemParser).equal(expected.ItemParser);
+      nassert.assert(instance, expected, true);
     }
 
-    it('should create an instance and set items, ItemParser', () => {
+    it('should create an instance and set fields', () => {
       let params = getParams();
-      let expected = params;
+      let expected = {
+        val: [1, 2, 3],
+        name: 'clients',
+        required: false,
+        ItemParser: IntParser
+      };
 
       test({ params, expected });
     });
@@ -91,20 +94,20 @@ describe('parsers / array-parser', () => {
     registerTest({
       methodName: '_validateItemParser',
       testName: 'should throw error when ItemParser is undefined',
-      params: getParams({ ItemParser: undefined }),
+      params: getParams({ itemType: undefined }),
       expected: new Error('Invalid itemType')
     });
 
     registerTest({
       methodName: '_validateItemParser',
       testName: 'should throw error when ItemParser is null',
-      params: getParams({ ItemParser: null }),
+      params: getParams({ itemType: null }),
       expected: new Error('Invalid itemType')
     });
 
     registerTest({
       methodName: '_validateItemParser',
-      testName: 'shouldn\'t throw error when val is not a nil',
+      testName: 'shouldn\'t throw error when val is not nil',
       params: getParams()
     });
   });
@@ -116,8 +119,7 @@ describe('parsers / array-parser', () => {
       let actual = instance._parseItem(params);
       should(actual).eql(expected);
 
-      should(IntParser.parse.calledOnce).equal(true);
-      should(IntParser.parse.calledWith(expectedArgs)).equal(true);
+      nassert.validateCalledFn({ srvc: IntParser, fnName: 'parse', expectedArgs });
     }
 
     beforeEach(() => {
