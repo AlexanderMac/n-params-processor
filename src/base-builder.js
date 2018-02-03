@@ -20,14 +20,15 @@ class ParsersProcessor {
   _registerOneParseFunction(parserName) {
     let parseFnName = this._getParseFunctionName(parserName);
 
-    this[parseFnName] = ({ source, name, az, ...params }) => {
-      params = _.chain(params)
+    this[parseFnName] = (params) => {
+      let parserParams = _.chain(params)
         .cloneDeep()
-        .extend({ val: this._getValue({ source, name }) })
+        .omit(['source', 'name', 'az'])
+        .extend({ val: this._getValue({ source: params.source, name: params.name }) })
         .value();
-      let parsedVal = parsers[parserName].parse(params);
+      let parsedVal = parsers[parserName].parse(parserParams);
 
-      return this._processResult({ name, az: az, parsedVal });
+      return this._processResult({ name: params.name, az: params.az, parsedVal });
     };
   }
 

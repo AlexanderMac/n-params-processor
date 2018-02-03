@@ -7,8 +7,7 @@
     "ecmaVersion": 2017,
     "sourceType": "module",
     "ecmaFeatures": {
-      "impliedStrict": false,
-      "experimentalObjectRestSpread": true
+      "impliedStrict": false
     }
   },
   "extends": "eslint:recommended",

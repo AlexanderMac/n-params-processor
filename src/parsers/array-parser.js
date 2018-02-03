@@ -10,9 +10,9 @@ class ArrayParser extends BaseParser {
     return instance.parse();
   }
 
-  constructor({ itemType, ...params }) {
+  constructor(params) {
     super(params);
-    this.ItemParser = parsers[`${itemType}Parser`];
+    this.ItemParser = parsers[`${params.itemType}Parser`];
   }
 
   parse() {
