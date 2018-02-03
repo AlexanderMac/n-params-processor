@@ -36,6 +36,20 @@ describe('parsers / base-parser', () => {
 
       test({ params, expected });
     });
+
+    it('should create an instance and initialize internal fields (without optional fields)', () => {
+      let params = {
+        val: 'user1',
+        name: 'login'
+      };
+      let expected = {
+        val: 'user1',
+        name: 'login',
+        required: false
+      };
+
+      test({ params, expected });
+    });
   });
 
   describe('parse', () => {

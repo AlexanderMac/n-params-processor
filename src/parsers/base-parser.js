@@ -12,10 +12,16 @@ class BaseParser {
   constructor({ val, name, required, min, max, allowed } = {}) {
     this.val = val;
     this.name = name;
-    this.required = required;
-    this.min = min;
-    this.max = max;
-    this.allowed = allowed;
+    this.required = !!required;
+    if (!_.isNil(min)) {
+      this.min = min;
+    }
+    if (!_.isNil(max)) {
+      this.max = max;
+    }
+    if (!_.isNil(allowed)) {
+      this.allowed = allowed;
+    }
   }
 
   parse() {
