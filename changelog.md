@@ -1,19 +1,13 @@
 # <sub>v2.0.0-alpha</sub>
 #### _Nov. 26, 2017_
 
-  * Rename `getEmptyObjectData` to `getEmptyDataObject`.
-  * Rename `parseObjectData` to `parseDataObject`.
-  * Rename `processStringParam` to `parseString`.
-  * Rename `processIntParam` to `parseInt`.
-  * Rename `processFloatParam` to `parseFloat`.
-  * Rename `processDateParam` to `parseDate`.
-  * Rename `processId` to `parseId`.
-  * Rename `processObjectId` to `parseObjectId`.
-  * Rename `processIn` to `parseIn`. TODO
-  * Rename `processNin` to `parseNin`. TODO
-  * Rename `processFields` to `parseFields`.
-  * Remove `processFilterByName`.
-  * Replace `parseIdList` to `parseArray` with `itemType = 'Id'`.
+  * Parameters processor class is devided into three classes: `BaseBuilder` and two its successors `QueryBuilder` and `DataBuilder`.
+  * `QueryBuilder` has two successors `MongooseQueryBuilder` and `SequelizeQueryBuilder`. So in v2 `n-params-processor` can be used for creating queries for two databases.
+  * All parsers moved to own classes.
+  * All _parse_ methods renamed from _process<Type>_ to _parse<Type>_: `parseInt` for example.
+  * No output parameter anymore. Builders contain internal `data` field, to return built data, `build` method should be used.
+  * `QueryBuilder.parse<Type>` methods accepts `op` (operation) parameter.
+  * Added `parseArray` for parsin array like parameters.
 
 # <sub>v1.1.1</sub>
 #### _Nov. 26, 2017_

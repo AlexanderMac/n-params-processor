@@ -1,5 +1,5 @@
 # n-params-processor
-Node.js parameters parser/validator mongodb/sequelize filter builder.
+Node.js parameters parser/validator and mongodb/sequelize query/data object builder.
 
 [![Build Status](https://travis-ci.org/AlexanderMac/n-params-processor.svg?branch=master)](https://travis-ci.org/AlexanderMac/n-params-processor)
 [![npm version](https://badge.fury.io/js/n-params-processor.svg)](https://badge.fury.io/js/n-params-processor)
@@ -7,45 +7,73 @@ Node.js parameters parser/validator mongodb/sequelize filter builder.
 ### Commands
 ```bash
 # Add to project
-$ npm i -S n-params-processor
-# Run tests
-$ npm test
-# Run lint tool
-$ npm run lint
-# Run coverage tool
-$ npm run coverage
+$ npm i n-params-processor
 ```
 
 ### Usage
 ```js
-const DataBuilder  = require('n-params-processor').DataBuilder;
-const QueryBuilder = require('n-params-processor').QueryBuilder;
+const MongooseQB  = require('n-params-processor').MongooseQB;
+const DataBuilder = require('n-params-processor').DataBuilder;
 
-// Create a new user
-exports.createUser = async (req, res, next) => {
+/* Request:
+- GET /api/users/58ea5b07973ab04f88def3fa?fields=firstName,lastName&page=5&count=10&sortBy=firstName
+*/
+exports.getUserById = async (req, res, next) => {
   try {
-    let builder = new DataBuilder({ source: req.body });
-    builder.parseString({ name: 'firstName', required: true });
-    builder.parseString({ name: 'lastName', required: true });
-    builder.parseInt({ name: 'age', min: 0, required: true });
+    const ALLOWED_FIELDS = 'id firstName lastName age';
+    const DEFAULT_FIELDS = 'id firstName lastName';
+    let builder = new MongooseQB({
+      source: req.query
+    });
+    builder.parseId({ from: req.params, name: 'userId', az: '_id', required: true });
+    builder.parseFields({ def: DEFAULT_FIELDS, allowed: ALLOWED_FIELDS });
+    builder.parsePagination();
+    builder.parseSorting();
 
-    let user = await usersSrvc.createUser(builder.build());
+    let query = builder.build();
+    /* query is an object: {
+      filter: {
+        _id: '58ea5b07973ab04f88def3fa'
+      },
+      fields: 'firstName lastName',
+      pagination: { page: 5, count: 10 },
+      sorting: { sortBy: 'firstName', sortDirection: 'asc' }
+    }*/
+    let user = await usersSrvc.getUser(query);
     res.send(user);
   } catch (err) {
     next(err);
   }
 };
 
-// Get an existing user by id
-exports.getPaymentById = async (req, res, next) => {
+/* Request:
+- POST /api/users
+  BODY: {
+    firstName: 'John',
+    age: '25',
+    roles: ['user']
+  }
+*/
+exports.createUser = async (req, res, next) => {
   try {
-    const ALLOWED_FIELDS = 'id firstName lastName age';
-    const DEFAULT_FIELDS = 'id firstName lastName';
-    let builder = new QueryBuilder();
-    builder.parseId({ from: req.params, required: true });
-    builder.parseFields({ from: req.query, def: DEFAULT_FIELDS, allowed: ALLOWED_FIELDS });
+    let builder = new DataBuilder({
+      source: req.body,
+      data: { creator: req.user.userId }
+    });
+    builder.parseString({ name: 'firstName', max: 10, required: true });
+    builder.parseString({ name: 'lastName', max: 20, def: 'not prodived' });
+    builder.parseInt({ name: 'age', min: 18, max: 55, required: true });
+    builder.parseArray({ name: 'roles', allowed: ['user', 'admin', 'owner'], itemType: 'string' });
 
-    let user = await usersSrvc.getUser(builder.build(consts.DB_PROVIDERS.mongoose));
+    let userData = builder.build();
+    /* userData is an object: {
+      creator: '58ea5b07973ab04f88def3fa', // base value
+      firstName: 'John',
+      lastName: 'not prodived', // used default value
+      age: 25, // age converted to Number
+      roles: ['user']
+    }*/
+    let user = await usersSrvc.createUser(userData);
     res.send(user);
   } catch (err) {
     next(err);
@@ -53,89 +81,98 @@ exports.getPaymentById = async (req, res, next) => {
 };
 ```
 
-### API
-- **registerCustomErrorType(CustomErrorType)**<br>
-Registers the custom error type which should be thrown in the case of invalid parameres.
+### BaseBuilder API
+- **static registerCustomErrorType(ErrorType)**<br>
+Registers the custom error type. The error of this type will be trown in the case of invalid parameres.
 
-  - `CustomErrorType` - error type, instance of `Error` object.
+  - `ErrorType`: error type, instance of `Error` object.
 
-- **getEmptyParams()**<br>
-Returns empty object with two fields: `filter` and `fields`.
+- **parse<Type>(params)**<br>
+Common parameters of `parse<Type>` method.
 
-- **getEmptyDataObject(data)**<br>
-Returns extended by data empty object.
+  - `source`: source object, if not defined `instance.source` is used.
+  - `name`: parameter name. 
+  - `az`: new name.
+  - `def`: default value, is used when parameter value is nil.
+  - `required` - indicates that parameter value is mandatory.
+  - `min`: minimum parameter value length.
+  - `max`: maximum parameter value length.
+  - `allowed` - validates that `allowed` array includes parameter value.
 
-  - `data` - object to extend.
+- **parseString(params)**<br>
+Parses, converts to `String` and validates parameter value.
 
-- **parseDataObject(opts, data)**<br>
-Takes allowed fields `opts.allowed` from `opts.from` and extends `data` by allowed fields.
+where `params` is an object with the following fields:
 
-  - `opts` - options (`from` - source object, `allowed` - an array of allowed fields).
-  - `data` - object to extend.
+  - `source`: source object, if not defined `instance.source` is used.
+  - `name`: parameter name. 
+  - `az`: new name.
+  - `def`: default value, is used when parameter value is nil.
+  - `required` - indicates that parameter value is mandatory.
+  - `min`: minimum parameter value length.
+  - `max`: maximum parameter value length.
+  - `allowed` - validates that `allowed` array includes parameter value.
 
-- **parseString(opts, output)**<br>
-Parses, converts to `String` and validates parameter. Adds output field to `output` object.
+- **parseDate(params, output)**<br>
+Parses, converts to `Date` and validates parameter value.
+TODO
 
-  - `opts` - options (`from` - source object, `name` - parameter name, `required` - indicates that parameter is mandatory, `allowed` - validates that parameter value is in `allowed` array).
-  - `output` - output object.
+- **parseJson(params)**<br>
+Parses, converts to `JSON` and validates parameter value.
+TODO
 
-- **parseInt(opts, output)**<br>
-Parses, converts to `IntegerNumber` and validates parameter. Adds output field to `output` object.
+- **parseBool(params)**<br>
+Parses, converts to `Boolean` and validates parameter value.
+TODO
 
-  - `opts` - options (`from` - source object, `name` - parameter name, `required` - indicates that parameter is mandatory, `min` - the lowest possible value, `max` - the largest possible value).
-  - `output` - output object.
+- **parseNumber(params)**<br>
+Parses, converts to `Number` and validates parameter value.
+TODO
 
-- **parseFloat(opts, output)**<br>
-Parses, converts to `FloatNumber` and validates parameter. Adds output field to `output` object.
+- **parseInt(params)**<br>
+Parses, converts to `IntegerNumber` and validates parameter.
 
-  - `opts` - options (`from` - source object, `name` - parameter name, `required` - indicates that parameter is mandatory, `min` - the lowest possible value, `max` - the largest possible value).
-  - `output` - output object.
+  - `min` - the lowest possible value.
+  - `max` - the largest possible value).
+  TODO
 
-- **parseDate(opts, output)**<br>
-Parses, converts to `Date` and validates parameter. Adds output field to `output` object.<br>
-*The date must be in YYYY-MM-DD HH:mm:ss format.*
+- **parseFloat(params)**<br>
+Parses, converts to `FloatNumber` and validates parameter.
+  TODO
 
-  - `opts` - options (`from` - source object, `name` - parameter name, `required` - indicates that parameter is mandatory).
-  - `output` - output object.
+- **parseRegexp(params)**<br>
+Parses and validates parameter.
+TODO
 
-- **parseId(opts, output)**<br>
-Parses, converts to `id` and validates parameter. Adds output field to `output` object.
-*RDBMS record id - positive integer.*
+- **parseObjectId(params)**<br>
+Parses, converts to `ObjectId` and validates parameter.
+TODO
 
-  - `opts` - options (`from` - source object, `name` - parameter name (`id` be default), `required` - indicates that parameter is mandatory).
-  - `output` - output object.
+- **parseArray**
+Parses, converts to `itemType` and validates parameter.
+TODO
 
-- **parseIdList(opts, output)**<br>
-Parses, converts to `IdList` and validates parameter. Adds output field to `output` object.
-*RDBMS record id - positive integer.*
+### DataBuilder API
+TODO
 
-  - `opts` - options (`from` - source object, `name` - parameter name, `required` - indicates that parameter is mandatory).
-  - `output` - output object.
+### QueryBuilder (MongooseQueryBuilder, SequelizeQueryBuilder) API
+TODO
 
-- **parseObjectId(opts, output)**<br>
-Parses, converts to `ObjectId` and validates parameter. Adds output field to `output` object.
-*MongoDb document objectId.*
+- **parseFields(params, output)**<br>
+Parses, converts and validates fields parameter.
 
-  - `opts` - options (`from` - source object, `name` - parameter name, `required` - indicates that parameter is mandatory).
-  - `output` - output object.
+   - `from.fields` - space separated string of parsing fields.
+   - `def` - space separated string of default fields.
+   - `allowed` - space separated string of allowed fields.
 
-- **parseIn(opts, output)**<br>
-Parses, converts to `$in` query and validates parameter. Adds output field to `output` object.
+- **parsePagination(params, output)**<br>
+TODO
 
-  - `opts` - options (`from` - source object, `name` - parameter name (`in` by default), `required` - indicates that parameter is mandatory).
-  - `output` - output object.
+- **parseSorting(params, output)**<br>
+TODO
 
-- **parseNin(opts, output)**<br>
-Parses, converts to `$notIn` query and validates parameter. Adds output field to `output` object.
+- **Build(params, output)**<br>
 
-  - `opts` - options (`from` - source object, `name` - parameter name (`nin` by default), `required` - indicates that parameter is mandatory).
-  - `output` - output object.
-
-- **parseFields(opts, output)**<br>
-Parses, converts and validates fields parameter. Adds output field to `output` object.
-
-  - `opts` - options (`from.fields` - space separated string of parsing fields, `def` - space separated string of default fields, `allowed` - space separated string of allowed fields).
-  - `output` - output object.
 
 ### Author
 Alexander Mac
