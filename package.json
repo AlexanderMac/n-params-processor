@@ -1,6 +1,6 @@
 {
   "name": "n-params-processor",
-  "version": "2.0.0-alpha-1",
+  "version": "2.0.0-alpha-2",
   "description": "Node.js parameters parser/validator/ mongodb/sequelize filter builder",
   "main": "index.js",
   "files": [
@@ -25,8 +25,10 @@
     "validator",
     "parser",
     "processor",
+    "builder",
     "filter",
-    "builder"
+    "query",
+    "data"
   ],
   "author": "Alexander Mac",
   "license": "MIT",
@@ -40,7 +42,6 @@
   },
   "devDependencies": {
     "eslint": "^4.17.0",
-    "istanbul": "^0.4.5",
     "mocha": "^5.0.0",
     "n-assert": "^3.0.0",
     "nyc": "^11.4.1",
