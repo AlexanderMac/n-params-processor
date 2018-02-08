@@ -36,8 +36,7 @@
   "homepage": "https://github.com/AlexanderMac/n-params-processor#readme",
   "dependencies": {
     "lodash": "^4.17.4",
-    "moment": "^2.20.1",
-    "n-validators": "^2.0.0-alpha-2"
+    "moment": "^2.20.1"
   },
   "devDependencies": {
     "eslint": "^4.17.0",
