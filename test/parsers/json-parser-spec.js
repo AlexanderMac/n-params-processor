@@ -19,6 +19,8 @@ describe('parsers / json-parser', () => {
     function test({ params, expected }) {
       let instance = new JsonParser(params);
 
+      BaseParser.prototype.parse.returns(_.isNil(expected));
+
       if (expected instanceof Error) {
         should(() => instance.parse()).throw(expected);
       } else {

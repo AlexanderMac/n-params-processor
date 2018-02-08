@@ -18,6 +18,7 @@ describe('parsers / base-parser', () => {
       should(instance.val).equal(expected.val);
       should(instance.name).equal(expected.name);
       should(instance.required).equal(expected.required);
+      should(instance.def).equal(expected.def);
       should(instance.min).equal(expected.min);
       should(instance.max).equal(expected.max);
       should(instance.allowed).equal(expected.allowed);
@@ -28,6 +29,7 @@ describe('parsers / base-parser', () => {
         val: 'user1',
         name: 'login',
         required: false,
+        def: 'defUser',
         min: 1,
         max: 9,
         allowed: ['user1', 'user2']
@@ -53,17 +55,52 @@ describe('parsers / base-parser', () => {
   });
 
   describe('parse', () => {
-    function test() {
-      let instance = new BaseParser();
+    function test({ params, expected }) {
+      let instance = new BaseParser(params);
       sinon.stub(instance, '_validateRequired');
 
-      instance.parse();
+      let actual = instance.parse();
+      should(actual).eql(expected.res);
+      should(instance.val).eql(expected.val);
 
       should(instance._validateRequired.calledOnce).equal(true);
     }
 
-    it('should call related methods', () => {
-      test();
+    it('should set instance.val to null and return true when params.val is null and params.def is not provided', () => {
+      let params = {
+        val: null
+      };
+      let expected = {
+        res: true,
+        val: null
+      };
+
+      test({ params, expected });
+    });
+
+    it('should set instance.val to params.def and return true when params.val is null and params.def is provided', () => {
+      let params = {
+        val: null,
+        def: 'defUser'
+      };
+      let expected = {
+        res: true,
+        val: 'defUser'
+      };
+
+      test({ params, expected });
+    });
+
+    it('should return nothing when val is not null', () => {
+      let params = {
+        val: 'user1'
+      };
+      let expected = {
+        res: undefined,
+        val: 'user1'
+      };
+
+      test({ params, expected });
     });
   });
 

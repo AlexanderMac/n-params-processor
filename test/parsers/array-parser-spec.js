@@ -49,6 +49,8 @@ describe('parsers / array-parser', () => {
       sinon.stub(instance, '_validateItemParser');
       sinon.stub(instance, '_parseItem').callsFake(val => val);
 
+      BaseParser.prototype.parse.returns(_.isNil(expected));
+
       let actual = instance.parse();
       should(actual).eql(expected);
 

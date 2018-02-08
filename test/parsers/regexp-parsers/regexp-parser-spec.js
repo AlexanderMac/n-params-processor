@@ -26,6 +26,8 @@ describe('parsers / regexp-parsers / regexp-parser', () => {
       let instance = new RegexpParser(params);
       sinon.stub(instance, '_validate');
 
+      BaseParser.prototype.parse.returns(_.isNil(expected));
+
       let actual = instance.parse();
       should(actual).eql(expected);
 

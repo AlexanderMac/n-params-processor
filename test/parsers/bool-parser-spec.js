@@ -19,6 +19,8 @@ describe('parsers / bool-parser', () => {
     function test({ params, expected }) {
       let instance = new BoolParser(params);
 
+      BaseParser.prototype.parse.returns(_.isNil(expected));
+
       if (expected instanceof Error) {
         should(() => instance.parse()).throw(expected);
       } else {

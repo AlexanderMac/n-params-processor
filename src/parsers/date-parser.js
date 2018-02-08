@@ -22,9 +22,8 @@ class DateParser extends BaseParser {
   }
 
   parse() {
-    super.parse();
-
-    if (_.isNil(this.val)) {
+    let isNilOrDefault = super.parse();
+    if (isNilOrDefault) {
       return this.val;
     }
 

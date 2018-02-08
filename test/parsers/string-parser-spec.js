@@ -28,6 +28,8 @@ describe('parsers / string-parser', () => {
       sinon.stub(instance, '_validateMin');
       sinon.stub(instance, '_validateMax');
 
+      BaseParser.prototype.parse.returns(_.isNil(expected));
+
       let actual = instance.parse();
       should(actual).eql(expected);
 

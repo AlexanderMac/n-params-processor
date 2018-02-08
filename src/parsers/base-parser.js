@@ -9,10 +9,13 @@ class BaseParser {
     _ErrorType = ErrorType;
   }
 
-  constructor({ val, name, required, min, max, allowed } = {}) {
+  constructor({ val, name, required, def, min, max, allowed } = {}) {
     this.val = val;
     this.name = name;
     this.required = !!required;
+    if (!_.isNil(def)) {
+      this.def = def;
+    }
     if (!_.isNil(min)) {
       this.min = min;
     }
@@ -26,6 +29,11 @@ class BaseParser {
 
   parse() {
     this._validateRequired();
+
+    if (_.isNil(this.val)) {
+      this.val = this.def || this.val;
+      return true;
+    }
   }
 
   _validateRequired() {
