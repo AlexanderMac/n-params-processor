@@ -1,9 +1,14 @@
 'use strict';
 
-const _       = require('lodash');
-const parsers = require('./parsers');
+const _          = require('lodash');
+const parsers    = require('./parsers');
+const BaseParser = require('./parsers/base-parser');
 
-class ParsersProcessor {
+class BaseBuilder {
+  static registerCustomErrorType(ErrorType) {
+    BaseParser.registerCustomErrorType(ErrorType);
+  }
+
   constructor({ source, data } = {}) {
     this.source = source;
     this.data = data || {};
@@ -63,4 +68,4 @@ class ParsersProcessor {
   }
 }
 
-module.exports = ParsersProcessor;
+module.exports = BaseBuilder;

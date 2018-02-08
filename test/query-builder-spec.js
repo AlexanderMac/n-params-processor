@@ -181,10 +181,10 @@ describe('query-builder', () => {
   describe('build', () => {
     function test(expected) {
       let instance = new QueryBuilder();
-      sinon.stub(instance, '_buildFilter').returns('builtFilter');
-      sinon.stub(instance, '_buildFields').returns('builtFields');
-      sinon.stub(instance, '_buildPagination').returns('builtPagination');
-      sinon.stub(instance, '_buildSorting').returns('builtSorting');
+      instance._buildFilter = () => 'builtFilter';
+      instance._buildFields = () => 'builtFields';
+      instance._buildPagination = () => 'builtPagination';
+      instance._buildSorting = () => 'builtSorting';
 
       let actual = instance.build();
       should(actual).eql(expected);

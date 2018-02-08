@@ -60,12 +60,6 @@ class QueryBuilder extends BaseBuilder {
     };
   }
 
-  // used for UTs, must be overrided in childs
-  _buildFilter() {}
-  _buildFields() {}
-  _buildPagination() {}
-  _buildSorting() {}
-
   _registerOneParseFunction(parserName) {
     let parseFnName = super._registerOneParseFunction(parserName);
 

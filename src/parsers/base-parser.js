@@ -5,7 +5,7 @@ const _ = require('lodash');
 let _ErrorType = Error;
 
 class BaseParser {
-  static registerErrorType(ErrorType) {
+  static registerCustomErrorType(ErrorType) {
     _ErrorType = ErrorType;
   }
 

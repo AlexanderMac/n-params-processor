@@ -6,6 +6,7 @@ const should      = require('should');
 const nassert     = require('n-assert');
 const BaseBuilder = require('../src/base-builder');
 const parsers     = require('../src/parsers');
+const BaseParser  = require('../src/parsers/base-parser');
 
 describe('base-builder', () => {
   function validateRegisteredParseFunctions(instance) {
@@ -20,11 +21,29 @@ describe('base-builder', () => {
     should(_.isFunction(instance.parseJson)).equal(true);
     should(_.isFunction(instance.parseBool)).equal(true);
     should(_.isFunction(instance.parseNumber)).equal(true);
+    should(_.isFunction(instance.parseInt)).equal(true);
     should(_.isFunction(instance.parseFloat)).equal(true);
     should(_.isFunction(instance.parseRegexp)).equal(true);
     should(_.isFunction(instance.parseObjectId)).equal(true);
     should(_.isFunction(instance.parseArray)).equal(true);
   }
+
+  describe('static registerCustomErrorType', () => {
+    beforeEach(() => {
+      sinon.stub(BaseParser, 'registerCustomErrorType');
+    });
+
+    afterEach(() => {
+      BaseParser.registerCustomErrorType.restore();
+    });
+
+    it('should call BaseParser.registerCustomErrorType method and pass ErrorType', () => {
+      let customErrorType = 'CustomErrorType';
+      BaseBuilder.registerCustomErrorType(customErrorType);
+
+      nassert.validateCalledFn({ srvc: BaseParser, fnName: 'registerCustomErrorType', expectedArgs: customErrorType });
+    });
+  });
 
   describe('constructor', () => {
     function test({ params, expected }) {
