@@ -1,6 +1,42 @@
 'use strict';
 
+const ALIASES = {
+  eq: 'eq',
+  ne: 'ne',
+  gt: 'gt',
+  gte: 'gte',
+  lt: 'lt',
+  lte: 'lte',
+  in: 'in',
+  nin: 'nin'
+};
+
+const MONGOOSE_OPS = {
+  [ALIASES.eq]: '$eq',
+  [ALIASES.ne]: '$ne',
+  [ALIASES.gt]: '$gt',
+  [ALIASES.gte]: '$gte',
+  [ALIASES.lt]: '$lte',
+  [ALIASES.lte]: '$lte',
+  [ALIASES.in]: '$in',
+  [ALIASES.nin]: '$nin'
+};
+
+const SEQUELIZE_OPS = {
+  [ALIASES.eq]: '$eq',
+  [ALIASES.ne]: '$ne',
+  [ALIASES.gt]: '$gt',
+  [ALIASES.gte]: '$gte',
+  [ALIASES.lt]: '$lte',
+  [ALIASES.lte]: '$lte',
+  [ALIASES.in]: '$in',
+  [ALIASES.nin]: '$notIn'
+};
+
 module.exports = {
+  ALIASES,
+  MONGOOSE_OPS,
+  SEQUELIZE_OPS
 };
 
 /* eslint max-len: off */

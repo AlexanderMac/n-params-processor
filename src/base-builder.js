@@ -4,9 +4,9 @@ const _       = require('lodash');
 const parsers = require('./parsers');
 
 class ParsersProcessor {
-  constructor(source) {
+  constructor({ source, data } = {}) {
     this.source = source;
-    this.data = {};
+    this.data = data || {};
     this._registerParseFunctions();
   }
 
@@ -26,10 +26,13 @@ class ParsersProcessor {
         .omit(['source', 'name', 'az'])
         .extend({ val: this._getValue({ source: params.source, name: params.name }) })
         .value();
-      let parsedVal = parsers[parserName].parse(parserParams);
+      let paramVal = parsers[parserName].parse(parserParams);
 
-      return this._processResult({ name: params.name, az: params.az, parsedVal });
+      let paramName = this._getParamName({ name: params.name, az: params.az, to: params.to });
+      return this._processResult({ paramName, paramVal, to: params.to });
     };
+
+    return parseFnName;
   }
 
   _getParseFunctionName(parserName) {
@@ -41,11 +44,21 @@ class ParsersProcessor {
     return currentSource[name];
   }
 
-  _processResult({ name, az, parsedVal }) {
-    this.data[az || name] = parsedVal;
+  _getParamName({ name, az, to }) {
+    let paramName = az || name;
+    let dest = _.isNil(to) ? this.data : this.data[to];
+    if (_.has(dest, paramName)) {
+      throw new Error(`Parameter "${paramName}" is already used. Use another name of remove duplicate`);
+    }
+    return paramName;
+  }
+
+  _processResult({ paramName, paramVal, to }) {
+    let dest = _.isNil(to) ? this.data : this.data[to];
+    dest[paramName] = paramVal;
     return {
-      name: az || name,
-      val: parsedVal
+      name: paramName,
+      val: paramVal
     };
   }
 }

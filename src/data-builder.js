@@ -1,14 +1,8 @@
 'use strict';
 
-const ParamsProc = require('./params-processor');
+const BaseBuilder = require('./base-builder');
 
-class DataBuilder extends ParamsProc {
-  constructor({ baseData, source } = {}) {
-    let data = baseData || {};
-    super({ source, dest: data });
-    this.data = data;
-  }
-
+class DataBuilder extends BaseBuilder {
   build() {
     return this.data;
   }

@@ -8,21 +8,6 @@ const BaseBuilder = require('../src/base-builder');
 const parsers     = require('../src/parsers');
 
 describe('base-builder', () => {
-  /*describe.skip('parseString', () => {
-    beforeEach(() => {
-      sinon.stub(_instance, '_getValue');
-      sinon.stub(parsers.StringParser, 'parse');
-    });
-
-    afterEach(() => {
-      _instance._getValue.restore();
-      parsers.StringParser.parse.restore();
-    });
-
-    registerParseTest({ parseFnName: 'parseString', parserName: 'StringParser' });
-  });
-  */
-
   function validateRegisteredParseFunctions(instance) {
     let instanceParseFnCount = _.chain(instance)
       .keys()
@@ -49,11 +34,36 @@ describe('base-builder', () => {
       validateRegisteredParseFunctions(instance);
     }
 
-    it('should create an instance and set internfal fields', () => {
-      let params = 'source';
+    it('should create an instance and set source to undefined, data to empty object when params are not provided', () => {
+      let params = undefined;
       let expected = {
-        source: 'source',
+        source: undefined,
         data: {}
+      };
+
+      test({ params, expected });
+    });
+
+    it('should create an instance and set source to params.source, data to empty object when only params.source is provided', () => {
+      let params = {
+        source: { login: 'u1' }
+      };
+      let expected = {
+        source: { login: 'u1' },
+        data: {}
+      };
+
+      test({ params, expected });
+    });
+
+    it('should create an instance and set source to params.source, data to params.data when all params are provided', () => {
+      let params = {
+        source: { login: 'u1' },
+        data: { id: 1 }
+      };
+      let expected = {
+        source: { login: 'u1' },
+        data: { id: 1 }
       };
 
       test({ params, expected });
@@ -72,6 +82,23 @@ describe('base-builder', () => {
   });
 
   describe('_registerOneParseFunction', () => {
+    function test({ parserName, expected }) {
+      let instance = new BaseBuilder();
+
+      let actual = instance._registerOneParseFunction(parserName);
+      should(actual).eql(expected);
+      should(_.isFunction(instance.parseSuper)).equal(true);
+    }
+
+    it('should add new parse<parserName> instance.method and return parse<parser> function name', () => {
+      let parserName = 'SuperParser';
+      let expected = 'parseSuper';
+
+      test({ parserName, expected });
+    });
+  });
+
+  describe('parse<Parser>', () => {
     beforeEach(() => {
       sinon.stub(parsers.IntParser, 'parse').returns(20);
     });
@@ -129,7 +156,7 @@ describe('base-builder', () => {
 
   describe('_getValue', () => {
     function test({ params, source, expected }) {
-      let instance = new BaseBuilder(source);
+      let instance = new BaseBuilder({ source });
 
       let actual = instance._getValue(params);
       nassert.assert(actual, expected, true);
@@ -152,40 +179,101 @@ describe('base-builder', () => {
     });
   });
 
-  describe('_processResult', () => {
-    function test({ params, expected }) {
+  describe('_getParamName', () => {
+    function test({ data, params, expected }) {
       let instance = new BaseBuilder();
+      instance.data = data;
+
+      if (_.isError(expected)) {
+        should(instance._getParamName.bind(instance, params)).throw(expected);
+      } else {
+        let actual = instance._getParamName(params);
+        should(actual).eql(expected);
+      }
+    }
+
+    it('should throw Error when paramName is not unique in the scope of instance.data and params.to is undefined', () => {
+      let data = {
+        login: 'u1'
+      };
+      let params = {
+        name: 'login'
+      };
+      let expected = new Error('Parameter "login" is already used. Use another name of remove duplicate');
+
+      test({ data, params, expected });
+    });
+
+    it('should not throw Error when paramName is unique in the scope of instance.data.to', () => {
+      let data = {
+        login: 'u1',
+        _filter_: {}
+      };
+      let params = {
+        name: 'login',
+        to: '_filter_'
+      };
+      let expected = 'login';
+
+      test({ data, params, expected });
+    });
+
+    it('should not throw Error and return paramName when it is unique in the scope of instance.data', () => {
+      let data = {
+        login: 'u1',
+        _filter_: {}
+      };
+      let params = {
+        name: 'login',
+        az: 'username'
+      };
+      let expected = 'username';
+
+      test({ data, params, expected });
+    });
+  });
+
+  describe('_processResult', () => {
+    function test({ data, params, expected }) {
+      let instance = new BaseBuilder();
+      instance.data = data;
 
       let actual = instance._processResult(params);
       should(instance.data).eql(expected.data);
       should(actual).eql(expected.result);
     }
 
-    it('should add new field to instance.data and return { name, val } object when az is undefined', () => {
+    it('should extend instance.data when params.to is undefined', () => {
+      let data = {};
       let params = {
-        name: 'login',
-        parsedVal: 'user1'
+        paramName: 'login',
+        paramVal: 'user1'
       };
       let expected = {
         data: { login: 'user1' },
         result: { name: 'login', val: 'user1' }
       };
 
-      test({ params, expected });
+      test({ data, params, expected });
     });
 
-    it('should add new field to instance.data and return { name: az, val } object when az is defined', () => {
+    it('should extend instance.data.to when params.to isdefined', () => {
+      let data = {
+        _filter_: {}
+      };
       let params = {
-        name: 'login',
-        az: 'username',
-        parsedVal: 'user1'
+        paramName: 'login',
+        paramVal: 'user1',
+        to: '_filter_'
       };
       let expected = {
-        data: { username: 'user1' },
-        result: { name: 'username', val: 'user1' }
+        data: {
+          _filter_: { login: 'user1' }
+        },
+        result: { name: 'login', val: 'user1' }
       };
 
-      test({ params, expected });
+      test({ data, params, expected });
     });
   });
 });

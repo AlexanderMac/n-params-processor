@@ -1,151 +1,89 @@
 'use strict';
 
-const _          = require('lodash');
-const validators = require('n-validators');
-const consts     = require('./consts');
-const ParamsProc = require('./params-processor');
+const _           = require('lodash');
+const BaseBuilder = require('./base-builder');
 
-class QueryBuilder extends ParamsProc {
-  constructor({ baseFilter, source } = {}) {
-    let filter = baseFilter || {};
-    super({ source, dest: filter });
-    this.filter = filter;
-    this.fields = '';
-    /* TODO: not implemented
-    this.pagination = {
-      page: 1,
-      count: 10
+class QueryBuilder extends BaseBuilder {
+  constructor({ source, filter } = {}) {
+    super({ source });
+    this.data._filter_ = filter || {};
+    this.data._fields_ = {};
+    this.data._pagination_ = {};
+    this.data._sorting_ = {};
+    this.filterCriteria = [];
+  }
+
+  parseFields({ source, fieldsName, allowed, def }) {
+    fieldsName = fieldsName || 'fields';
+
+    // convert val to string or use default when val is nil
+    let res = this.parseString({ source, name: fieldsName, az: 'fields', to: '_fields_', def });
+    // init new source, with fields array value
+    source = {
+      'fields': _.split(res.val, ' ')
     };
-    this.sorting = {};
-    */
+    allowed = _.split(allowed, ' ');
+    // use ArrayParser to validate fields
+    this.parseArray({ source, name: 'fields', to: '_fields_', allowed, itemType: 'string' });
+
+    return this.data._fields_;
   }
 
-  parseIn(opts) {
-    opts = _.chain(opts).clone().extend({ expr: '$$in' }).value();
-    this._parseInNotInExpression(opts);
+  parsePagination({ source, pageName, countName }) {
+    pageName = pageName || 'page';
+    countName = countName || 'count';
+    let to = '_pagination_';
+
+    this.parseInt({ source, name: pageName, az: 'page', to, min: 0, def: 0 });
+    this.parseInt({ source, name: countName, az: 'count', to, min: 1, max: 50, def: 10 });
+
+    return this.data._pagination_;
   }
 
-  parseNin(opts) {
-    opts = _.chain(opts).clone().extend({ expr: '$$nin' }).value();
-    this._parseInNotInExpression(opts);
+  parseSorting({ source, sortByName, sortDirName }) {
+    sortByName = sortByName || 'sortBy';
+    sortDirName = sortDirName || 'sortDirection';
+    let to = '_sorting_';
+
+    this.parseString({ source, name: sortByName, az: 'sortBy', to, def: 'id' });
+    this.parseString({ source, name: sortDirName, az: 'sortDirection', to, allowed: ['asc', 'desc'], def: 'asc' });
+
+    return this.data._sorting_;
   }
 
-  _parseInNotInExpression({ source, name, field, expr, required }) {
-    let val = this._validateParamsAndGetValue({ source, name, required });
-    if (_.isNil(val)) {
-      return;
-    }
-    this._validateParameterProvided({ param: field, paramName: 'field' });
-
-    val = _.map(val, item => parseInt(item));
-    if (!validators.everyIsUniqueId(val)) {
-      this._throwUnprocessableRequestError(`${name} must contain a list of valid IDs`);
-    }
-    this.dest[expr] = {
-      fieldName: field,
-      fieldVal: val
+  build() {
+    return {
+      filter: this._buildFilter(),
+      fields: this._buildFields() ,
+      pagination: this._buildPagination(),
+      sorting: this._buildSorting()
     };
   }
 
-  parseFields({ source, name, allowed, def, required }) {
-    let val = this._validateParamsAndGetValue({ source, name, required });
-    if (_.isNil(val)) {
-      this.fields = def || '';
-      return;
-    }
+  // used for UTs, must be overrided in childs
+  _buildFilter() {}
+  _buildFields() {}
+  _buildPagination() {}
+  _buildSorting() {}
 
-    if (!validators.isFieldsString(val, allowed)) {
-      this._throwUnprocessableRequestError('fields must be a space separated string of fields');
-    }
-    this.fields = val;
-  }
+  _registerOneParseFunction(parserName) {
+    let parseFnName = super._registerOneParseFunction(parserName);
 
-  /* TODO: not implemented
-  // TODO: test it
-  // TODO: implement it
-  parsePagination() {
-  }
-
-  // TODO: test it
-  // TODO: implement it
-  parseSorting() {
-  }
-  */
-
-  build(dbProvider) {
-    switch (dbProvider) {
-      case consts.DB_PROVIDERS.mongoose:
-        return this._buildMongooseQuery();
-      case consts.DB_PROVIDERS.sequelize:
-        return this._buildSequelizeQuery();
-      default:
-        if (!dbProvider) {
-          throw Error('dbProvider is not defined');
-        }
-        throw Error(`Unsupported dbPovider: ${dbProvider}`);
-    }
-  }
-
-  _buildMongooseQuery() {
-    let filter = _.reduce(this.filter, (res, paramVal, paramName) => {
-      switch (paramName) {
-        case '$$in':
-          res[paramVal.fieldName] = {
-            $in: paramVal.fieldVal
-          };
-          break;
-        case '$$nin':
-          res[paramVal.fieldName] = {
-            $nin: paramVal.fieldVal
-          };
-          break;
-        default:
-          res[paramName] = paramVal;
+    this[parseFnName] = (params) => {
+      if (_.isNil(params.to)) {
+        params.to = '_filter_';
+      }
+      let res = super[parseFnName](params);
+      if (params.to === '_filter_') {
+        this.filterCriteria.push({
+          name: res.name,
+          op: params.op
+        });
       }
       return res;
-    }, {});
-
-    let fields = this.fields;
-
-    return {
-      filter,
-      fields,
-      /* TODO: not implemented
-      pagination: this.pagination,
-      sorting: this.sorting
-      */
     };
-  }
 
-  _buildSequelizeQuery() {
-    let filter = _.reduce(this.filter, (res, paramVal, paramName) => {
-      switch (paramName) {
-        case '$$in':
-          res[paramVal.fieldName] = {
-            $in: paramVal.fieldVal
-          };
-          break;
-        case '$$nin':
-          res[paramVal.fieldName] = {
-            $notIn: paramVal.fieldVal
-          };
-          break;
-        default:
-          res[paramName] = paramVal;
-      }
-      return res;
-    }, {});
-
-    let fields = this.fields.split(' ');
-
-    return {
-      filter,
-      fields,
-      /* TODO: not implemented
-      pagination: this.pagination,
-      sorting: this.sorting
-      */
-    };
+    return parseFnName;
   }
 }
 
