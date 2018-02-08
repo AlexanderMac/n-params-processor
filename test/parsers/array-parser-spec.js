@@ -48,6 +48,7 @@ describe('parsers / array-parser', () => {
       let instance = new ArrayParser(params);
       sinon.stub(instance, '_validateItemParser');
       sinon.stub(instance, '_parseItem').callsFake(val => val);
+      sinon.stub(instance, '_validateAllowed');
 
       BaseParser.prototype.parse.returns(_.isNil(expected));
 
@@ -57,6 +58,7 @@ describe('parsers / array-parser', () => {
       should(BaseParser.prototype.parse.calledOnce).equal(true);
       should(instance._validateItemParser.calledOnce).equal(areTestMethodsCalled);
       should(instance._parseItem.calledThrice).equal(areTestMethodsCalled);
+      should(instance._validateAllowed.calledOnce).equal(areTestMethodsCalled);
     }
 
     beforeEach(() => {
@@ -111,6 +113,27 @@ describe('parsers / array-parser', () => {
       methodName: '_validateItemParser',
       testName: 'shouldn\'t throw error when val is not nil',
       params: getParams()
+    });
+  });
+
+  describe('_validateAllowed', () => {
+    registerTest({
+      methodName: '_validateAllowed',
+      testName: 'should throw Error when allowed is defined and val is not subset of it',
+      params: { name: 'login', val: ['u1'], allowed: ['u2', 'u3'], itemType: 'string' },
+      expected: new Error('login is incorrect, must be subset of u2,u3')
+    });
+
+    registerTest({
+      methodName: '_validateAllowed',
+      testName: 'shouldn\'t throw error when allowed is undefined',
+      params: { name: 'login', val: ['u1'], allowed: undefined, itemType: 'string' }
+    });
+
+    registerTest({
+      methodName: '_validateAllowed',
+      testName: 'shouldn\'t throw error when allowed is defined val is subset of it',
+      params: { name: 'login', val: ['u1'], allowed: ['u1', 'u2', 'u3'], itemType: 'string' }
     });
   });
 

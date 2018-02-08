@@ -12,7 +12,7 @@ class ArrayParser extends BaseParser {
 
   constructor(params) {
     super(params);
-    this.ItemParser = parsers[`${params.itemType}Parser`];
+    this.ItemParser = parsers[`${_.capitalize(params.itemType)}Parser`];
   }
 
   parse() {
@@ -23,6 +23,7 @@ class ArrayParser extends BaseParser {
 
     this._validateItemParser();
     this.val = _.map(this.val, item => this._parseItem(item));
+    this._validateAllowed();
 
     return this.val;
   }
@@ -30,6 +31,12 @@ class ArrayParser extends BaseParser {
   _validateItemParser() {
     if (_.isNil(this.ItemParser)) {
       this._throwIncorrectParamError('Invalid itemType');
+    }
+  }
+
+  _validateAllowed() {
+    if (this.allowed && _.difference(this.val, this.allowed).length > 0) {
+      this._throwIncorrectParamError(`${this.name} is incorrect, must be subset of ${this.allowed}`);
     }
   }
 
