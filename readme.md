@@ -1,46 +1,45 @@
 # n-params-processor
-Node.js parameters parser/validator and mongodb/sequelize query/data object builder.
+Node.js parameters parser/validator and mongodb/sequelize query/data-object builder.
 
 [![Build Status](https://travis-ci.org/AlexanderMac/n-params-processor.svg?branch=master)](https://travis-ci.org/AlexanderMac/n-params-processor)
 [![npm version](https://badge.fury.io/js/n-params-processor.svg)](https://badge.fury.io/js/n-params-processor)
 
-### Commands
+## Installation
 ```bash
-# Add to project
 $ npm i n-params-processor
 ```
 
-### Usage
+## Example of usage
 ```js
 const MongooseQB  = require('n-params-processor').MongooseQB;
 const DataBuilder = require('n-params-processor').DataBuilder;
 
 /* Request:
-- GET /api/users/58ea5b07973ab04f88def3fa?fields=firstName,lastName&page=5&count=10&sortBy=firstName
+- GET /api/users?role=user&fields=firstName,lastName&page=5&count=10&sortBy=firstName
 */
-exports.getUserById = async (req, res, next) => {
+exports.getUsers = async (req, res, next) => {
   try {
     const ALLOWED_FIELDS = 'id firstName lastName age';
     const DEFAULT_FIELDS = 'id firstName lastName';
     let builder = new MongooseQB({
       source: req.query
     });
-    builder.parseId({ from: req.params, name: 'userId', az: '_id', required: true });
-    builder.parseFields({ def: DEFAULT_FIELDS, allowed: ALLOWED_FIELDS });
+    builder.parseString({ name: 'role', az: 'userRole', required: true });
+    builder.parseFields({ allowed: ALLOWED_FIELDS, def: DEFAULT_FIELDS });
     builder.parsePagination();
     builder.parseSorting();
 
     let query = builder.build();
     /* query is an object: {
       filter: {
-        _id: '58ea5b07973ab04f88def3fa'
+        userRole: 'user'
       },
       fields: 'firstName lastName',
       pagination: { page: 5, count: 10 },
       sorting: { sortBy: 'firstName', sortDirection: 'asc' }
     }*/
-    let user = await usersSrvc.getUser(query);
-    res.send(user);
+    let users = await usersSrvc.getUsers(query);
+    res.send(users);
   } catch (err) {
     next(err);
   }
@@ -69,7 +68,7 @@ exports.createUser = async (req, res, next) => {
     /* userData is an object: {
       creator: '58ea5b07973ab04f88def3fa', // base value
       firstName: 'John',
-      lastName: 'not prodived', // used default value
+      lastName: 'not prodived', // default value is used
       age: 25, // age converted to Number
       roles: ['user']
     }*/
@@ -81,101 +80,139 @@ exports.createUser = async (req, res, next) => {
 };
 ```
 
-### BaseBuilder API
-- **static registerCustomErrorType(ErrorType)**<br>
-Registers the custom error type. The error of this type will be trown in the case of invalid parameres.
+## BaseBuilder API
+- This is a base builder class, an object of this class shouldn't be used directly. Instead of this inherit of `QueryBuilder` or `DataBuilder` must be used.
+
+### static registerCustomErrorType(ErrorType)
+Registers the custom error type. The error of this type will be trown in the case of invalid parameter.
 
   - `ErrorType`: error type, instance of `Error` object.
 
-- **parse<Type>(params)**<br>
-Common parameters of `parse<Type>` method.
+### <a name="basebuilder"></a> constructor(params)
 
-  - `source`: source object, if not defined `instance.source` is used.
+- `params` is an object with the following fields:
+  - `source`: base source object, can be `req.body` for example. Parsers will use this source if custom is not provided, *optional*.
+  - `data`: base data object, can include some common fields: `{ currentUser: req.user }` for example, *optional*.
+
+### <a name="parsetype"></a> parseType(params)
+Common parameters of `parseType` method.
+
+- `params` is an object with the following fields:
+  - `source`: source object, if not provided `instance.source` is used, *optional*.
   - `name`: parameter name. 
-  - `az`: new name.
-  - `def`: default value, is used when parameter value is nil.
-  - `required` - indicates that parameter value is mandatory.
-  - `min`: minimum parameter value length.
-  - `max`: maximum parameter value length.
-  - `allowed` - validates that `allowed` array includes parameter value.
+  - `az`: new name, *optional*.
+  - `def`: default value, is used when parameter value is nil, *optional*.
+  - `required` - indicates that parameter value is mandatory, *optional*.
 
-- **parseString(params)**<br>
+### parseString(params)
 Parses, converts to `String` and validates parameter value.
 
-where `params` is an object with the following fields:
+- `params` is an object with the same fields as for [parseType](#parsetype), except:
+  - `min`: the lowest possible string length, *optional*.
+  - `max`: the largest possible string length, *optional*.
+  - `allowed` - validates that `allowed` array includes parameter value, *optional*.
 
-  - `source`: source object, if not defined `instance.source` is used.
-  - `name`: parameter name. 
-  - `az`: new name.
-  - `def`: default value, is used when parameter value is nil.
-  - `required` - indicates that parameter value is mandatory.
-  - `min`: minimum parameter value length.
-  - `max`: maximum parameter value length.
-  - `allowed` - validates that `allowed` array includes parameter value.
-
-- **parseDate(params, output)**<br>
+### parseDate(params, output)
 Parses, converts to `Date` and validates parameter value.
-TODO
 
-- **parseJson(params)**<br>
+- `params` is an object with the same fields as for [parseType](#parsetype), except:
+  - `format`: is date time format, if not provided `monent.defaultFormat` is used, *optional*.
+  - `min`: the lowest possible date, *optional*.
+  - `max`: the largest possible date, *optional*.
+
+### parseJson(params)
 Parses, converts to `JSON` and validates parameter value.
-TODO
 
-- **parseBool(params)**<br>
+- `params` is an object with the same fields as for [parseType](#parsetype).
+
+### parseBool(params)
 Parses, converts to `Boolean` and validates parameter value.
-TODO
 
-- **parseNumber(params)**<br>
+- `params` is an object with the same fields as for [parseType](#parsetype).
+
+### <a name="parsenumber"></a> parseNumber(params)
 Parses, converts to `Number` and validates parameter value.
-TODO
 
-- **parseInt(params)**<br>
+- `params` is an object with the same fields as for [parseType](#parsetype), except:
+  - `min`: the lowest possible value, *optional*.
+  - `max`: the largest possible value, *optional*.
+  - `allowed` - validates that `allowed` array includes parameter value, *optional*.
+
+### parseInt(params)
 Parses, converts to `IntegerNumber` and validates parameter.
 
-  - `min` - the lowest possible value.
-  - `max` - the largest possible value).
-  TODO
+- `params` is an object with the same fields as for [parseNumber](#parsenumber).
 
-- **parseFloat(params)**<br>
+### parseFloat(params)
 Parses, converts to `FloatNumber` and validates parameter.
-  TODO
 
-- **parseRegexp(params)**<br>
+- `params` is an object with the same fields as for [parseNumber](#parsenumber).
+
+### parseRegexp(params)
 Parses and validates parameter.
-TODO
 
-- **parseObjectId(params)**<br>
+- `params` is an object with the same fields as for [parseType](#parsetype).
+
+### parseObjectId(params)
 Parses, converts to `ObjectId` and validates parameter.
-TODO
 
-- **parseArray**
+- `params` is an object with the same fields as for [parseType](#parsetype).
+
+### parseArray(params)
 Parses, converts to `itemType` and validates parameter.
-TODO
 
-### DataBuilder API
-TODO
+- `params` is an object with the same fields as for [parseType](#parsetype), except:
+  - `itemType` the array item type (on of the registered parser types: `Int`, `String`, `Bool`, etc).
+  - `allowed` - validates that parameter value is subset of `allowed` array, *optional*.
 
-### QueryBuilder (MongooseQueryBuilder, SequelizeQueryBuilder) API
-TODO
+## DataBuilder API
+Should be used for creating a plain data object, to use in create and update operations.
 
-- **parseFields(params, output)**<br>
-Parses, converts and validates fields parameter.
+### constructor(params)
 
-   - `from.fields` - space separated string of parsing fields.
-   - `def` - space separated string of default fields.
-   - `allowed` - space separated string of allowed fields.
+- `params` is an object with the same fields as for [BaseBuilder.constructor](#basebuilder).
 
-- **parsePagination(params, output)**<br>
-TODO
+### build()
+Returns a final data object.
 
-- **parseSorting(params, output)**<br>
-TODO
+## QueryBuilder (MongooseQueryBuilder, SequelizeQueryBuilder) API
+Should be used for generating database query.
 
-- **Build(params, output)**<br>
+### constructor(params)
 
+- `params` is an object with the same fields as for [BaseBuilder.constructor](#basebuilder), except:
+  - `filter`: base filter, can include some common parameters, *optional*.
 
-### Author
+### parseFields(params)
+Parses, converts and validates fields parameter. Validated parameter value must be space separated string of values.
+
+- `params` is an object with the following fields:
+  - `source`: source object, if not defined `instance.source` is used.
+  - `fieldsName`: the name of `fields` parameter, if not provided `fields` is used, *optional*.
+  - `allowed` - space separated string of allowed fields.
+  - `def` - space separated string of default fields.
+
+### parsePagination(params)
+Parses, converts and validates pagination parameters. By default `page` set to 0, `count` to 10.
+
+- `params` is an object with the following fields:
+  - `source`: source object, if not defined `instance.source` is used.
+  - `pageName`: the name of `page` parameter, if not provided `page` is used, *optional*.
+  - `countName`: the name of `count` parameter, if not provided `count` is used, *optional*.
+
+### parseSorting(params)
+Parses, converts and validates sorting parameters. By default `sortBy` set to `id`, `sortDirection` to `asc`.
+
+- `params` is an object with the following fields:
+  - `source`: source object, if not defined `instance.source` is used.
+  - `sortByName`: the name of `sortBy` parameter, if not provided `sortBy` is used, *optional*.
+  - `sortDirName`: the name of `sortDirection` parameter, if not provided `sortDirection` is used, *optional*.
+
+### Build()
+Returns a final query with `filter`, `fields`, `pagination` and `sorting` fields.
+
+## Author
 Alexander Mac
 
-### License
+## License
 Licensed under the MIT license.
