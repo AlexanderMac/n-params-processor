@@ -1,4 +1,4 @@
-# <sub>v2.0.0-rc1</sub>
+# <sub>v2.0.0</sub>
 #### _Feb. 11, 2018_
 
   * Parameters processor class is devided into three classes: `BaseBuilder` and two its successors `QueryBuilder` and `DataBuilder`.
