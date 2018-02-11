@@ -13,11 +13,11 @@ class QueryBuilder extends BaseBuilder {
     this.filterCriteria = [];
   }
 
-  parseFields({ source, fieldsName, allowed, def }) {
+  parseFields({ source, fieldsName, allowed, def } = {}) {
     fieldsName = fieldsName || 'fields';
 
     // convert val to string or use default when val is nil
-    let res = this.parseString({ source, name: fieldsName, az: 'fields', to: '_fields_', def });
+    let res = this.parseString({ source, name: fieldsName, az: 'fields', to: '_temp_', def });
     // init new source, with fields array value
     source = {
       'fields': _.split(res.val, ' ')
@@ -29,7 +29,7 @@ class QueryBuilder extends BaseBuilder {
     return this.data._fields_;
   }
 
-  parsePagination({ source, pageName, countName }) {
+  parsePagination({ source, pageName, countName } = {}) {
     pageName = pageName || 'page';
     countName = countName || 'count';
     let to = '_pagination_';
@@ -40,7 +40,7 @@ class QueryBuilder extends BaseBuilder {
     return this.data._pagination_;
   }
 
-  parseSorting({ source, sortByName, sortDirName }) {
+  parseSorting({ source, sortByName, sortDirName } = {}) {
     sortByName = sortByName || 'sortBy';
     sortDirName = sortDirName || 'sortDirection';
     let to = '_sorting_';
@@ -62,13 +62,13 @@ class QueryBuilder extends BaseBuilder {
 
   _registerOneParseFunction(parserName) {
     let parseFnName = super._registerOneParseFunction(parserName);
-    let baseParseFn = super[parseFnName];
+    let baseParseFn = this[parseFnName].bind(this);
 
     this[parseFnName] = (params) => {
       if (_.isNil(params.to)) {
         params.to = '_filter_';
       }
-      let res = baseParseFn.call(this, params);
+      let res = baseParseFn(params);
       if (params.to === '_filter_') {
         this.filterCriteria.push({
           name: res.name,

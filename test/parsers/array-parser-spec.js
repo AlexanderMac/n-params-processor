@@ -121,7 +121,7 @@ describe('parsers / array-parser', () => {
       methodName: '_validateAllowed',
       testName: 'should throw Error when allowed is defined and val is not subset of it',
       params: { name: 'login', val: ['u1'], allowed: ['u2', 'u3'], itemType: 'string' },
-      expected: new Error('login is incorrect, must be subset of u2,u3')
+      expected: new Error('login is incorrect, must be subset of [u2,u3]')
     });
 
     registerTest({

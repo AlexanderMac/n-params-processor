@@ -6,7 +6,6 @@ const should      = require('should');
 const nassert     = require('n-assert');
 const BaseBuilder = require('../src/base-builder');
 const parsers     = require('../src/parsers');
-const BaseParser  = require('../src/parsers/base-parser');
 
 describe('base-builder', () => {
   function validateRegisteredParseFunctions(instance) {
@@ -28,23 +27,6 @@ describe('base-builder', () => {
     should(_.isFunction(instance.parseArray)).equal(true);
   }
 
-  describe.skip('static registerCustomErrorType', () => {
-    beforeEach(() => {
-      sinon.stub(BaseParser, 'registerCustomErrorType');
-    });
-
-    afterEach(() => {
-      BaseParser.registerCustomErrorType.restore();
-    });
-
-    it('should call BaseParser.registerCustomErrorType method and pass ErrorType', () => {
-      let customErrorType = 'CustomErrorType';
-      BaseBuilder.registerCustomErrorType(customErrorType);
-
-      nassert.validateCalledFn({ srvc: BaseParser, fnName: 'registerCustomErrorType', expectedArgs: customErrorType });
-    });
-  });
-
   describe('constructor', () => {
     function test({ params, expected }) {
       let instance = new BaseBuilder(params);
@@ -57,7 +39,7 @@ describe('base-builder', () => {
       let params = undefined;
       let expected = {
         source: undefined,
-        data: {}
+        data: { _temp_: {}}
       };
 
       test({ params, expected });
@@ -69,7 +51,7 @@ describe('base-builder', () => {
       };
       let expected = {
         source: { login: 'u1' },
-        data: {}
+        data: { _temp_: {}}
       };
 
       test({ params, expected });
@@ -82,7 +64,10 @@ describe('base-builder', () => {
       };
       let expected = {
         source: { login: 'u1' },
-        data: { id: 1 }
+        data: {
+          _temp_: {},
+          id: 1
+        }
       };
 
       test({ params, expected });

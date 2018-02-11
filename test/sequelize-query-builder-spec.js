@@ -81,4 +81,46 @@ describe('sequelize-query-builder', () => {
       test(expected);
     });
   });
+
+  describe('functional', () => {
+    function test({ req, expected }) {
+      const ALLOWED_FIELDS = 'id firstName lastName age';
+      const DEFAULT_FIELDS = 'id firstName lastName';
+      let queryBuilder = new SequelizeQB({
+        source: req.query
+      });
+      queryBuilder.parseString({ name: 'role', az: 'userRole', required: true });
+      queryBuilder.parseArray({ name: 'users', az: 'userId', itemType: 'int', op: 'nin' });
+      queryBuilder.parseFields({ allowed: ALLOWED_FIELDS, def: DEFAULT_FIELDS });
+      queryBuilder.parsePagination();
+      queryBuilder.parseSorting();
+
+      let actual = queryBuilder.build();
+      should(actual).eql(expected);
+    }
+
+    it('should parse params and return query', () => {
+      let req = {
+        query: {
+          role: 'user',
+          users: [1, 2, 3],
+          fields: 'firstName lastName',
+          page: 5,
+          count: 10,
+          sortBy: 'firstName'
+        }
+      };
+      let expected = {
+        filter: {
+          userRole: { $eq: 'user' },
+          userId: { $notIn: [1, 2, 3] }
+        },
+        fields: ['firstName', 'lastName'],
+        pagination: { page: 5, count: 10 },
+        sorting: { sortBy: 'firstName', sortDirection: 'asc' }
+      };
+
+      test({ req, expected });
+    });
+  });
 });

@@ -7,6 +7,7 @@ class BaseBuilder {
   constructor({ source, data } = {}) {
     this.source = source;
     this.data = data || {};
+    this.data._temp_ = {};
     this._registerParseFunctions();
   }
 
@@ -47,7 +48,7 @@ class BaseBuilder {
   _getParamName({ name, az, to }) {
     let paramName = az || name;
     let dest = _.isNil(to) ? this.data : this.data[to];
-    if (_.has(dest, paramName)) {
+    if (to !== '_temp_' && _.has(dest, paramName)) {
       throw new Error(`Parameter "${paramName}" is already used. Use another name of remove duplicate`);
     }
     return paramName;

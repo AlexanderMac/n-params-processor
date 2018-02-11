@@ -1,11 +1,10 @@
 'use strict';
 
-const registerCustomErrorType = require('./src/parsers/base-parser').registerCustomErrorType;
+const BaseParser = require('./src/parsers/base-parser');
 
-// TODO: test it
 module.exports = {
   consts: require('./src/consts'),
-  registerCustomErrorType,
+  registerCustomErrorType: (params) => BaseParser.registerCustomErrorType(params),
   DataBuilder: require('./src/data-builder'),
   MongooseQB: require('./src/mongoose-query-builder'),
   SequelizeQB: require('./src/sequelize-query-builder')

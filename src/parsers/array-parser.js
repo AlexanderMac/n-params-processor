@@ -36,7 +36,7 @@ class ArrayParser extends BaseParser {
 
   _validateAllowed() {
     if (this.allowed && _.difference(this.val, this.allowed).length > 0) {
-      this._throwIncorrectParamError(`${this.name} is incorrect, must be subset of ${this.allowed}`);
+      this._throwIncorrectParamError(`${this.name} is incorrect, must be subset of [${this.allowed}]`);
     }
   }
 

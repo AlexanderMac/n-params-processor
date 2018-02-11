@@ -15,24 +15,26 @@ const MongooseQB  = require('n-params-processor').MongooseQB;
 const DataBuilder = require('n-params-processor').DataBuilder;
 
 /* Request:
-- GET /api/users?role=user&fields=firstName,lastName&page=5&count=10&sortBy=firstName
+- GET /api/users?role=user&fields=firstName%20lastName&users[]=1,2,3&page=5&count=10&sortBy=firstName
 */
 exports.getUsers = async (req, res, next) => {
   try {
     const ALLOWED_FIELDS = 'id firstName lastName age';
     const DEFAULT_FIELDS = 'id firstName lastName';
-    let builder = new MongooseQB({
+    let queryBuilder = new MongooseQB({
       source: req.query
     });
-    builder.parseString({ name: 'role', az: 'userRole', required: true });
-    builder.parseFields({ allowed: ALLOWED_FIELDS, def: DEFAULT_FIELDS });
-    builder.parsePagination();
-    builder.parseSorting();
+    queryBuilder.parseString({ name: 'role', az: 'userRole', required: true });
+    queryBuilder.parseArray({ name: 'users', az: 'userId', itemType: 'int', op: 'in' });
+    queryBuilder.parseFields({ allowed: ALLOWED_FIELDS, def: DEFAULT_FIELDS });
+    queryBuilder.parsePagination();
+    queryBuilder.parseSorting();
 
-    let query = builder.build();
+    let query = queryBuilder.build();
     /* query is an object: {
       filter: {
-        userRole: 'user'
+        userRole: { $eq: 'user' },
+        userId: { $in: [1, 2, 3] }
       },
       fields: 'firstName lastName',
       pagination: { page: 5, count: 10 },
@@ -55,16 +57,16 @@ exports.getUsers = async (req, res, next) => {
 */
 exports.createUser = async (req, res, next) => {
   try {
-    let builder = new DataBuilder({
+    let dataBuilder = new DataBuilder({
       source: req.body,
       data: { creator: req.user.userId }
     });
-    builder.parseString({ name: 'firstName', max: 10, required: true });
-    builder.parseString({ name: 'lastName', max: 20, def: 'not prodived' });
-    builder.parseInt({ name: 'age', min: 18, max: 55, required: true });
-    builder.parseArray({ name: 'roles', allowed: ['user', 'admin', 'owner'], itemType: 'string' });
+    dataBuilder.parseString({ name: 'firstName', max: 10, required: true });
+    dataBuilder.parseString({ name: 'lastName', max: 20, def: 'not prodived' });
+    dataBuilder.parseInt({ name: 'age', min: 18, max: 55, required: true });
+    dataBuilder.parseArray({ name: 'roles', allowed: ['user', 'admin', 'owner'], itemType: 'string' });
 
-    let userData = builder.build();
+    let userData = dataBuilder.build();
     /* userData is an object: {
       creator: '58ea5b07973ab04f88def3fa', // base value
       firstName: 'John',
@@ -80,13 +82,27 @@ exports.createUser = async (req, res, next) => {
 };
 ```
 
-## BaseBuilder API
-- This is a base builder class, an object of this class shouldn't be used directly. Instead of this inherit of `QueryBuilder` or `DataBuilder` must be used.
+## API
 
-### static registerCustomErrorType(ErrorType)
+### consts
+The constants objects. `OPERATORS` field contains all valid query operators.
+
+### registerCustomErrorType(ErrorType)
 Registers the custom error type. The error of this type will be trown in the case of invalid parameter.
 
   - `ErrorType`: error type, instance of `Error` object.
+
+### DataBuilder
+See [DataBuilder](#databuilder).
+
+### MongooseQB
+See [QueryBuilder](#querybuilder).
+
+### SequelizeQB
+See [QueryBuilder](#querybuilder).
+
+## BaseBuilder API
+- This is a base builder class, an object of this class shouldn't be used directly. Instead of this inherit of `QueryBuilder` or `DataBuilder` must be used.
 
 ### <a name="basebuilder"></a> constructor(params)
 

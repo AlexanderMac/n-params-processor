@@ -26,7 +26,8 @@ describe('query-builder', () => {
           _filter_: {},
           _fields_: {},
           _pagination_: {},
-          _sorting_: {}
+          _sorting_: {},
+          _temp_: {},
         },
         filterCriteria: []
       };
@@ -42,7 +43,8 @@ describe('query-builder', () => {
           _filter_: { id: 1 },
           _fields_: {},
           _pagination_: {},
-          _sorting_: {}
+          _sorting_: {},
+          _temp_: {},
         },
         filterCriteria: []
       };
@@ -72,7 +74,7 @@ describe('query-builder', () => {
       };
       let expected = 'fieldsData';
       let allowed = params.allowed.split(' ');
-      let parseStringArgs = { source: undefined, name: 'fields', az: 'fields', to: '_fields_', def: params.def };
+      let parseStringArgs = { source: undefined, name: 'fields', az: 'fields', to: '_temp_', def: params.def };
       let parseArrayArgs = { source: { fields: ['id'] }, name: 'fields', to: '_fields_', allowed, itemType: 'string' };
       let parseStringRes = { val: 'id' };
 
@@ -90,7 +92,7 @@ describe('query-builder', () => {
       };
       let expected = 'fieldsData';
       let allowed = params.allowed.split(' ');
-      let parseStringArgs = { source: undefined, name: 'attrs', az: 'fields', to: '_fields_', def: params.def };
+      let parseStringArgs = { source: undefined, name: 'attrs', az: 'fields', to: '_temp_', def: params.def };
       let parseArrayArgs = { source: { fields: ['id', 'name'] }, name: 'fields', to: '_fields_', allowed, itemType: 'string' };
       let parseStringRes = { val: 'id name' };
 
@@ -231,35 +233,19 @@ describe('query-builder', () => {
     });
   });
 
-  describe('parse<Parser>', () => {
-    let parseSuperStub;
-
-    beforeEach(() => {
-      parseSuperStub = sinon.stub().returns({ name: 'login', val: 'u1' });
-      sinon.stub(BaseBuilder.prototype, '_registerOneParseFunction').callsFake(() => {
-        BaseBuilder.prototype.parseSuper = parseSuperStub;
-        return 'parseSuper';
-      });
-    });
-
-    afterEach(() => {
-      BaseBuilder.prototype._registerOneParseFunction.restore();
-    });
-
-    function test({ params, parseSuperArgs, expected }) {
+  describe('parseString', () => {
+    function test({ params, expected }) {
       let instance = new QueryBuilder();
 
-      let actual = instance.parseSuper(params);
+      let actual = instance.parseString(params);
       should(actual).eql(expected.result);
       should(instance.filterCriteria).eql(expected.filterCriteria);
-
-      should(parseSuperStub.calledOnce).equal(true);
-      should(parseSuperStub.calledWithExactly(parseSuperArgs)).equal(true);
     }
 
     it('should call registered parser, update filter and return value (when params.to is undefined)', () => {
       let params = {
-        params: 'params'
+        source: { login: 'u1' },
+        name: 'login'
       };
       let parseSuperArgs = {
         params: 'params',
@@ -280,7 +266,8 @@ describe('query-builder', () => {
 
     it('should call registered parser, update pagination and return value (when params.to = _pagination_)', () => {
       let params = {
-        params: 'params',
+        source: { page: 2 },
+        name: 'page',
         to: '_pagination_'
       };
       let parseSuperArgs = {
@@ -289,8 +276,8 @@ describe('query-builder', () => {
       };
       let expected = {
         result: {
-          name: 'login',
-          val: 'u1'
+          name: 'page',
+          val: '2'
         },
         filterCriteria: []
       };
