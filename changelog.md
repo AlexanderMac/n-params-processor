@@ -1,5 +1,5 @@
-# <sub>v2.0.0-alpha</sub>
-#### _Feb. 10, 2018_
+# <sub>v2.0.0-rc1</sub>
+#### _Feb. 11, 2018_
 
   * Parameters processor class is devided into three classes: `BaseBuilder` and two its successors `QueryBuilder` and `DataBuilder`.
   * `QueryBuilder` has two successors `MongooseQueryBuilder` and `SequelizeQueryBuilder`. So in v2 `n-params-processor` can be used for creating queries for two databases.
