@@ -93,13 +93,13 @@ Registers the custom error type. The error of this type will be trown in the cas
   - `ErrorType`: error type, instance of `Error` object.
 
 ### DataBuilder
-See [DataBuilder](#databuilder).
+See [DataBuilder](#databuilder-api).
 
 ### MongooseQB
-See [QueryBuilder](#querybuilder).
+See [QueryBuilder](#querybuilder-api).
 
 ### SequelizeQB
-See [QueryBuilder](#querybuilder).
+See [QueryBuilder](#querybuilder-api).
 
 ## BaseBuilder API
 - This is a base builder class, an object of this class shouldn't be used directly. Instead of this inherit of `QueryBuilder` or `DataBuilder` must be used.
@@ -181,7 +181,7 @@ Parses, converts to `itemType` and validates parameter.
   - `itemType` the array item type (on of the registered parser types: `Int`, `String`, `Bool`, etc).
   - `allowed` - validates that parameter value is subset of `allowed` array, *optional*.
 
-## <a name="databuilder"></a> DataBuilder API
+## <a name="databuilder-api"></a> DataBuilder API
 Should be used for creating a plain data object, to use in create and update operations.
 
 ### constructor(params)
@@ -191,7 +191,7 @@ Should be used for creating a plain data object, to use in create and update ope
 ### build()
 Returns a final data object.
 
-## <a name="querybuilder"></a> QueryBuilder (MongooseQueryBuilder, SequelizeQueryBuilder) API
+## <a name="querybuilder-api"></a> QueryBuilder (MongooseQueryBuilder, SequelizeQueryBuilder) API
 Should be used for generating database query.
 
 ### constructor(params)
