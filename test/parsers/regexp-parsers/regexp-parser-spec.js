@@ -85,7 +85,7 @@ describe('parsers / regexp-parsers / regexp-parser', () => {
 
     registerTest({
       methodName: '_validate',
-      testName: 'shouldn\'t throw error when val is a string and there is a match between regexp and name',
+      testName: 'should not throw error when val is a string and there is a match between regexp and name',
       params: getParams()
     });
   });

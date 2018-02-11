@@ -87,7 +87,7 @@ describe('parsers / number-parsers / number-parser', () => {
   describe('_convert', () => {
     registerTest({
       methodName: '_convert',
-      testName: 'should set instance.val to NaN when val can\'t be converted to a number',
+      testName: 'should set instance.val to NaN when val ca not be converted to a number',
       params: getParams({ val: 'Wrong number' }),
       expected: NaN
     });
@@ -117,7 +117,7 @@ describe('parsers / number-parsers / number-parser', () => {
 
     registerTest({
       methodName: '_validateNumber',
-      testName: 'shouldn\'t throw error when val is a number',
+      testName: 'should not throw error when val is a number',
       params: getParams()
     });
   });
@@ -132,13 +132,13 @@ describe('parsers / number-parsers / number-parser', () => {
 
     registerTest({
       methodName: '_validateMin',
-      testName: 'shouldn\t throw error when op.min is defined and val is greater than min',
+      testName: 'should not throw error when op.min is defined and val is greater than min',
       params: getParams({ min: 17 })
     });
 
     registerTest({
       methodName: '_validateMin',
-      testName: 'shouldn\t throw error when op.min is not defined',
+      testName: 'should not throw error when op.min is not defined',
       params: getParams()
     });
   });
@@ -153,13 +153,13 @@ describe('parsers / number-parsers / number-parser', () => {
 
     registerTest({
       methodName: '_validateMax',
-      testName: 'shouldn\t throw error when op.max is defined and val is less than max',
+      testName: 'should not throw error when op.max is defined and val is less than max',
       params: getParams({ max: 19 })
     });
 
     registerTest({
       methodName: '_validateMax',
-      testName: 'shouldn\t throw error when op.max is not defined',
+      testName: 'should not throw error when op.max is not defined',
       params: getParams()
     });
   });

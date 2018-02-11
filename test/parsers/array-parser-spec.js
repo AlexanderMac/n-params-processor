@@ -111,7 +111,7 @@ describe('parsers / array-parser', () => {
 
     registerTest({
       methodName: '_validateItemParser',
-      testName: 'shouldn\'t throw error when val is not nil',
+      testName: 'should not throw error when val is not nil',
       params: getParams()
     });
   });
@@ -126,13 +126,13 @@ describe('parsers / array-parser', () => {
 
     registerTest({
       methodName: '_validateAllowed',
-      testName: 'shouldn\'t throw error when allowed is undefined',
+      testName: 'should not throw error when allowed is undefined',
       params: { name: 'login', val: ['u1'], allowed: undefined, itemType: 'string' }
     });
 
     registerTest({
       methodName: '_validateAllowed',
-      testName: 'shouldn\'t throw error when allowed is defined val is subset of it',
+      testName: 'should not throw error when allowed is defined val is subset of it',
       params: { name: 'login', val: ['u1'], allowed: ['u1', 'u2', 'u3'], itemType: 'string' }
     });
   });

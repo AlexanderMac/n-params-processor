@@ -192,7 +192,7 @@ describe('parsers / date-parser', () => {
 
     registerTest({
       methodName: '_validateMomentDate',
-      testName: 'shouldn\'t throw error when val is a valid date',
+      testName: 'should not throw error when val is a valid date',
       params: getParams({ val: moment() })
     });
   });
@@ -207,13 +207,13 @@ describe('parsers / date-parser', () => {
 
     registerTest({
       methodName: '_validateMin',
-      testName: 'shouldn\t throw error when op.min is defined and val is greater than min',
+      testName: 'should not throw error when op.min is defined and val is greater than min',
       params: getParams({ min: '2016-01-01', val: moment('2017-01-01', 'YYYY-MM-DD') })
     });
 
     registerTest({
       methodName: '_validateMin',
-      testName: 'shouldn\t throw error when op.min is not defined',
+      testName: 'should not throw error when op.min is not defined',
       params: getParams()
     });
   });
@@ -228,13 +228,13 @@ describe('parsers / date-parser', () => {
 
     registerTest({
       methodName: '_validateMax',
-      testName: 'shouldn\t throw error when op.max is defined and val is less than max',
+      testName: 'should not throw error when op.max is defined and val is less than max',
       params: getParams({ max: '2018-01-01', val: moment('2017-01-01', 'YYYY-MM-DD') })
     });
 
     registerTest({
       methodName: '_validateMax',
-      testName: 'shouldn\t throw error when op.max is not defined',
+      testName: 'should not throw error when op.max is not defined',
       params: getParams()
     });
   });

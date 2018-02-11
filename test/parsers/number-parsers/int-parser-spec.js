@@ -21,7 +21,7 @@ describe('parsers / number-parsers / int-parser', () => {
   describe('_convert', () => {
     registerTest({
       methodName: '_convert',
-      testName: 'should set instance.val to NaN when val can\'t be converted to a number',
+      testName: 'should set instance.val to NaN when val ca not be converted to a number',
       params: getParams({ val: 'Wrong number' }),
       expected: NaN
     });

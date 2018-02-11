@@ -90,13 +90,13 @@ describe('parsers / string-parser', () => {
 
     registerTest({
       methodName: '_validateMin',
-      testName: 'shouldn\t throw error when op.min is defined and val.length is greater than min',
+      testName: 'should not throw error when op.min is defined and val.length is greater than min',
       params: getParams({ min: 1 })
     });
 
     registerTest({
       methodName: '_validateMin',
-      testName: 'shouldn\t throw error when op.min is not defined',
+      testName: 'should not throw error when op.min is not defined',
       params: getParams()
     });
   });
@@ -111,13 +111,13 @@ describe('parsers / string-parser', () => {
 
     registerTest({
       methodName: '_validateMax',
-      testName: 'shouldn\t throw error when op.max is defined and val.length is less than max',
+      testName: 'should not throw error when op.max is defined and val.length is less than max',
       params: getParams({ max: 7 })
     });
 
     registerTest({
       methodName: '_validateMax',
-      testName: 'shouldn\t throw error when op.max is not defined',
+      testName: 'should not throw error when op.max is not defined',
       params: getParams()
     });
   });

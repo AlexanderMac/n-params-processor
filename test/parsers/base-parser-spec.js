@@ -114,19 +114,19 @@ describe('parsers / base-parser', () => {
 
     registerTest({
       methodName: '_validateRequired',
-      testName: 'shouldn\'t throw error when required is false and val is undefined',
+      testName: 'should not throw error when required is false and val is undefined',
       params: { name: 'login', val: undefined, required: false }
     });
 
     registerTest({
       methodName: '_validateRequired',
-      testName: 'shouldn\'t throw error when required is true and val is not undefined',
+      testName: 'should not throw error when required is true and val is not undefined',
       params: { name: 'login', val: 'u1', required: true }
     });
 
     registerTest({
       methodName: '_validateRequired',
-      testName: 'shouldn\'t throw error when required is false and val is defined',
+      testName: 'should not throw error when required is false and val is defined',
       params: { name: 'login', val: 'u1', required: false }
     });
   });
@@ -141,7 +141,7 @@ describe('parsers / base-parser', () => {
 
     registerTest({
       methodName: '_validateAllowed',
-      testName: 'shouldn\'t throw error when allowed is undefined',
+      testName: 'should not throw error when allowed is undefined',
       params: { name: 'login', val: 'u1', allowed: undefined }
     });
 
