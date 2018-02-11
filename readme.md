@@ -181,7 +181,7 @@ Parses, converts to `itemType` and validates parameter.
   - `itemType` the array item type (on of the registered parser types: `Int`, `String`, `Bool`, etc).
   - `allowed` - validates that parameter value is subset of `allowed` array, *optional*.
 
-## DataBuilder API
+## <a name="databuilder"></a> DataBuilder API
 Should be used for creating a plain data object, to use in create and update operations.
 
 ### constructor(params)
@@ -191,7 +191,7 @@ Should be used for creating a plain data object, to use in create and update ope
 ### build()
 Returns a final data object.
 
-## QueryBuilder (MongooseQueryBuilder, SequelizeQueryBuilder) API
+## <a name="querybuilder"></a> QueryBuilder (MongooseQueryBuilder, SequelizeQueryBuilder) API
 Should be used for generating database query.
 
 ### constructor(params)
