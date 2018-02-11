@@ -134,9 +134,9 @@ describe('parsers / base-parser', () => {
   describe('_validateAllowed', () => {
     registerTest({
       methodName: '_validateAllowed',
-      testName: 'should throw Error when allowed is defined and doesn\'t contain val',
+      testName: 'should throw Error when allowed is defined and does not contain val',
       params: { name: 'login', val: 'u1', allowed: ['u2', 'u3'] },
-      expected: new Error('login is incorrect, must be one of u2,u3')
+      expected: new Error('login is incorrect, must be one of [u2,u3]')
     });
 
     registerTest({
@@ -147,7 +147,7 @@ describe('parsers / base-parser', () => {
 
     registerTest({
       methodName: '_validateAllowed',
-      testName: 'shouldn\'t throw error when allowed is defined and contains val',
+      testName: 'should not throw error when allowed is defined and contains val',
       params: { name: 'login', val: 'u1', allowed: ['u1', 'u2', 'u3'] }
     });
   });

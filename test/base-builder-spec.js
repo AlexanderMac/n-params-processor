@@ -28,7 +28,7 @@ describe('base-builder', () => {
     should(_.isFunction(instance.parseArray)).equal(true);
   }
 
-  describe('static registerCustomErrorType', () => {
+  describe.skip('static registerCustomErrorType', () => {
     beforeEach(() => {
       sinon.stub(BaseParser, 'registerCustomErrorType');
     });

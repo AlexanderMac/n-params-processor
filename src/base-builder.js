@@ -1,14 +1,9 @@
 'use strict';
 
-const _          = require('lodash');
-const parsers    = require('./parsers');
-const BaseParser = require('./parsers/base-parser');
+const _       = require('lodash');
+const parsers = require('./parsers');
 
 class BaseBuilder {
-  static registerCustomErrorType(ErrorType) {
-    BaseParser.registerCustomErrorType(ErrorType);
-  }
-
   constructor({ source, data } = {}) {
     this.source = source;
     this.data = data || {};
@@ -28,7 +23,7 @@ class BaseBuilder {
     this[parseFnName] = (params) => {
       let parserParams = _.chain(params)
         .cloneDeep()
-        .omit(['source', 'name', 'az'])
+        .omit(['source', 'az'])
         .extend({ val: this._getValue({ source: params.source, name: params.name }) })
         .value();
       let paramVal = parsers[parserName].parse(parserParams);

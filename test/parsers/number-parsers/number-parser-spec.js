@@ -110,6 +110,13 @@ describe('parsers / number-parsers / number-parser', () => {
   describe('_validateNumber', () => {
     registerTest({
       methodName: '_validateNumber',
+      testName: 'shouldn throw error when val is NaN',
+      expected: new Error('age must be a number'),
+      params: getParams({ val: NaN })
+    });
+
+    registerTest({
+      methodName: '_validateNumber',
       testName: 'shouldn\'t throw error when val is a number',
       params: getParams()
     });
@@ -137,6 +144,13 @@ describe('parsers / number-parsers / number-parser', () => {
   });
 
   describe('_validateMax', () => {
+    registerTest({
+      methodName: '_validateMax',
+      testName: 'should throw error when op.min is defined and provided val is greater than max',
+      params: getParams({ max: 17 }),
+      expected: new Error('age must be less than or equal to 17')
+    });
+
     registerTest({
       methodName: '_validateMax',
       testName: 'shouldn\t throw error when op.max is defined and val is less than max',

@@ -203,8 +203,14 @@ describe('query-builder', () => {
   });
 
   describe('_registerOneParseFunction', () => {
+    let instance;
+
     beforeEach(() => {
-      sinon.stub(BaseBuilder.prototype, '_registerOneParseFunction').returns('parseSuper');
+      instance = new QueryBuilder();
+      sinon.stub(BaseBuilder.prototype, '_registerOneParseFunction').callsFake(() => {
+        instance.parseSuper = () => {};
+        return 'parseSuper';
+      });
     });
 
     afterEach(() => {
@@ -212,8 +218,6 @@ describe('query-builder', () => {
     });
 
     function test({ parserName, expected }) {
-      let instance = new QueryBuilder();
-
       let actual = instance._registerOneParseFunction(parserName);
       should(actual).eql(expected);
       should(_.isFunction(instance.parseSuper)).equal(true);

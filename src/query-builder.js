@@ -62,12 +62,13 @@ class QueryBuilder extends BaseBuilder {
 
   _registerOneParseFunction(parserName) {
     let parseFnName = super._registerOneParseFunction(parserName);
+    let baseParseFn = super[parseFnName];
 
     this[parseFnName] = (params) => {
       if (_.isNil(params.to)) {
         params.to = '_filter_';
       }
-      let res = super[parseFnName](params);
+      let res = baseParseFn.call(this, params);
       if (params.to === '_filter_') {
         this.filterCriteria.push({
           name: res.name,

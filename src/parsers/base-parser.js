@@ -44,7 +44,7 @@ class BaseParser {
 
   _validateAllowed() {
     if (this.allowed && !_.includes(this.allowed, this.val)) {
-      this._throwIncorrectParamError(`${this.name} is incorrect, must be one of ${this.allowed}`);
+      this._throwIncorrectParamError(`${this.name} is incorrect, must be one of [${this.allowed}]`);
     }
   }
 

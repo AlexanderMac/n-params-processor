@@ -10,7 +10,7 @@ class SequelizeQueryBuilder extends QueryBuilder {
   _buildFilter() {
     return _.reduce(this.data._filter_, (res, paramVal, paramName) => {
       let criterion = _.find(this.filterCriteria, { name: paramName });
-      let dbSpecificOp = criterion ? SEQUELIZE_OPS[criterion.op] : SEQUELIZE_OPS.eq;
+      let dbSpecificOp = (criterion && criterion.op) ? SEQUELIZE_OPS[criterion.op] : SEQUELIZE_OPS.eq;
       res[paramName] = {
         [dbSpecificOp]: paramVal
       };
