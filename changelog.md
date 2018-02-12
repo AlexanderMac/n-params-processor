@@ -1,3 +1,11 @@
+# <sub>v2.1.0</sub>
+#### _Feb. 12, 2018_
+
+  * Added `formatRes` parameter to `parseDate` method. If this parameter is provided final date result converted to `Date` object or to string.
+  * Added support for `like` query operator. For mongoose queries it replaced to `$eq`, for sequelize to `$like`.
+  * Changed `def` parameter behavior, it's used when this value is not undefined.
+  * Added validation for mandatory `parse<Type>` parameters: `source` and `name`.
+
 # <sub>v2.0.0</sub>
 #### _Feb. 11, 2018_
 
@@ -12,14 +20,14 @@
 # <sub>v1.1.1</sub>
 #### _Nov. 26, 2017_
 
-  * Fix package.json, add `src` folder to `files` section.
+  * Fixed package.json, add `src` folder to `files` section.
 
 # <sub>v1.1.0</sub>
 #### _Nov. 25, 2017_
 
- * Create complete readme.
- * Cover by tests all functionality.
- * Refactor and improve a lot of things.
+ * Created complete readme.
+ * Covered by tests all functionality.
+ * Refactored and improved a lot of things.
  
 # <sub>v1.0.0</sub>
 #### _Apr. 6, 2017_
