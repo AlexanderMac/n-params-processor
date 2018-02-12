@@ -233,7 +233,7 @@ describe('query-builder', () => {
     });
   });
 
-  describe('parseString', () => {
+  describe('parse<Parser>', () => {
     function test({ params, expected }) {
       let instance = new QueryBuilder();
 
@@ -241,6 +241,23 @@ describe('query-builder', () => {
       should(actual).eql(expected.result);
       should(instance.filterCriteria).eql(expected.filterCriteria);
     }
+
+    it('should call registered parser, do not update filter and null when res is null', () => {
+      let params = {
+        source: {},
+        name: 'login'
+      };
+      let parseSuperArgs = {
+        params: 'params',
+        to: '_filter_'
+      };
+      let expected = {
+        result: null,
+        filterCriteria: []
+      };
+
+      test({ params, parseSuperArgs, expected });
+    });
 
     it('should call registered parser, update filter and return value (when params.to is undefined)', () => {
       let params = {

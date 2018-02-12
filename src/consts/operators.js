@@ -8,7 +8,8 @@ const ALIASES = {
   lt: 'lt',
   lte: 'lte',
   in: 'in',
-  nin: 'nin'
+  nin: 'nin',
+  like: 'like'
 };
 
 const MONGOOSE_OPS = {
@@ -19,7 +20,8 @@ const MONGOOSE_OPS = {
   [ALIASES.lt]: '$lte',
   [ALIASES.lte]: '$lte',
   [ALIASES.in]: '$in',
-  [ALIASES.nin]: '$nin'
+  [ALIASES.nin]: '$nin',
+  [ALIASES.like]: '$eq' // TODO: use $text
 };
 
 const SEQUELIZE_OPS = {
@@ -30,7 +32,8 @@ const SEQUELIZE_OPS = {
   [ALIASES.lt]: '$lte',
   [ALIASES.lte]: '$lte',
   [ALIASES.in]: '$in',
-  [ALIASES.nin]: '$notIn'
+  [ALIASES.nin]: '$notIn',
+  [ALIASES.like]: '$like'
 };
 
 module.exports = {

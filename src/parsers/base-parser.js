@@ -13,7 +13,7 @@ class BaseParser {
     this.val = val;
     this.name = name;
     this.required = !!required;
-    if (!_.isNil(def)) {
+    if (!_.isUndefined(def)) {
       this.def = def;
     }
     if (!_.isNil(min)) {
@@ -31,7 +31,7 @@ class BaseParser {
     this._validateRequired();
 
     if (_.isNil(this.val)) {
-      this.val = this.def || this.val;
+      this.val = !_.isUndefined(this.def) ? this.def : this.val;
       return true;
     }
   }

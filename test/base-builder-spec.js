@@ -158,6 +158,51 @@ describe('base-builder', () => {
     });
   });
 
+  describe('_validateParseParams', () => {
+    function test({ source, params, expected }) {
+      let instance = new BaseBuilder();
+      instance.source = source;
+
+      if (_.isError(expected)) {
+        should(instance._validateParseParams.bind(instance, params)).throw(expected);
+      } else {
+        instance._validateParseParams(params);
+      }
+    }
+
+    it('should throw Error when instance.source and params.source are undefined', () => {
+      let source = undefined;
+      let params = {
+        source: undefined,
+        name: 'login'
+      };
+      let expected = new Error('Instance.source or params.source must be provided');
+
+      test({ source, params, expected });
+    });
+
+    it('should throw Error when params.name is undefined', () => {
+      let source = undefined;
+      let params = {
+        source: { login: 'u1' },
+        name: undefined
+      };
+      let expected = new Error('params.name is requred');
+
+      test({ source, params, expected });
+    });
+
+    it('should not throw Error when both source and name are defined', () => {
+      let source = undefined;
+      let params = {
+        source: { login: 'u1' },
+        name: 'login'
+      };
+
+      test({ source, params });
+    });
+  });
+
   describe('_getValue', () => {
     function test({ params, source, expected }) {
       let instance = new BaseBuilder({ source });
@@ -246,6 +291,20 @@ describe('base-builder', () => {
       should(instance.data).eql(expected.data);
       should(actual).eql(expected.result);
     }
+
+    it('should do not change instance.data and retun null when params.paramVal is undefined', () => {
+      let data = {};
+      let params = {
+        paramName: 'login',
+        paramVal: undefined
+      };
+      let expected = {
+        data: {},
+        result: null
+      };
+
+      test({ data, params, expected });
+    });
 
     it('should extend instance.data when params.to is undefined', () => {
       let data = {};

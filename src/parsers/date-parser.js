@@ -13,6 +13,7 @@ class DateParser extends BaseParser {
   constructor(params) {
     super(params);
     this.format = params.format || moment.defaultFormat;
+    this.formatRes = params.formatRes;
     if (this.min) {
       this.min = moment.isMoment(params.min) ? params.min : moment(params.min, this.format);
     }
@@ -31,8 +32,7 @@ class DateParser extends BaseParser {
     this._validateMomentDate();
     this._validateMin();
     this._validateMax();
-
-    return this.val;
+    return this._getResult();
   }
 
   _validateMomentDate() {
@@ -51,6 +51,16 @@ class DateParser extends BaseParser {
     if (!_.isNil(this.max) && this.val > this.max) {
       this._throwIncorrectParamError(`${this.name} must be less than or equal to ${this.max.format(this.format)}`);
     }
+  }
+
+  _getResult() {
+    if (!this.formatRes || !this.val) {
+      return this.val;
+    }
+    if (this.formatRes === Date) {
+      return this.val.toDate();
+    }
+    return this.val.format(this.formatRes);
   }
 }
 

@@ -133,6 +133,7 @@ Parses, converts to `Date` and validates parameter value.
 
 - `params` is an object with the same fields as for [parseType](#parsetype), except:
   - `format`: is date time format, if not provided `monent.defaultFormat` is used, *optional*.
+  - `formatRes`: is a result object format, can be `Date` or format string, *optional*.
   - `min`: the lowest possible date, *optional*.
   - `max`: the largest possible date, *optional*.
 

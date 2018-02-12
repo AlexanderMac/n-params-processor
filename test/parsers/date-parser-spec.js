@@ -29,15 +29,16 @@ describe('parsers / date-parser', () => {
       should(instance.val).equal(expected.val);
       should(instance.name).equal(expected.name);
       should(instance.format).equal(expected.format);
+      should(instance.formatRes).equal(expected.formatRes);
       if (expected.min) {
         should(instance.min.isSame(expected.min)).equal(true);
       } else {
-        should(instance.min).eql(expected.min);
+        should(instance.min).equal(undefined);
       }
       if (expected.max) {
         should(instance.max.isSame(expected.max)).equal(true);
       } else {
-        should(instance.max).eql(expected.max);
+        should(instance.max).equal(undefined);
       }
     }
 
@@ -46,6 +47,7 @@ describe('parsers / date-parser', () => {
         val: '15',
         name: 'createdAt',
         format: 'YYYY-MM-DD',
+        formatRes: Date,
         min: '2016-01-01',
         max: '2017-01-01'
       };
@@ -59,9 +61,11 @@ describe('parsers / date-parser', () => {
         .value();
     }
 
-    it('should create an instance and set format, min, max when format is provided', () => {
+    it('should create an instance and set format, formatRes, min, max when they are provided', () => {
       let params = getParams();
       let expected = getExpectedParams(params, {
+        format: 'YYYY-MM-DD',
+        formatRes: Date,
         min: moment('2016-01-01'),
         max: moment('2017-01-01')
       });
@@ -69,62 +73,15 @@ describe('parsers / date-parser', () => {
       test({ params, expected });
     });
 
-    it('should create an instance and set format, min, max when format is not provided', () => {
+    it('should create an instance and set default format and skip other fields when all params are not provided', () => {
       let params = getParams({
-        format: undefined
+        format: undefined,
+        formatRes: undefined,
+        min: undefined,
+        max: undefined
       });
       let expected = getExpectedParams(params, {
         format: 'YYYY-MM-DDTHH:mm:ssZ',
-        min: moment('2016-01-01'),
-        max: moment('2017-01-01')
-      });
-
-      test({ params, expected });
-    });
-
-    it('should create an instance and set format, min, max when min is not provided', () => {
-      let params = getParams({
-        min: undefined
-      });
-      let expected = getExpectedParams(params, {
-        min: undefined,
-        max: moment('2017-01-01')
-      });
-
-      test({ params, expected });
-    });
-
-    it('should create an instance and set format, min, max when min is a moment object', () => {
-      let params = getParams({
-        min: moment('2016-01-01')
-      });
-      let expected = getExpectedParams(params, {
-        min: moment('2016-01-01'),
-        max: moment('2017-01-01')
-      });
-
-      test({ params, expected });
-    });
-
-    it('should create an instance and set format, min, max when max is not provided', () => {
-      let params = getParams({
-        max: undefined
-      });
-      let expected = getExpectedParams(params, {
-        min: moment('2016-01-01'),
-        max: undefined
-      });
-
-      test({ params, expected });
-    });
-
-    it('should create an instance and set format, min, max when max is a moment object', () => {
-      let params = getParams({
-        max: moment('2017-01-01')
-      });
-      let expected = getExpectedParams(params, {
-        min: moment('2016-01-01'),
-        max: moment('2017-01-01')
       });
 
       test({ params, expected });
@@ -137,6 +94,7 @@ describe('parsers / date-parser', () => {
       sinon.stub(instance, '_validateMomentDate');
       sinon.stub(instance, '_validateMin');
       sinon.stub(instance, '_validateMax');
+      sinon.stub(instance, '_getResult').returns(expected);
 
       BaseParser.prototype.parse.returns(_.isNil(expected));
 
@@ -147,6 +105,7 @@ describe('parsers / date-parser', () => {
       should(instance._validateMomentDate.calledOnce).equal(areTestMethodsCalled);
       should(instance._validateMin.calledOnce).equal(areTestMethodsCalled);
       should(instance._validateMax.calledOnce).equal(areTestMethodsCalled);
+      should(instance._getResult.calledOnce).equal(areTestMethodsCalled);
     }
 
     beforeEach(() => {
@@ -236,6 +195,36 @@ describe('parsers / date-parser', () => {
       methodName: '_validateMax',
       testName: 'should not throw error when op.max is not defined',
       params: getParams()
+    });
+  });
+
+  describe('_getResult', () => {
+    registerTest({
+      methodName: '_getResult',
+      testName: 'should return val when formatRes is undefined',
+      params: getParams({ formatRes: undefined, val: moment('2017-01-01', 'YYYY-MM-DD') }),
+      expectedRes: moment('2017-01-01', 'YYYY-MM-DD')
+    });
+
+    registerTest({
+      methodName: '_getResult',
+      testName: 'should return val when formatRes is provided and val is undefined',
+      params: getParams({ formatRes: Date, val: undefined }),
+      expectedRes: undefined
+    });
+
+    registerTest({
+      methodName: '_getResult',
+      testName: 'should return val converted to Date when formatRes is Date and val is not undefined',
+      params: getParams({ formatRes: Date, val: moment('2017-01-01', 'YYYY-MM-DD') }),
+      expectedRes: moment('2017-01-01', 'YYYY-MM-DD').toDate()
+    });
+
+    registerTest({
+      methodName: '_getResult',
+      testName: 'should return val converted to format string when formatRes is format string and val is not undefined',
+      params: getParams({ formatRes: 'YYYY-MM-DD', val: moment('2017-01-01', 'YYYY-MM-DD') }),
+      expectedRes: moment('2017-01-01', 'YYYY-MM-DD').format('YYYY-MM-DD')
     });
   });
 });

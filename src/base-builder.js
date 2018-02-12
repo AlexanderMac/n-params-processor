@@ -22,6 +22,8 @@ class BaseBuilder {
     let parseFnName = this._getParseFunctionName(parserName);
 
     this[parseFnName] = (params) => {
+      this._validateParseParams(params);
+
       let parserParams = _.chain(params)
         .cloneDeep()
         .omit(['source', 'az'])
@@ -40,6 +42,16 @@ class BaseBuilder {
     return 'parse' + _.replace(parserName, 'Parser', '');
   }
 
+  _validateParseParams({ source, name }) {
+    let currentSource = source || this.source;
+    if (!currentSource) {
+      throw new Error('Instance.source or params.source must be provided');
+    }
+    if (!name) {
+      throw new Error('params.name is requred');
+    }
+  }
+
   _getValue({ source, name }) {
     let currentSource = source || this.source;
     return currentSource[name];
@@ -55,6 +67,9 @@ class BaseBuilder {
   }
 
   _processResult({ paramName, paramVal, to }) {
+    if (_.isUndefined(paramVal)) {
+      return null;
+    }
     let dest = _.isNil(to) ? this.data : this.data[to];
     dest[paramName] = paramVal;
     return {

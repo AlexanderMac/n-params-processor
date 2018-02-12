@@ -66,21 +66,21 @@ describe('parsers / base-parser', () => {
       should(instance._validateRequired.calledOnce).equal(true);
     }
 
-    it('should set instance.val to null and return true when params.val is null and params.def is not provided', () => {
+    it('should set instance.val to undefined and return true when params.val is undefined and params.def is not provided', () => {
       let params = {
-        val: null
+        val: undefined
       };
       let expected = {
         res: true,
-        val: null
+        val: undefined
       };
 
       test({ params, expected });
     });
 
-    it('should set instance.val to params.def and return true when params.val is null and params.def is provided', () => {
+    it('should set instance.val to params.def and return true when params.val is undefined and params.def is provided', () => {
       let params = {
-        val: null,
+        val: undefined,
         def: 'defUser'
       };
       let expected = {
@@ -91,7 +91,7 @@ describe('parsers / base-parser', () => {
       test({ params, expected });
     });
 
-    it('should return nothing when val is not null', () => {
+    it('should return nothing when val is not undefined', () => {
       let params = {
         val: 'user1'
       };

@@ -69,6 +69,9 @@ class QueryBuilder extends BaseBuilder {
         params.to = '_filter_';
       }
       let res = baseParseFn(params);
+      if (_.isNil(res)) {
+        return res;
+      }
       if (params.to === '_filter_') {
         this.filterCriteria.push({
           name: res.name,
