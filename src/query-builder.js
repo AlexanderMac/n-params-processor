@@ -13,7 +13,7 @@ class QueryBuilder extends BaseBuilder {
     this.filterCriteria = [];
   }
 
-  parseFields({ source, fieldsName, allowed, def } = {}) {
+  parseFields({ source, fieldsName, allowed, def }) {
     fieldsName = fieldsName || 'fields';
 
     // convert val to string or use default when val is nil
