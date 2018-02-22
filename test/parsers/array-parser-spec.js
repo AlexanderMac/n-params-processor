@@ -24,6 +24,48 @@ describe('parsers / array-parser', () => {
     return _.extend(def, ex);
   }
 
+  describe('static getInstance', () => {
+    function test() {
+      let actual = ArrayParser.getInstance({});
+      should(actual).be.instanceof(ArrayParser);
+    }
+
+    it('should create and return instance of ArrayParser', () => {
+      return test();
+    });
+  });
+
+  describe('static parse', () => {
+    beforeEach(() => {
+      sinon.stub(ArrayParser, 'getInstance');
+    });
+
+    afterEach(() => {
+      ArrayParser.getInstance.restore();
+    });
+
+    function test({ params, expected }) {
+      let mock = {
+        parse: () => 'ok'
+      };
+      sinon.spy(mock, 'parse');
+      ArrayParser.getInstance.returns(mock);
+
+      let actual = ArrayParser.parse(params);
+      nassert.assert(actual, expected);
+
+      nassert.validateCalledFn({ srvc: ArrayParser, fnName: 'getInstance', expectedArgs: params });
+      nassert.validateCalledFn({ srvc: mock, fnName: 'parse', expectedArgs: '_without-args_' });
+    }
+
+    it('should create instance of ArrayParser, call parse method and return result', () => {
+      let params = 'params';
+      let expected = 'ok';
+
+      return test({ params, expected });
+    });
+  });
+
   describe('constructor', () => {
     function test({ params, expected }) {
       let instance = new ArrayParser(params);

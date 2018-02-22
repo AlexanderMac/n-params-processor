@@ -1,7 +1,9 @@
 'use strict';
 
 const _        = require('lodash');
+const sinon    = require('sinon');
 const should   = require('should');
+const nassert  = require('n-assert');
 const testUtil = require('../../test-util');
 const IdParser = require('../../../src/parsers/number-parsers/id-parser');
 
@@ -18,6 +20,48 @@ describe('parsers / number-parsers / id-parser', () => {
     };
     return _.extend(def, ex);
   }
+
+  describe('static getInstance', () => {
+    function test() {
+      let actual = IdParser.getInstance({});
+      should(actual).be.instanceof(IdParser);
+    }
+
+    it('should create and return instance of IdParser', () => {
+      return test();
+    });
+  });
+
+  describe('static parse', () => {
+    beforeEach(() => {
+      sinon.stub(IdParser, 'getInstance');
+    });
+
+    afterEach(() => {
+      IdParser.getInstance.restore();
+    });
+
+    function test({ params, expected }) {
+      let mock = {
+        parse: () => 'ok'
+      };
+      sinon.spy(mock, 'parse');
+      IdParser.getInstance.returns(mock);
+
+      let actual = IdParser.parse(params);
+      nassert.assert(actual, expected);
+
+      nassert.validateCalledFn({ srvc: IdParser, fnName: 'getInstance', expectedArgs: params });
+      nassert.validateCalledFn({ srvc: mock, fnName: 'parse', expectedArgs: '_without-args_' });
+    }
+
+    it('should create instance of IdParser, call parse method and return result', () => {
+      let params = 'params';
+      let expected = 'ok';
+
+      return test({ params, expected });
+    });
+  });
 
   describe('constructor', () => {
     function test({ params, expected }) {

@@ -3,9 +3,12 @@
 const NumberParser = require('./number-parser');
 
 class FloatParser extends NumberParser {
+  static getInstance(params) {
+    return new FloatParser(params);
+  }
+
   static parse(params) {
-    let instance = new FloatParser(params);
-    return instance.parse();
+    return FloatParser.getInstance(params).parse();
   }
 
   _convert() {

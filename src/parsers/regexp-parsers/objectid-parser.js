@@ -3,9 +3,12 @@
 const RegexpParser = require('./regexp-parser');
 
 class ObjectIdParser extends RegexpParser {
+  static getInstance(params) {
+    return new ObjectIdParser(params);
+  }
+
   static parse(params) {
-    let instance = new ObjectIdParser(params);
-    return instance.parse();
+    return ObjectIdParser.getInstance(params).parse();
   }
 
   constructor(params) {

@@ -1,6 +1,9 @@
 'use strict';
 
 const _         = require('lodash');
+const sinon     = require('sinon');
+const should    = require('should');
+const nassert   = require('n-assert');
 const testUtil  = require('../../test-util');
 const IntParser = require('../../../src/parsers/number-parsers/int-parser');
 
@@ -17,6 +20,48 @@ describe('parsers / number-parsers / int-parser', () => {
     };
     return _.extend(def, ex);
   }
+
+  describe('static getInstance', () => {
+    function test() {
+      let actual = IntParser.getInstance({});
+      should(actual).be.instanceof(IntParser);
+    }
+
+    it('should create and return instance of IntParser', () => {
+      return test();
+    });
+  });
+
+  describe('static parse', () => {
+    beforeEach(() => {
+      sinon.stub(IntParser, 'getInstance');
+    });
+
+    afterEach(() => {
+      IntParser.getInstance.restore();
+    });
+
+    function test({ params, expected }) {
+      let mock = {
+        parse: () => 'ok'
+      };
+      sinon.spy(mock, 'parse');
+      IntParser.getInstance.returns(mock);
+
+      let actual = IntParser.parse(params);
+      nassert.assert(actual, expected);
+
+      nassert.validateCalledFn({ srvc: IntParser, fnName: 'getInstance', expectedArgs: params });
+      nassert.validateCalledFn({ srvc: mock, fnName: 'parse', expectedArgs: '_without-args_' });
+    }
+
+    it('should create instance of IntParser, call parse method and return result', () => {
+      let params = 'params';
+      let expected = 'ok';
+
+      return test({ params, expected });
+    });
+  });
 
   describe('_convert', () => {
     registerTest({

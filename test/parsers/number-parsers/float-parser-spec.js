@@ -1,6 +1,9 @@
 'use strict';
 
 const _           = require('lodash');
+const sinon       = require('sinon');
+const should      = require('should');
+const nassert     = require('n-assert');
 const testUtil    = require('../../test-util');
 const FloatParser = require('../../../src/parsers/number-parsers/float-parser');
 
@@ -17,6 +20,48 @@ describe('parsers / number-parsers / float-parser', () => {
     };
     return _.extend(def, ex);
   }
+
+  describe('static getInstance', () => {
+    function test() {
+      let actual = FloatParser.getInstance({});
+      should(actual).be.instanceof(FloatParser);
+    }
+
+    it('should create and return instance of FloatParser', () => {
+      return test();
+    });
+  });
+
+  describe('static parse', () => {
+    beforeEach(() => {
+      sinon.stub(FloatParser, 'getInstance');
+    });
+
+    afterEach(() => {
+      FloatParser.getInstance.restore();
+    });
+
+    function test({ params, expected }) {
+      let mock = {
+        parse: () => 'ok'
+      };
+      sinon.spy(mock, 'parse');
+      FloatParser.getInstance.returns(mock);
+
+      let actual = FloatParser.parse(params);
+      nassert.assert(actual, expected);
+
+      nassert.validateCalledFn({ srvc: FloatParser, fnName: 'getInstance', expectedArgs: params });
+      nassert.validateCalledFn({ srvc: mock, fnName: 'parse', expectedArgs: '_without-args_' });
+    }
+
+    it('should create instance of FloatParser, call parse method and return result', () => {
+      let params = 'params';
+      let expected = 'ok';
+
+      return test({ params, expected });
+    });
+  });
 
   describe('_convert', () => {
     registerTest({

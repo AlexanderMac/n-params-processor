@@ -5,9 +5,12 @@ const BaseParser = require('./base-parser');
 const parsers    = require('./');
 
 class ArrayParser extends BaseParser {
+  static getInstance(params) {
+    return new ArrayParser(params);
+  }
+
   static parse(params) {
-    let instance = new ArrayParser(params);
-    return instance.parse();
+    return ArrayParser.getInstance(params).parse();
   }
 
   constructor(params) {

@@ -3,6 +3,7 @@
 const _          = require('lodash');
 const sinon      = require('sinon');
 const should     = require('should');
+const nassert    = require('n-assert');
 const BaseParser = require('../../src/parsers/base-parser');
 const JsonParser = require('../../src/parsers/json-parser');
 
@@ -14,6 +15,48 @@ describe('parsers / json-parser', () => {
     };
     return _.extend(def, ex);
   }
+
+  describe('static getInstance', () => {
+    function test() {
+      let actual = JsonParser.getInstance({});
+      should(actual).be.instanceof(JsonParser);
+    }
+
+    it('should create and return instance of JsonParser', () => {
+      return test();
+    });
+  });
+
+  describe('static parse', () => {
+    beforeEach(() => {
+      sinon.stub(JsonParser, 'getInstance');
+    });
+
+    afterEach(() => {
+      JsonParser.getInstance.restore();
+    });
+
+    function test({ params, expected }) {
+      let mock = {
+        parse: () => 'ok'
+      };
+      sinon.spy(mock, 'parse');
+      JsonParser.getInstance.returns(mock);
+
+      let actual = JsonParser.parse(params);
+      nassert.assert(actual, expected);
+
+      nassert.validateCalledFn({ srvc: JsonParser, fnName: 'getInstance', expectedArgs: params });
+      nassert.validateCalledFn({ srvc: mock, fnName: 'parse', expectedArgs: '_without-args_' });
+    }
+
+    it('should create instance of JsonParser, call parse method and return result', () => {
+      let params = 'params';
+      let expected = 'ok';
+
+      return test({ params, expected });
+    });
+  });
 
   describe('parse', () => {
     function test({ params, expected }) {

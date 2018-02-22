@@ -3,6 +3,7 @@
 const _          = require('lodash');
 const sinon      = require('sinon');
 const should     = require('should');
+const nassert    = require('n-assert');
 const BaseParser = require('../../src/parsers/base-parser');
 const BoolParser = require('../../src/parsers/bool-parser');
 
@@ -14,6 +15,48 @@ describe('parsers / bool-parser', () => {
     };
     return _.extend(def, ex);
   }
+
+  describe('static getInstance', () => {
+    function test() {
+      let actual = BoolParser.getInstance({});
+      should(actual).be.instanceof(BoolParser);
+    }
+
+    it('should create and return instance of BoolParser', () => {
+      return test();
+    });
+  });
+
+  describe('static parse', () => {
+    beforeEach(() => {
+      sinon.stub(BoolParser, 'getInstance');
+    });
+
+    afterEach(() => {
+      BoolParser.getInstance.restore();
+    });
+
+    function test({ params, expected }) {
+      let mock = {
+        parse: () => 'ok'
+      };
+      sinon.spy(mock, 'parse');
+      BoolParser.getInstance.returns(mock);
+
+      let actual = BoolParser.parse(params);
+      nassert.assert(actual, expected);
+
+      nassert.validateCalledFn({ srvc: BoolParser, fnName: 'getInstance', expectedArgs: params });
+      nassert.validateCalledFn({ srvc: mock, fnName: 'parse', expectedArgs: '_without-args_' });
+    }
+
+    it('should create instance of BoolParser, call parse method and return result', () => {
+      let params = 'params';
+      let expected = 'ok';
+
+      return test({ params, expected });
+    });
+  });
 
   describe('parse', () => {
     function test({ params, expected }) {
@@ -81,9 +124,16 @@ describe('parsers / bool-parser', () => {
       });
     });
 
-    it('should throw Error when val is an invalid boolean', () => {
+    it('should throw Error when val is a string, but not true, false', () => {
       test({
-        params: getParams({ val: 'invalid bool' }),
+        params: getParams({ val: 'invalid boolean' }),
+        expected: new Error('success must be a valid boolean value')
+      });
+    });
+
+    it('should throw Error when val is not boolean and string', () => {
+      test({
+        params: getParams({ val: 155 }),
         expected: new Error('success must be a valid boolean value')
       });
     });

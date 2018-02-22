@@ -3,9 +3,12 @@
 const NumberParser = require('./number-parser');
 
 class IdParser extends NumberParser {
+  static getInstance(params) {
+    return new IdParser(params);
+  }
+
   static parse(params) {
-    let instance = new IdParser(params);
-    return instance.parse();
+    return IdParser.getInstance(params).parse();
   }
 
   constructor(params) {

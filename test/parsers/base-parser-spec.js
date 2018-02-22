@@ -12,6 +12,16 @@ describe('parsers / base-parser', () => {
     testUtil.registerTest(params);
   }
 
+  describe('static registerCustomErrorType', () => {
+    function test() {
+      BaseParser.registerCustomErrorType(Error);
+    }
+
+    it('should register new Error type', () => {
+      return test();
+    });
+  });
+
   describe('constructor', () => {
     function test({ params, expected }) {
       let instance = new BaseParser(params);

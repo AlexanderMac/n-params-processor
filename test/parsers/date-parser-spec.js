@@ -4,6 +4,7 @@ const _          = require('lodash');
 const moment     = require('moment');
 const sinon      = require('sinon');
 const should     = require('should');
+const nassert    = require('n-assert');
 const testUtil   = require('../test-util');
 const BaseParser = require('../../src/parsers/base-parser');
 const DateParser = require('../../src/parsers/date-parser');
@@ -22,6 +23,48 @@ describe('parsers / date-parser', () => {
     };
     return _.extend(def, ex);
   }
+
+  describe('static getInstance', () => {
+    function test() {
+      let actual = DateParser.getInstance({});
+      should(actual).be.instanceof(DateParser);
+    }
+
+    it('should create and return instance of DateParser', () => {
+      return test();
+    });
+  });
+
+  describe('static parse', () => {
+    beforeEach(() => {
+      sinon.stub(DateParser, 'getInstance');
+    });
+
+    afterEach(() => {
+      DateParser.getInstance.restore();
+    });
+
+    function test({ params, expected }) {
+      let mock = {
+        parse: () => 'ok'
+      };
+      sinon.spy(mock, 'parse');
+      DateParser.getInstance.returns(mock);
+
+      let actual = DateParser.parse(params);
+      nassert.assert(actual, expected);
+
+      nassert.validateCalledFn({ srvc: DateParser, fnName: 'getInstance', expectedArgs: params });
+      nassert.validateCalledFn({ srvc: mock, fnName: 'parse', expectedArgs: '_without-args_' });
+    }
+
+    it('should create instance of DateParser, call parse method and return result', () => {
+      let params = 'params';
+      let expected = 'ok';
+
+      return test({ params, expected });
+    });
+  });
 
   describe('constructor', () => {
     function test({ params, expected }) {
@@ -42,47 +85,62 @@ describe('parsers / date-parser', () => {
       }
     }
 
-    function getParams(ex) {
-      let def = {
-        val: '15',
-        name: 'createdAt',
-        format: 'YYYY-MM-DD',
-        formatRes: Date,
-        min: '2016-01-01',
-        max: '2017-01-01'
+    it('should use params.format when it is provided', () => {
+      let params = {
+        format: 'YYYY-MM-DD'
       };
-      return _.extend(def, ex);
-    }
-
-    function getExpectedParams(params, ex) {
-      return _.chain(params)
-        .clone()
-        .extend(ex)
-        .value();
-    }
-
-    it('should create an instance and set format, formatRes, min, max when they are provided', () => {
-      let params = getParams();
-      let expected = getExpectedParams(params, {
-        format: 'YYYY-MM-DD',
-        formatRes: Date,
-        min: moment('2016-01-01'),
-        max: moment('2017-01-01')
-      });
+      let expected = {
+        format: 'YYYY-MM-DD'
+      };
 
       test({ params, expected });
     });
 
-    it('should create an instance and set default format and skip other fields when all params are not provided', () => {
-      let params = getParams({
-        format: undefined,
-        formatRes: undefined,
-        min: undefined,
-        max: undefined
-      });
-      let expected = getExpectedParams(params, {
+    it('should use default format when params.format is not provided', () => {
+      let params = {};
+      let expected = {
+        format: 'YYYY-MM-DDTHH:mm:ssZ'
+      };
+
+      test({ params, expected });
+    });
+
+    it('should use params.formatRes when it is provided', () => {
+      let params = {
+        formatRes: 'YYYY-MM-DD'
+      };
+      let expected = {
         format: 'YYYY-MM-DDTHH:mm:ssZ',
-      });
+        formatRes: 'YYYY-MM-DD'
+      };
+
+      test({ params, expected });
+    });
+
+    it('should use params.min, params.max when they are provided and in string format', () => {
+      let params = {
+        min: '2016-01-01',
+        max: '2017-01-01'
+      };
+      let expected = {
+        format: 'YYYY-MM-DDTHH:mm:ssZ',
+        min: moment('2016-01-01'),
+        max: moment('2017-01-01')
+      };
+
+      test({ params, expected });
+    });
+
+    it('should use params.min, params.max when they are provided and in moment format', () => {
+      let params = {
+        min: moment('2016-01-01'),
+        max: moment('2017-01-01')
+      };
+      let expected = {
+        format: 'YYYY-MM-DDTHH:mm:ssZ',
+        min: moment('2016-01-01'),
+        max: moment('2017-01-01')
+      };
 
       test({ params, expected });
     });

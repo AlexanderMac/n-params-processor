@@ -82,7 +82,7 @@ describe('sequelize-query-builder', () => {
     });
   });
 
-  describe('functional', () => {
+  describe('integration tests', () => {
     function test({ req, expected }) {
       const ALLOWED_FIELDS = 'id firstName lastName age';
       const DEFAULT_FIELDS = 'id firstName lastName';

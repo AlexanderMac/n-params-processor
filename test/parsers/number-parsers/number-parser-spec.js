@@ -3,6 +3,7 @@
 const _            = require('lodash');
 const sinon        = require('sinon');
 const should       = require('should');
+const nassert      = require('n-assert');
 const testUtil     = require('../../test-util');
 const BaseParser   = require('../../../src/parsers/base-parser');
 const NumberParser = require('../../../src/parsers/number-parsers/number-parser');
@@ -20,6 +21,48 @@ describe('parsers / number-parsers / number-parser', () => {
     };
     return _.extend(def, ex);
   }
+
+  describe('static getInstance', () => {
+    function test() {
+      let actual = NumberParser.getInstance({});
+      should(actual).be.instanceof(NumberParser);
+    }
+
+    it('should create and return instance of NumberParser', () => {
+      return test();
+    });
+  });
+
+  describe('static parse', () => {
+    beforeEach(() => {
+      sinon.stub(NumberParser, 'getInstance');
+    });
+
+    afterEach(() => {
+      NumberParser.getInstance.restore();
+    });
+
+    function test({ params, expected }) {
+      let mock = {
+        parse: () => 'ok'
+      };
+      sinon.spy(mock, 'parse');
+      NumberParser.getInstance.returns(mock);
+
+      let actual = NumberParser.parse(params);
+      nassert.assert(actual, expected);
+
+      nassert.validateCalledFn({ srvc: NumberParser, fnName: 'getInstance', expectedArgs: params });
+      nassert.validateCalledFn({ srvc: mock, fnName: 'parse', expectedArgs: '_without-args_' });
+    }
+
+    it('should create instance of NumberParser, call parse method and return result', () => {
+      let params = 'params';
+      let expected = 'ok';
+
+      return test({ params, expected });
+    });
+  });
 
   describe('parse', () => {
     function test({ params, expected, areTestMethodsCalled }) {

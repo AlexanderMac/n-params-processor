@@ -4,9 +4,12 @@ const _          = require('lodash');
 const BaseParser = require('./base-parser');
 
 class BoolParser extends BaseParser {
+  static getInstance(params) {
+    return new BoolParser(params);
+  }
+
   static parse(params) {
-    let instance = new BoolParser(params);
-    return instance.parse();
+    return BoolParser.getInstance(params).parse();
   }
 
   parse() {

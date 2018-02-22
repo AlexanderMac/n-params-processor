@@ -21,7 +21,7 @@ describe('data-builder', () => {
     });
   });
 
-  describe('functional', () => {
+  describe('integration tests', () => {
     function test({ req, expected }) {
       let dataBuilder = new DataBuilder({
         source: req.body,
