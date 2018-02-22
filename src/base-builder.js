@@ -30,6 +30,9 @@ class BaseBuilder {
         .extend({ val: this._getValue({ source: params.source, name: params.name }) })
         .value();
       let paramVal = parsers[parserName].parse(parserParams);
+      if (_.isUndefined(paramVal)) {
+        return null;
+      }
 
       let paramName = this._getParamName({ name: params.name, az: params.az, to: params.to });
       return this._processResult({ paramName, paramVal, to: params.to });
@@ -67,9 +70,6 @@ class BaseBuilder {
   }
 
   _processResult({ paramName, paramVal, to }) {
-    if (_.isUndefined(paramVal)) {
-      return null;
-    }
     let dest = _.isNil(to) ? this.data : this.data[to];
     dest[paramName] = paramVal;
     return {

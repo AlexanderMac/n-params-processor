@@ -104,7 +104,7 @@ describe('base-builder', () => {
 
   describe('parse<Parser>', () => {
     beforeEach(() => {
-      sinon.stub(parsers.IntParser, 'parse').returns(20);
+      sinon.stub(parsers.IntParser, 'parse');
     });
 
     afterEach(() => {
@@ -119,6 +119,21 @@ describe('base-builder', () => {
 
       nassert.validateCalledFn({ srvc: parsers.IntParser, fnName: 'parse', expectedArgs: expectedParseArgs });
     }
+
+    it('should call registered parser, and return null when val is undefined', () => {
+      let params = {
+        source: {},
+        name: 'age',
+        min: 18
+      };
+      let expected = null;
+      let expectedParseArgs = {
+        val: undefined,
+        min: 18
+      };
+
+      test({ params, expected, expectedParseArgs });
+    });
 
     it('should call registered parser, and return value', () => {
       let params = {
@@ -137,6 +152,8 @@ describe('base-builder', () => {
         min: 18,
         val: '20'
       };
+
+      parsers.IntParser.parse.returns(20);
 
       test({ params, expected, expectedParseArgs });
     });
@@ -292,20 +309,6 @@ describe('base-builder', () => {
       should(actual).eql(expected.result);
     }
 
-    it('should do not change instance.data and retun null when params.paramVal is undefined', () => {
-      let data = {};
-      let params = {
-        paramName: 'login',
-        paramVal: undefined
-      };
-      let expected = {
-        data: {},
-        result: null
-      };
-
-      test({ data, params, expected });
-    });
-
     it('should extend instance.data when params.to is undefined', () => {
       let data = {};
       let params = {
@@ -320,7 +323,7 @@ describe('base-builder', () => {
       test({ data, params, expected });
     });
 
-    it('should extend instance.data.to when params.to isdefined', () => {
+    it('should extend instance.data.to when params.to is defined', () => {
       let data = {
         _filter_: {}
       };
