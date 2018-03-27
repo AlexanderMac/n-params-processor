@@ -1,7 +1,11 @@
+# <sub>v2.3.0</sub>
+#### _Mar. 27, 2018_
+  * Added `parseEmail` method to parse and validate email address parameter.
+
 # <sub>v2.2.0</sub>
 #### _Feb. 22, 2018_
   * Fixed processing of undefined values in `BaseBuilder`, now `parse<Type>` method returns `null` when value is undefined and `def` parameter is not provided.
-  * Created new UTs, increased code coverage to 100%.
+  * Created new UTs, increased code coverage up to 100%.
 
 # <sub>v2.1.0</sub>
 #### _Feb. 12, 2018_
