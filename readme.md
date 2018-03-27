@@ -175,6 +175,11 @@ Parses, converts to `ObjectId` and validates parameter.
 
 - `params` is an object with the same fields as for [parseType](#parsetype).
 
+### parseEmail(params)
+Parses and validates email parameter.
+
+- `params` is an object with the same fields as for [parseType](#parsetype).
+
 ### parseArray(params)
 Parses, converts to `itemType` and validates parameter.
 

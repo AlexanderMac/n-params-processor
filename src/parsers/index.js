@@ -10,4 +10,5 @@ module.exports.FloatParser    = require('./number-parsers/float-parser');
 module.exports.IdParser       = require('./number-parsers/id-parser');
 module.exports.RegexpParser   = require('./regexp-parsers/regexp-parser');
 module.exports.ObjectIdParser = require('./regexp-parsers/objectid-parser');
+module.exports.EmailParser    = require('./regexp-parsers/email-parser');
 module.exports.ArrayParser    = require('./array-parser');
