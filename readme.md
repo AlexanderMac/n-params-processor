@@ -2,6 +2,7 @@
 Node.js parameters parser/validator and mongodb/sequelize query/data-object builder.
 
 [![Build Status](https://travis-ci.org/AlexanderMac/n-params-processor.svg?branch=master)](https://travis-ci.org/AlexanderMac/n-params-processor)
+[![Code Coverage](https://codecov.io/gh/AlexanderMac/n-params-processor/branch/master/graph/badge.svg)](https://codecov.io/gh/AlexanderMac/n-params-processor)
 [![npm version](https://badge.fury.io/js/n-params-processor.svg)](https://badge.fury.io/js/n-params-processor)
 
 ## Installation
