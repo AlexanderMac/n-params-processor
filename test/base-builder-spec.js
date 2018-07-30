@@ -14,7 +14,7 @@ describe('base-builder', () => {
       .filter(name => _.isFunction(instance[name]) && _.startsWith(name, 'parse'))
       .value()
       .length;
-    should(instanceParseFnCount).equal(12);
+    should(instanceParseFnCount).equal(13);
     should(_.isFunction(instance.parseString)).equal(true);
     should(_.isFunction(instance.parseDate)).equal(true);
     should(_.isFunction(instance.parseJson)).equal(true);
@@ -25,6 +25,7 @@ describe('base-builder', () => {
     should(_.isFunction(instance.parseRegexp)).equal(true);
     should(_.isFunction(instance.parseObjectId)).equal(true);
     should(_.isFunction(instance.parseEmail)).equal(true);
+    should(_.isFunction(instance.parseCustom)).equal(true);
     should(_.isFunction(instance.parseArray)).equal(true);
   }
 

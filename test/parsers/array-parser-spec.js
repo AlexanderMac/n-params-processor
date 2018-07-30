@@ -1,13 +1,14 @@
 'use strict';
 
-const _           = require('lodash');
-const sinon       = require('sinon');
-const should      = require('should');
-const nassert     = require('n-assert');
-const testUtil    = require('../test-util');
-const BaseParser  = require('../../src/parsers/base-parser');
-const IntParser   = require('../../src/parsers/number-parsers/int-parser');
-const ArrayParser = require('../../src/parsers/array-parser');
+const _            = require('lodash');
+const sinon        = require('sinon');
+const should       = require('should');
+const nassert      = require('n-assert');
+const testUtil     = require('../test-util');
+const BaseParser   = require('../../src/parsers/base-parser');
+const IntParser    = require('../../src/parsers/number-parsers/int-parser');
+const CustomParser = require('../../src/parsers/custom-parser');
+const ArrayParser  = require('../../src/parsers/array-parser');
 
 describe('parsers / array-parser', () => {
   function registerTest(params) {
@@ -78,6 +79,22 @@ describe('parsers / array-parser', () => {
         val: [1, 2, 3],
         name: 'clients',
         required: false,
+        itemType: 'Int',
+        ItemParser: IntParser
+      };
+
+      test({ params, expected });
+    });
+
+    it('should create an instance and set fields for custom itemType', () => {
+      let itemHandler = () => {};
+      let params = getParams({ itemType: 'Custom', itemHandler });
+      let expected = {
+        val: [1, 2, 3],
+        name: 'clients',
+        required: false,
+        itemType: 'Custom',
+        itemHandler,
         ItemParser: IntParser
       };
 
@@ -180,33 +197,54 @@ describe('parsers / array-parser', () => {
   });
 
   describe('_parseItem', () => {
-    function test({ params, expected, expectedArgs }) {
-      let instance = new ArrayParser(getParams());
+    function test({ parserParamsEx, params, expected, expectedIntParsersArgs, expectedCustomParsersArgs }) {
+      let parserParams = getParams(parserParamsEx);
+      let instance = new ArrayParser(parserParams);
 
       let actual = instance._parseItem(params);
       should(actual).eql(expected);
 
-      nassert.validateCalledFn({ srvc: IntParser, fnName: 'parse', expectedArgs });
+      nassert.validateCalledFn({ srvc: IntParser, fnName: 'parse', expectedArgs: expectedIntParsersArgs });
+      nassert.validateCalledFn({ srvc: CustomParser, fnName: 'parse', expectedArgs: expectedCustomParsersArgs });
     }
 
     beforeEach(() => {
       sinon.stub(IntParser, 'parse').callsFake(params => params.val);
+      sinon.stub(CustomParser, 'parse').callsFake(params => 'custom' + params.val);
     });
 
     afterEach(() => {
       IntParser.parse.restore();
+      CustomParser.parse.restore();
     });
 
     it('should build params and return result of the parser.parse call', () => {
       let params = 1;
       let expected = 1;
-      let expectedArgs = {
+      let expectedIntParsersArgs = {
         val: 1,
         name: 'item',
         required: true
       };
 
-      test({ params, expected, expectedArgs });
+      test({ params, expected, expectedIntParsersArgs });
+    });
+
+    it('should build params and return result of the parser.parse call for custom parser', () => {
+      let parserParamsEx = {
+        itemType: 'Custom',
+        itemHandler: (val) => val.toString()
+      };
+      let params = 1;
+      let expected = 'custom1';
+      let expectedCustomParsersArgs = {
+        val: 1,
+        name: 'item',
+        handler: parserParamsEx.itemHandler,
+        required: true
+      };
+
+      test({ parserParamsEx, params, expected, expectedCustomParsersArgs });
     });
   });
 });

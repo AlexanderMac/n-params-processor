@@ -15,7 +15,9 @@ class ArrayParser extends BaseParser {
 
   constructor(params) {
     super(params);
-    this.ItemParser = parsers[`${_.capitalize(params.itemType)}Parser`];
+    this.itemType = params.itemType;
+    this.itemHandler = params.itemHandler;
+    this.ItemParser = parsers[`${_.capitalize(this.itemType)}Parser`];
   }
 
   parse() {
@@ -47,6 +49,7 @@ class ArrayParser extends BaseParser {
     return this.ItemParser.parse({
       val: item,
       name: 'item',
+      handler: this.itemHandler,
       required: true
     });
   }

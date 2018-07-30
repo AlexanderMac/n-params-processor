@@ -181,11 +181,18 @@ Parses and validates email parameter.
 
 - `params` is an object with the same fields as for [parseType](#parsetype).
 
+### parseCustom(params)
+Parses and validates parameters using custom handler.
+
+- `params` is an object with the same fields as for [parseType](#parsetype), except:
+  - `handler`: the function that accepts value and returns some result, *required*.
+
 ### parseArray(params)
 Parses, converts to `itemType` and validates parameter.
 
 - `params` is an object with the same fields as for [parseType](#parsetype), except:
   - `itemType` the array item type (on of the registered parser types: `Int`, `String`, `Bool`, etc).
+  - `itemHandler` the handler for custom item type.
   - `allowed` - validates that parameter value is subset of `allowed` array, *optional*.
 
 ## <a name="databuilder-api"></a> DataBuilder API
