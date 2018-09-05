@@ -68,17 +68,26 @@ describe('sequelize-query-builder', () => {
   });
 
   describe('_buildSorting', () => {
-    function test(expected) {
+    function test({ _sorting_, expected }) {
       let instance = new SequelizeQB();
-      instance.data._sorting_ = 'sortingData';
+      instance.data._sorting_ = _sorting_;
 
       let actual = instance._buildSorting();
       should(actual).eql(expected);
     }
 
-    it('should build query sorting', () => {
-      let expected = 'sortingData';
-      test(expected);
+    it('should not build query sorting when data._sorting_ is null', () => {
+      test({});
+    });
+
+    it('should build query sorting when data._sorting is not null', () => {
+      let _sorting_ = {
+        sortBy: 'createdAt',
+        sortDirection: 'desc'
+      };
+      let expected = [['createdAt', 'desc']];
+
+      test({ _sorting_, expected });
     });
   });
 
@@ -117,7 +126,7 @@ describe('sequelize-query-builder', () => {
         },
         fields: ['firstName', 'lastName'],
         pagination: { page: 5, count: 10 },
-        sorting: { sortBy: 'firstName', sortDirection: 'asc' }
+        sorting: [['firstName', 'asc']]
       };
 
       test({ req, expected });

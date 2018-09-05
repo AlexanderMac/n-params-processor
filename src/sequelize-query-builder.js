@@ -27,7 +27,10 @@ class SequelizeQueryBuilder extends QueryBuilder {
   }
 
   _buildSorting() {
-    return this.data._sorting_;
+    let params = this.data._sorting_;
+    if (!_.isEmpty(params)) {
+      return [[params.sortBy, params.sortDirection]];
+    }
   }
 }
 
