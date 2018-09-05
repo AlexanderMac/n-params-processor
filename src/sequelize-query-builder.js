@@ -31,6 +31,7 @@ class SequelizeQueryBuilder extends QueryBuilder {
     if (!_.isEmpty(params)) {
       return [[params.sortBy, params.sortDirection]];
     }
+    return {};
   }
 }
 

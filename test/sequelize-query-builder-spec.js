@@ -77,7 +77,9 @@ describe('sequelize-query-builder', () => {
     }
 
     it('should not build query sorting when data._sorting_ is null', () => {
-      test({});
+      let expected = {};
+
+      test({ expected });
     });
 
     it('should build query sorting when data._sorting is not null', () => {
