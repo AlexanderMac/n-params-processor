@@ -1,3 +1,7 @@
+# <sub>v2.5.1</sub>
+#### Sep. 5, 2018_
+  * Minor fixes.
+
 # <sub>v2.5.0</sub>
 #### Sep. 5, 2018_
   * Fixed `buildSorting` method for Sequelize, currently it returns the correct value in [[sortBy, sortDirection]] format.
