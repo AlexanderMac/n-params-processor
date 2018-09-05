@@ -1,13 +1,13 @@
 # <sub>v2.5.1</sub>
-#### Sep. 5, 2018_
+#### _Sep. 5, 2018_
   * Minor fixes.
 
 # <sub>v2.5.0</sub>
-#### Sep. 5, 2018_
+#### _Sep. 5, 2018_
   * Fixed `buildSorting` method for Sequelize, currently it returns the correct value in [[sortBy, sortDirection]] format.
 
 # <sub>v2.4.0</sub>
-#### Jul. 30, 2018_
+#### _Jul. 30, 2018_
   * Added `CustomParser` to parse parameters using custom handler.
   * Added support for `CustomParser` in `ArrayParser`, not it accepts an additional `itemType: custom` and `itemHandler: () => ...`.
 
