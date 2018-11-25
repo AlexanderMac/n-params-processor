@@ -10,10 +10,14 @@ class MongooseQueryBuilder extends QueryBuilder {
   _buildFilter() {
     return _.reduce(this.data._filter_, (res, paramVal, paramName) => {
       let criterion = _.find(this.filterCriteria, { name: paramName });
-      let dbSpecificOp = (criterion && criterion.op) ? MONGOOSE_OPS[criterion.op] : MONGOOSE_OPS.eq;
-      res[paramName] = {
-        [dbSpecificOp]: paramVal
-      };
+      let dbSpecificOp = (criterion && criterion.op) ? MONGOOSE_OPS[criterion.op] : null;
+      if (dbSpecificOp) {
+        res[paramName] = {
+          [dbSpecificOp]: paramVal
+        };
+      } else {
+        res[paramName] = paramVal;
+      }
       return res;
     }, {});
   }

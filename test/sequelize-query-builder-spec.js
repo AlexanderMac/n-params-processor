@@ -30,7 +30,7 @@ describe('sequelize-query-builder', () => {
       ];
       let expected = {
         id: { $ne: 1 },
-        name: { $eq: 'u1' },
+        name: 'u1',
       };
 
       test({ instanceFilter, filterCriteria, expected });
@@ -123,7 +123,7 @@ describe('sequelize-query-builder', () => {
       };
       let expected = {
         filter: {
-          userRole: { $eq: 'user' },
+          userRole: 'user',
           userId: { $notIn: [1, 2, 3] }
         },
         fields: ['firstName', 'lastName'],
