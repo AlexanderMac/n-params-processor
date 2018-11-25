@@ -1,3 +1,8 @@
+# <sub>v3.0.0</sub>
+#### Nov. 25, 2018_
+  * Removed `$eq` operator by default from `QueryBuilder`.
+  * Added `allowed` parameter (an array of allowed fields for sortBy).
+
 # <sub>v2.5.1</sub>
 #### _Sep. 5, 2018_
   * Minor fixes.
