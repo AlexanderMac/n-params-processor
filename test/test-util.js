@@ -1,7 +1,11 @@
 'use strict';
 
-const _      = require('lodash');
-const should = require('should');
+const _       = require('lodash');
+const should  = require('should');
+const sinon   = require('sinon');
+const nassert = require('n-assert');
+
+nassert.initSinon(sinon);
 
 exports.registerTest = ({ Parser, methodName, testName, params, expected, expectedRes }) => {
   it(testName, () => {
