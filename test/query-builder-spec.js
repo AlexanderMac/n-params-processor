@@ -141,7 +141,7 @@ describe('query-builder', () => {
   });
 
   describe('parseSorting', () => {
-    function test({ params, parseStringFirstCallArgs, parseStringScndCallArgs, expected }) {
+    function test({ params, parseStringArgs, expected }) {
       let instance = new QueryBuilder();
       instance.data._sorting_ = 'sortingData';
       sinon.stub(instance, 'parseString');
@@ -151,32 +151,39 @@ describe('query-builder', () => {
       should(instance.data._sorting_).eql(expected);
 
       should(instance.parseString.calledTwice).equal(true);
-      should(instance.parseString.firstCall.calledWithExactly(parseStringFirstCallArgs)).equal(true);
-      should(instance.parseString.secondCall.calledWithExactly(parseStringScndCallArgs)).equal(true);
+      nassert.validateCalledFn({ srvc: instance, fnName: 'parseString', callCount: 2, nCall: 0, expectedArgs: parseStringArgs[0] });
+      nassert.validateCalledFn({ srvc: instance, fnName: 'parseString', callCount: 2, nCall: 1, expectedArgs: parseStringArgs[1] });
     }
 
     it('should return instance.data._sorting_ and use default names when params.source, sortByName, sortDirName are undefined', () => {
-      let params = {};
+      let params = {
+        allowed: []
+      };
       let expected = 'sortingData';
       let to = '_sorting_';
-      let parseStringFirstCallArgs = { source: undefined, name: 'sortBy', az: 'sortBy', to, def: 'id' };
-      let parseStringScndCallArgs = { source: undefined, name: 'sortDirection', az: 'sortDirection', to, allowed: ['asc', 'desc'], def: 'asc' };
+      let parseStringArgs = [
+        { source: undefined, name: 'sortBy', az: 'sortBy', to, def: 'id' },
+        { source: undefined, name: 'sortDirection', az: 'sortDirection', to, allowed: ['asc', 'desc'], def: 'asc' }
+      ];
 
-      test({ params, expected, parseStringFirstCallArgs, parseStringScndCallArgs });
+      test({ params, expected, parseStringArgs });
     });
 
     it('should return instance.data._sorting_ and use provided values when params.source, sortByName, sortDirName are defined', () => {
       let params = {
         source: 'source',
         sortByName: 'orderBy',
-        sortDirName: 'sortDir'
+        sortDirName: 'sortDir',
+        allowed: ['orderBy']
       };
       let expected = 'sortingData';
       let to = '_sorting_';
-      let parseStringFirstCallArgs = { source: 'source', name: 'orderBy', az: 'sortBy', to, def: 'id' };
-      let parseStringScndCallArgs = { source: 'source', name: 'sortDir', az: 'sortDirection', to, allowed: ['asc', 'desc'], def: 'asc' };
+      let parseStringArgs = [
+        { source: 'source', name: 'orderBy', az: 'sortBy', to, def: 'id' },
+        { source: 'source', name: 'sortDir', az: 'sortDirection', to, allowed: ['asc', 'desc'], def: 'asc' }
+      ];
 
-      test({ params, expected, parseStringFirstCallArgs, parseStringScndCallArgs });
+      test({ params, expected, parseStringArgs });
     });
   });
 

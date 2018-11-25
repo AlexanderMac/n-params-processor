@@ -92,8 +92,8 @@ describe('mongoose-query-builder', () => {
       queryBuilder.parseString({ name: 'role', az: 'userRole', required: true });
       queryBuilder.parseArray({ name: 'users', az: 'userId', itemType: 'int', op: 'in' });
       queryBuilder.parseFields({ allowed: ALLOWED_FIELDS, def: DEFAULT_FIELDS });
+      queryBuilder.parseSorting({ allowed: ['id', 'firstName'] });
       queryBuilder.parsePagination();
-      queryBuilder.parseSorting();
 
       let actual = queryBuilder.build();
       should(actual).eql(expected);

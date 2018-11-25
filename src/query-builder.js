@@ -22,8 +22,8 @@ class QueryBuilder extends BaseBuilder {
     source = {
       'fields': _.split(res.val, ' ')
     };
+
     allowed = _.split(allowed, ' ');
-    // use ArrayParser to validate fields
     this.parseArray({ source, name: 'fields', to: '_fields_', allowed, itemType: 'string' });
 
     return this.data._fields_;
@@ -40,12 +40,16 @@ class QueryBuilder extends BaseBuilder {
     return this.data._pagination_;
   }
 
-  parseSorting({ source, sortByName, sortDirName } = {}) {
+  parseSorting({ source, sortByName, sortDirName, allowed } = {}) {
     sortByName = sortByName || 'sortBy';
     sortDirName = sortDirName || 'sortDirection';
     let to = '_sorting_';
 
-    this.parseString({ source, name: sortByName, az: 'sortBy', to, def: 'id' });
+    if (!allowed) {
+      throw new Error('Parameter allowed is required');
+    }
+
+    this.parseString({ source, name: sortByName, az: 'sortBy', to, def: 'id', allowed });
     this.parseString({ source, name: sortDirName, az: 'sortDirection', to, allowed: ['asc', 'desc'], def: 'asc' });
 
     return this.data._sorting_;
