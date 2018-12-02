@@ -1,3 +1,7 @@
+# <sub>v3.0.1</sub>
+#### Dec. 2, 2018_
+  * Updated email regexp.
+
 # <sub>v3.0.0</sub>
 #### Nov. 25, 2018_
   * Removed `$eq` operator by default from `QueryBuilder`.
