@@ -1,3 +1,7 @@
+# <sub>v3.1.0</sub>
+#### Dec. 3, 2018_
+  * Fixed object schema for MongooseQB sorting.
+
 # <sub>v3.0.1</sub>
 #### Dec. 2, 2018_
   * Updated email regexp.
