@@ -143,6 +143,7 @@ describe('query-builder', () => {
   describe('parseSorting', () => {
     function test({ params, parseStringArgs, expected }) {
       let instance = new QueryBuilder();
+      instance.defSortBy = 'id';
       instance.data._sorting_ = 'sortingData';
       sinon.stub(instance, 'parseString');
 
@@ -162,8 +163,8 @@ describe('query-builder', () => {
       let expected = 'sortingData';
       let to = '_sorting_';
       let parseStringArgs = [
-        { source: undefined, name: 'sortBy', az: 'sortBy', to, def: 'id' },
-        { source: undefined, name: 'sortDirection', az: 'sortDirection', to, allowed: ['asc', 'desc'], def: 'asc' }
+        { source: undefined, name: 'sortBy', az: 'by', to, def: 'id' },
+        { source: undefined, name: 'sortDirection', az: 'direction', to, allowed: ['asc', 'desc'], def: 'asc' }
       ];
 
       test({ params, expected, parseStringArgs });
@@ -179,8 +180,8 @@ describe('query-builder', () => {
       let expected = 'sortingData';
       let to = '_sorting_';
       let parseStringArgs = [
-        { source: 'source', name: 'orderBy', az: 'sortBy', to, def: 'id' },
-        { source: 'source', name: 'sortDir', az: 'sortDirection', to, allowed: ['asc', 'desc'], def: 'asc' }
+        { source: 'source', name: 'orderBy', az: 'by', to, def: 'id' },
+        { source: 'source', name: 'sortDir', az: 'direction', to, allowed: ['asc', 'desc'], def: 'asc' }
       ];
 
       test({ params, expected, parseStringArgs });

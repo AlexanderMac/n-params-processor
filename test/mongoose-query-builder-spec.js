@@ -55,14 +55,20 @@ describe('mongoose-query-builder', () => {
   describe('_buildPagination', () => {
     function test(expected) {
       let instance = new MongooseQB();
-      instance.data._pagination_ = 'paginationData';
+      instance.data._pagination_ = {
+        page: 1,
+        count: 10
+      };
 
       let actual = instance._buildPagination();
       should(actual).eql(expected);
     }
 
     it('should build query pagination', () => {
-      let expected = 'paginationData';
+      let expected = {
+        page: 1,
+        count: 10
+      };
       test(expected);
     });
   });
@@ -70,14 +76,17 @@ describe('mongoose-query-builder', () => {
   describe('_buildSorting', () => {
     function test(expected) {
       let instance = new MongooseQB();
-      instance.data._sorting_ = 'sortingData';
+      instance.data._sorting_ = {
+        by: '_id',
+        direction: 'asc'
+      };
 
       let actual = instance._buildSorting();
       should(actual).eql(expected);
     }
 
     it('should build query sorting', () => {
-      let expected = 'sortingData';
+      let expected = { _id: 'asc' };
       test(expected);
     });
   });
@@ -86,13 +95,11 @@ describe('mongoose-query-builder', () => {
     function test({ req, expected }) {
       const ALLOWED_FIELDS = 'id firstName lastName age';
       const DEFAULT_FIELDS = 'id firstName lastName';
-      let queryBuilder = new MongooseQB({
-        source: req.query
-      });
+      let queryBuilder = new MongooseQB({ source: req.query });
       queryBuilder.parseString({ name: 'role', az: 'userRole', required: true });
       queryBuilder.parseArray({ name: 'users', az: 'userId', itemType: 'int', op: 'in' });
       queryBuilder.parseFields({ allowed: ALLOWED_FIELDS, def: DEFAULT_FIELDS });
-      queryBuilder.parseSorting({ allowed: ['id', 'firstName'] });
+      queryBuilder.parseSorting({ allowed: ['_id', 'firstName'] });
       queryBuilder.parsePagination();
 
       let actual = queryBuilder.build();
@@ -117,7 +124,7 @@ describe('mongoose-query-builder', () => {
         },
         fields: 'firstName lastName',
         pagination: { page: 5, count: 10 },
-        sorting: { sortBy: 'firstName', sortDirection: 'asc' }
+        sorting: { firstName: 'asc' }
       };
 
       test({ req, expected });

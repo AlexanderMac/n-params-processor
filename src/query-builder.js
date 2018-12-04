@@ -49,8 +49,8 @@ class QueryBuilder extends BaseBuilder {
       throw new Error('Parameter allowed is required');
     }
 
-    this.parseString({ source, name: sortByName, az: 'sortBy', to, def: 'id', allowed });
-    this.parseString({ source, name: sortDirName, az: 'sortDirection', to, allowed: ['asc', 'desc'], def: 'asc' });
+    this.parseString({ source, name: sortByName, az: 'by', to, def: this.defSortBy, allowed });
+    this.parseString({ source, name: sortDirName, az: 'direction', to, allowed: ['asc', 'desc'], def: 'asc' });
 
     return this.data._sorting_;
   }

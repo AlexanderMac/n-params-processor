@@ -7,6 +7,11 @@ const QueryBuilder = require('./query-builder');
 const SEQUELIZE_OPS = consts.OPERATORS.SEQUELIZE_OPS;
 
 class SequelizeQueryBuilder extends QueryBuilder {
+  constructor(params) {
+    super(params);
+    this.defSortBy = 'id';
+  }
+
   _buildFilter() {
     return _.reduce(this.data._filter_, (res, paramVal, paramName) => {
       let criterion = _.find(this.filterCriteria, { name: paramName });
@@ -33,7 +38,7 @@ class SequelizeQueryBuilder extends QueryBuilder {
   _buildSorting() {
     let params = this.data._sorting_;
     if (!_.isEmpty(params)) {
-      return [[params.sortBy, params.sortDirection]];
+      return [[params.by, params.direction]];
     }
     return {};
   }

@@ -55,14 +55,20 @@ describe('sequelize-query-builder', () => {
   describe('_buildPagination', () => {
     function test(expected) {
       let instance = new SequelizeQB();
-      instance.data._pagination_ = 'paginationData';
+      instance.data._pagination_ = {
+        page: 1,
+        count: 10
+      };
 
       let actual = instance._buildPagination();
       should(actual).eql(expected);
     }
 
     it('should build query pagination', () => {
-      let expected = 'paginationData';
+      let expected = {
+        page: 1,
+        count: 10
+      };
       test(expected);
     });
   });
@@ -84,8 +90,8 @@ describe('sequelize-query-builder', () => {
 
     it('should build query sorting when data._sorting is not null', () => {
       let _sorting_ = {
-        sortBy: 'createdAt',
-        sortDirection: 'desc'
+        by: 'createdAt',
+        direction: 'desc'
       };
       let expected = [['createdAt', 'desc']];
 
