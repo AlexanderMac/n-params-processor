@@ -1,3 +1,7 @@
+# <sub>v4.0.0</sub>
+#### Dec. 7, 2018_
+  * `parsePagination` and `parseSorting` do not return default objects by default.
+
 # <sub>v3.1.0</sub>
 #### Dec. 3, 2018_
   * Fixed object schema for MongooseQB sorting.
