@@ -7,11 +7,6 @@ const QueryBuilder = require('./query-builder');
 const MONGOOSE_OPS = consts.OPERATORS.MONGOOSE_OPS;
 
 class MongooseQueryBuilder extends QueryBuilder {
-  constructor(params) {
-    super(params);
-    this.defSortBy = '_id';
-  }
-
   _buildFilter() {
     return _.reduce(this.data._filter_, (res, paramVal, paramName) => {
       let criterion = _.find(this.filterCriteria, { name: paramName });
@@ -37,8 +32,11 @@ class MongooseQueryBuilder extends QueryBuilder {
 
   _buildSorting() {
     let sorting = this.data._sorting_;
+    if (_.isEmpty(sorting)) {
+      return null;
+    }
     return {
-      [sorting.by]: sorting.direction
+      [sorting.by]: sorting.direction || 'asc'
     };
   }
 }

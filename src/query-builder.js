@@ -34,8 +34,12 @@ class QueryBuilder extends BaseBuilder {
     countName = countName || 'count';
     let to = '_pagination_';
 
-    this.parseInt({ source, name: pageName, az: 'page', to, min: 0, def: 0 });
-    this.parseInt({ source, name: countName, az: 'count', to, min: 1, max: 50, def: 10 });
+    this.parseInt({ source, name: pageName, az: 'page', to, min: 0 });
+    this.parseInt({ source, name: countName, az: 'count', to, min: 1, max: 50 });
+
+    if (_.isEmpty(this.data._pagination_)) {
+      this.data._pagination_ = null;
+    }
 
     return this.data._pagination_;
   }
@@ -49,8 +53,12 @@ class QueryBuilder extends BaseBuilder {
       throw new Error('Parameter allowed is required');
     }
 
-    this.parseString({ source, name: sortByName, az: 'by', to, def: this.defSortBy, allowed });
-    this.parseString({ source, name: sortDirName, az: 'direction', to, allowed: ['asc', 'desc'], def: 'asc' });
+    this.parseString({ source, name: sortByName, az: 'by', to, allowed });
+    this.parseString({ source, name: sortDirName, az: 'direction', to, allowed: ['asc', 'desc'] });
+
+    if (_.isEmpty(this.data._sorting_)) {
+      this.data._sorting_ = null;
+    }
 
     return this.data._sorting_;
   }

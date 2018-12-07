@@ -83,7 +83,7 @@ describe('sequelize-query-builder', () => {
     }
 
     it('should not build query sorting when data._sorting_ is null', () => {
-      let expected = {};
+      let expected = null;
 
       test({ expected });
     });
@@ -109,8 +109,8 @@ describe('sequelize-query-builder', () => {
       queryBuilder.parseString({ name: 'role', az: 'userRole', required: true });
       queryBuilder.parseArray({ name: 'users', az: 'userId', itemType: 'int', op: 'nin' });
       queryBuilder.parseFields({ allowed: ALLOWED_FIELDS, def: DEFAULT_FIELDS });
-      queryBuilder.parseSorting({ allowed: ['id', 'firstName'] });
       queryBuilder.parsePagination();
+      queryBuilder.parseSorting({ allowed: ['id', 'firstName'] });
 
       let actual = queryBuilder.build();
       should(actual).eql(expected);
@@ -135,6 +135,26 @@ describe('sequelize-query-builder', () => {
         fields: ['firstName', 'lastName'],
         pagination: { page: 5, count: 10 },
         sorting: [['firstName', 'asc']]
+      };
+
+      test({ req, expected });
+    });
+
+    it('should parse params (when pagination, sorting and fields are empty) and return query', () => {
+      let req = {
+        query: {
+          role: 'user',
+          users: [1, 2, 3]
+        }
+      };
+      let expected = {
+        filter: {
+          userRole: 'user',
+          userId: { $notIn: [1, 2, 3] }
+        },
+        fields: ['id', 'firstName', 'lastName'],
+        pagination: null,
+        sorting: null
       };
 
       test({ req, expected });

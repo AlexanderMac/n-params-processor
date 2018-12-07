@@ -223,7 +223,7 @@ Parses, converts and validates fields parameter. Validated parameter value must 
   - `def` - space separated string of default fields.
 
 ### parsePagination(params)
-Parses, converts and validates pagination parameters. By default `page` set to 0, `count` to 10.
+Parses, converts and validates pagination parameters. By default pagination object is null.
 
 - `params` is an object with the following fields:
   - `source`: source object, if not defined `instance.source` is used.
@@ -231,7 +231,7 @@ Parses, converts and validates pagination parameters. By default `page` set to 0
   - `countName`: the name of `count` parameter, if not provided `count` is used, *optional*.
 
 ### parseSorting(params)
-Parses, converts and validates sorting parameters. By default `sortBy` set to `id`, `sortDirection` to `asc`.
+Parses, converts and validates sorting parameters. By default sorting object is null.
 
 - `params` is an object with the following fields:
   - `source`: source object, if not defined `instance.source` is used.

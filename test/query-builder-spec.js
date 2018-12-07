@@ -119,8 +119,8 @@ describe('query-builder', () => {
       let params = {};
       let expected = 'paginationData';
       let to = '_pagination_';
-      let parseIntFirstCallArgs = { source: undefined, name: 'page', az: 'page', to, min: 0, def: 0 };
-      let parseIntScndCallArgs = { source: undefined, name: 'count', az: 'count', to, min: 1, max: 50, def: 10 };
+      let parseIntFirstCallArgs = { source: undefined, name: 'page', az: 'page', to, min: 0 };
+      let parseIntScndCallArgs = { source: undefined, name: 'count', az: 'count', to, min: 1, max: 50 };
 
       test({ params, expected, parseIntFirstCallArgs, parseIntScndCallArgs });
     });
@@ -133,8 +133,8 @@ describe('query-builder', () => {
       };
       let expected = 'paginationData';
       let to = '_pagination_';
-      let parseIntFirstCallArgs = { source: 'source', name: 'nPage', az: 'page', to, min: 0, def: 0 };
-      let parseIntScndCallArgs = { source: 'source', name: 'cnt', az: 'count', to, min: 1, max: 50, def: 10 };
+      let parseIntFirstCallArgs = { source: 'source', name: 'nPage', az: 'page', to, min: 0 };
+      let parseIntScndCallArgs = { source: 'source', name: 'cnt', az: 'count', to, min: 1, max: 50 };
 
       test({ params, expected, parseIntFirstCallArgs, parseIntScndCallArgs });
     });
@@ -143,7 +143,6 @@ describe('query-builder', () => {
   describe('parseSorting', () => {
     function test({ params, parseStringArgs, expected }) {
       let instance = new QueryBuilder();
-      instance.defSortBy = 'id';
       instance.data._sorting_ = 'sortingData';
       sinon.stub(instance, 'parseString');
 
@@ -163,8 +162,8 @@ describe('query-builder', () => {
       let expected = 'sortingData';
       let to = '_sorting_';
       let parseStringArgs = [
-        { source: undefined, name: 'sortBy', az: 'by', to, def: 'id' },
-        { source: undefined, name: 'sortDirection', az: 'direction', to, allowed: ['asc', 'desc'], def: 'asc' }
+        { source: undefined, name: 'sortBy', az: 'by', to },
+        { source: undefined, name: 'sortDirection', az: 'direction', to, allowed: ['asc', 'desc'] }
       ];
 
       test({ params, expected, parseStringArgs });
@@ -180,8 +179,8 @@ describe('query-builder', () => {
       let expected = 'sortingData';
       let to = '_sorting_';
       let parseStringArgs = [
-        { source: 'source', name: 'orderBy', az: 'by', to, def: 'id' },
-        { source: 'source', name: 'sortDir', az: 'direction', to, allowed: ['asc', 'desc'], def: 'asc' }
+        { source: 'source', name: 'orderBy', az: 'by', to },
+        { source: 'source', name: 'sortDir', az: 'direction', to, allowed: ['asc', 'desc'] }
       ];
 
       test({ params, expected, parseStringArgs });

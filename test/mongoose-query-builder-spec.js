@@ -99,8 +99,8 @@ describe('mongoose-query-builder', () => {
       queryBuilder.parseString({ name: 'role', az: 'userRole', required: true });
       queryBuilder.parseArray({ name: 'users', az: 'userId', itemType: 'int', op: 'in' });
       queryBuilder.parseFields({ allowed: ALLOWED_FIELDS, def: DEFAULT_FIELDS });
-      queryBuilder.parseSorting({ allowed: ['_id', 'firstName'] });
       queryBuilder.parsePagination();
+      queryBuilder.parseSorting({ allowed: ['_id', 'firstName'] });
 
       let actual = queryBuilder.build();
       should(actual).eql(expected);
@@ -125,6 +125,26 @@ describe('mongoose-query-builder', () => {
         fields: 'firstName lastName',
         pagination: { page: 5, count: 10 },
         sorting: { firstName: 'asc' }
+      };
+
+      test({ req, expected });
+    });
+
+    it('should parse params (when pagination, sorting and fields are empty) and return query', () => {
+      let req = {
+        query: {
+          role: 'user',
+          users: [1, 2, 3]
+        }
+      };
+      let expected = {
+        filter: {
+          userRole: 'user',
+          userId: { $in: [1, 2, 3] }
+        },
+        fields: 'id firstName lastName',
+        pagination: null,
+        sorting: null
       };
 
       test({ req, expected });
