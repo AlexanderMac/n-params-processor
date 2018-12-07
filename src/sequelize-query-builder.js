@@ -27,7 +27,7 @@ class SequelizeQueryBuilder extends QueryBuilder {
   }
 
   _buildPagination() {
-    return this.data._pagination_;
+    return _.isEmpty(this.data._pagination_) ? null : this.data._pagination_;
   }
 
   _buildSorting() {
