@@ -1,3 +1,7 @@
+# <sub>v4.0.1</sub>
+#### Dec. 7, 2018_
+  * Fixed external `buildPagination` function, now it returns null when pagination object is empty.
+
 # <sub>v4.0.0</sub>
 #### Dec. 7, 2018_
   * `parsePagination` and `parseSorting` do not return default objects by default.
