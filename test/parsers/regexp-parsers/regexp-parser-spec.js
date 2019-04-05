@@ -52,8 +52,8 @@ describe('parsers / regexp-parsers / regexp-parser', () => {
       let actual = RegexpParser.parse(params);
       nassert.assert(actual, expected);
 
-      nassert.validateCalledFn({ srvc: RegexpParser, fnName: 'getInstance', expectedArgs: params });
-      nassert.validateCalledFn({ srvc: mock, fnName: 'parse', expectedArgs: '_without-args_' });
+      nassert.assertFn({ inst: RegexpParser, fnName: 'getInstance', expectedArgs: params });
+      nassert.assertFn({ inst: mock, fnName: 'parse', expectedArgs: '_without-args_' });
     }
 
     it('should create instance of RegexpParser, call parse method and return result', () => {

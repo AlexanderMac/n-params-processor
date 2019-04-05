@@ -36,8 +36,8 @@ describe('parsers / regexp-parsers / objectid-parser', () => {
       let actual = ObjectIdParser.parse(params);
       nassert.assert(actual, expected);
 
-      nassert.validateCalledFn({ srvc: ObjectIdParser, fnName: 'getInstance', expectedArgs: params });
-      nassert.validateCalledFn({ srvc: mock, fnName: 'parse', expectedArgs: '_without-args_' });
+      nassert.assertFn({ inst: ObjectIdParser, fnName: 'getInstance', expectedArgs: params });
+      nassert.assertFn({ inst: mock, fnName: 'parse', expectedArgs: '_without-args_' });
     }
 
     it('should create instance of ObjectIdParser, call parse method and return result', () => {

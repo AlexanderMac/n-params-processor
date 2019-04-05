@@ -46,8 +46,8 @@ describe('parsers / bool-parser', () => {
       let actual = BoolParser.parse(params);
       nassert.assert(actual, expected);
 
-      nassert.validateCalledFn({ srvc: BoolParser, fnName: 'getInstance', expectedArgs: params });
-      nassert.validateCalledFn({ srvc: mock, fnName: 'parse', expectedArgs: '_without-args_' });
+      nassert.assertFn({ inst: BoolParser, fnName: 'getInstance', expectedArgs: params });
+      nassert.assertFn({ inst: mock, fnName: 'parse', expectedArgs: '_without-args_' });
     }
 
     it('should create instance of BoolParser, call parse method and return result', () => {

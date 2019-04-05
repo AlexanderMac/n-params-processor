@@ -51,8 +51,8 @@ describe('parsers / number-parsers / id-parser', () => {
       let actual = IdParser.parse(params);
       nassert.assert(actual, expected);
 
-      nassert.validateCalledFn({ srvc: IdParser, fnName: 'getInstance', expectedArgs: params });
-      nassert.validateCalledFn({ srvc: mock, fnName: 'parse', expectedArgs: '_without-args_' });
+      nassert.assertFn({ inst: IdParser, fnName: 'getInstance', expectedArgs: params });
+      nassert.assertFn({ inst: mock, fnName: 'parse', expectedArgs: '_without-args_' });
     }
 
     it('should create instance of IdParser, call parse method and return result', () => {

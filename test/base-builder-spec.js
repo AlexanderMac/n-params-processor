@@ -119,7 +119,7 @@ describe('base-builder', () => {
       let actual = instance.parseInt(params);
       should(actual).eql(expected);
 
-      nassert.validateCalledFn({ srvc: parsers.IntParser, fnName: 'parse', expectedArgs: expectedParseArgs });
+      nassert.assertFn({ inst: parsers.IntParser, fnName: 'parse', expectedArgs: expectedParseArgs });
     }
 
     it('should call registered parser, and return null when val is undefined', () => {

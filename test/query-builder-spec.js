@@ -63,8 +63,8 @@ describe('query-builder', () => {
       should(actual).eql(expected);
       should(instance.data._fields_).eql(expected);
 
-      nassert.validateCalledFn({ srvc: instance, fnName: 'parseString', expectedArgs: parseStringArgs });
-      nassert.validateCalledFn({ srvc: instance, fnName: 'parseArray', expectedArgs: parseArrayArgs });
+      nassert.assertFn({ inst: instance, fnName: 'parseString', expectedArgs: parseStringArgs });
+      nassert.assertFn({ inst: instance, fnName: 'parseArray', expectedArgs: parseArrayArgs });
     }
 
     it('should return instance.data._fields_ and use default names when params.source, fieldsName are undefined', () => {
@@ -151,8 +151,8 @@ describe('query-builder', () => {
       should(instance.data._sorting_).eql(expected);
 
       should(instance.parseString.calledTwice).equal(true);
-      nassert.validateCalledFn({ srvc: instance, fnName: 'parseString', callCount: 2, nCall: 0, expectedArgs: parseStringArgs[0] });
-      nassert.validateCalledFn({ srvc: instance, fnName: 'parseString', callCount: 2, nCall: 1, expectedArgs: parseStringArgs[1] });
+      nassert.assertFn({ inst: instance, fnName: 'parseString', callCount: 2, nCall: 0, expectedArgs: parseStringArgs[0] });
+      nassert.assertFn({ inst: instance, fnName: 'parseString', callCount: 2, nCall: 1, expectedArgs: parseStringArgs[1] });
     }
 
     it('should return instance.data._sorting_ and use default names when params.source, sortByName, sortDirName are undefined', () => {

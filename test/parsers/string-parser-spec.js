@@ -52,8 +52,8 @@ describe('parsers / string-parser', () => {
       let actual = StringParser.parse(params);
       nassert.assert(actual, expected);
 
-      nassert.validateCalledFn({ srvc: StringParser, fnName: 'getInstance', expectedArgs: params });
-      nassert.validateCalledFn({ srvc: mock, fnName: 'parse', expectedArgs: '_without-args_' });
+      nassert.assertFn({ inst: StringParser, fnName: 'getInstance', expectedArgs: params });
+      nassert.assertFn({ inst: mock, fnName: 'parse', expectedArgs: '_without-args_' });
     }
 
     it('should create instance of StringParser, call parse method and return result', () => {

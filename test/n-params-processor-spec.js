@@ -18,6 +18,6 @@ describe('registerCustomErrorType', () => {
     let customErrorType = 'CustomErrorType';
     paramsProc.registerCustomErrorType(customErrorType);
 
-    nassert.validateCalledFn({ srvc: BaseParser, fnName: 'registerCustomErrorType', expectedArgs: customErrorType });
+    nassert.assertFn({ inst: BaseParser, fnName: 'registerCustomErrorType', expectedArgs: customErrorType });
   });
 });

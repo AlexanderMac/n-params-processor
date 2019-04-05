@@ -55,8 +55,8 @@ describe('parsers / array-parser', () => {
       let actual = ArrayParser.parse(params);
       nassert.assert(actual, expected);
 
-      nassert.validateCalledFn({ srvc: ArrayParser, fnName: 'getInstance', expectedArgs: params });
-      nassert.validateCalledFn({ srvc: mock, fnName: 'parse', expectedArgs: '_without-args_' });
+      nassert.assertFn({ inst: ArrayParser, fnName: 'getInstance', expectedArgs: params });
+      nassert.assertFn({ inst: mock, fnName: 'parse', expectedArgs: '_without-args_' });
     }
 
     it('should create instance of ArrayParser, call parse method and return result', () => {
@@ -204,8 +204,8 @@ describe('parsers / array-parser', () => {
       let actual = instance._parseItem(params);
       should(actual).eql(expected);
 
-      nassert.validateCalledFn({ srvc: IntParser, fnName: 'parse', expectedArgs: expectedIntParsersArgs });
-      nassert.validateCalledFn({ srvc: CustomParser, fnName: 'parse', expectedArgs: expectedCustomParsersArgs });
+      nassert.assertFn({ inst: IntParser, fnName: 'parse', expectedArgs: expectedIntParsersArgs });
+      nassert.assertFn({ inst: CustomParser, fnName: 'parse', expectedArgs: expectedCustomParsersArgs });
     }
 
     beforeEach(() => {
