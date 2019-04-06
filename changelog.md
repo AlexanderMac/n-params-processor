@@ -1,3 +1,8 @@
+# <sub>v4.0.2</sub>
+#### _Apr_. 6, 2019_
+
+  * Update packages to the latest versions.
+
 # <sub>v4.0.1</sub>
 #### Dec. 7, 2018_
   * Fixed external `buildPagination` function, now it returns null when pagination object is empty.
