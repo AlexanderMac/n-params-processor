@@ -238,7 +238,7 @@ Parses, converts and validates sorting parameters. By default sorting object is 
   - `sortByName`: the name of `sortBy` parameter, if not provided `sortBy` is used, *optional*.
   - `sortDirName`: the name of `sortDirection` parameter, if not provided `sortDirection` is used, *optional*.
 
-### Build()
+### build()
 Returns a final query with `filter`, `fields`, `pagination` and `sorting` fields.
 
 ## Author
