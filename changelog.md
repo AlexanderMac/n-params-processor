@@ -1,7 +1,12 @@
+# <sub>v4.1.0</sub>
+#### _Jun_. 18, 2019_
+
+  * Added `pattern` parameter in regexp parser.
+
 # <sub>v4.0.2</sub>
 #### _Apr_. 6, 2019_
 
-  * Update packages to the latest versions.
+  * Updated packages to the latest versions.
 
 # <sub>v4.0.1</sub>
 #### Dec. 7, 2018_
