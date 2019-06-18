@@ -13,11 +13,8 @@ class ObjectIdParser extends RegexpParser {
 
   constructor(params) {
     super(params);
+    this.pattern = /^[0-9a-fA-F]{24}$/;
     this.errorMessage = `${this.name} must be a valid ObjectId`;
-  }
-
-  _getRegexp() {
-    return /^[0-9a-fA-F]{24}$/;
   }
 }
 

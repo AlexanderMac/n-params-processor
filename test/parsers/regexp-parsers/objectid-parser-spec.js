@@ -47,14 +47,4 @@ describe('parsers / regexp-parsers / objectid-parser', () => {
       return test({ params, expected });
     });
   });
-
-  describe('_getRegexp', () => {
-    it('should return ObjectId regexp', () => {
-      let instance = new ObjectIdParser({});
-
-      let expected = /^[0-9a-fA-F]{24}$/;
-      let actual = instance._getRegexp();
-      should(actual).eql(expected);
-    });
-  });
 });

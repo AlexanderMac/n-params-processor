@@ -14,6 +14,7 @@ class RegexpParser extends BaseParser {
 
   constructor(params) {
     super(params);
+    this.pattern = params.pattern;
     this.errorMessage = `There is no match between regexp and ${this.name}`;
   }
 
@@ -29,13 +30,9 @@ class RegexpParser extends BaseParser {
   }
 
   _validate() {
-    if (!_.isString(this.val) || !this._getRegexp().test(this.val)) {
+    if (!_.isString(this.val) || !this.pattern.test(this.val)) {
       this._throwIncorrectParamError(this.errorMessage);
     }
-  }
-
-  _getRegexp() {
-    return /^[a-zA-Z]+$/;
   }
 }
 

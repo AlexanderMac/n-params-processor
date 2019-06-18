@@ -169,7 +169,8 @@ Parses, converts to `FloatNumber` and validates parameter.
 ### parseRegexp(params)
 Parses and validates parameter.
 
-- `params` is an object with the same fields as for [parseType](#parsetype).
+- `params` is an object with the same fields as for [parseType](#parsetype), except:
+  - `pattern`: Regular expression that should be used to test parameter value.
 
 ### parseObjectId(params)
 Parses, converts to `ObjectId` and validates parameter.

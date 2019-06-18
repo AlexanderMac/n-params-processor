@@ -17,7 +17,8 @@ describe('parsers / regexp-parsers / regexp-parser', () => {
   function getParams(ex) {
     let def = {
       val: 'John',
-      name: 'name'
+      name: 'name',
+      pattern: /[a-zA-Z]/
     };
     return _.extend(def, ex);
   }
