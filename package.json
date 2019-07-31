@@ -37,12 +37,12 @@
   },
   "homepage": "https://github.com/AlexanderMac/n-params-processor#readme",
   "dependencies": {
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.15",
     "moment": "^2.24.0"
   },
   "devDependencies": {
-    "eslint": "^5.16.0",
-    "mocha": "^6.1.4",
+    "eslint": "^6.1.0",
+    "mocha": "^6.2.0",
     "n-assert": "^5.0.2",
     "nyc": "^14.1.1",
     "should": "^13.2.3",
