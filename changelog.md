@@ -1,3 +1,7 @@
+# <sub>v4.1.1</sub>
+#### _Sep_. 24, 2019_
+  * Fix bug in arrayParser, that prevented using the such items as `ObjectId`.
+
 # <sub>v4.1.0</sub>
 #### _Jun_. 18, 2019_
   * Add `pattern` parameter in regexp parser.
