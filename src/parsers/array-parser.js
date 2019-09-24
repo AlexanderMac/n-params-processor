@@ -17,7 +17,7 @@ class ArrayParser extends BaseParser {
     super(params);
     this.itemType = params.itemType;
     this.itemHandler = params.itemHandler;
-    this.ItemParser = parsers[`${_.capitalize(this.itemType)}Parser`];
+    this.ItemParser = parsers[`${_.upperFirst(this.itemType)}Parser`];
   }
 
   parse() {
