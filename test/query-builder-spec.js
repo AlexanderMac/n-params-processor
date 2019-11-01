@@ -249,31 +249,23 @@ describe('query-builder', () => {
       should(instance.filterCriteria).eql(expected.filterCriteria);
     }
 
-    it('should call registered parser, do not update filter and null when res is null', () => {
+    it('should call registered parser, do not update filter and return null when result is null', () => {
       let params = {
         source: {},
         name: 'login'
-      };
-      let parseSuperArgs = {
-        params: 'params',
-        to: '_filter_'
       };
       let expected = {
         result: null,
         filterCriteria: []
       };
 
-      test({ params, parseSuperArgs, expected });
+      test({ params, expected });
     });
 
     it('should call registered parser, update filter and return value (when params.to is undefined)', () => {
       let params = {
         source: { login: 'u1' },
         name: 'login'
-      };
-      let parseSuperArgs = {
-        params: 'params',
-        to: '_filter_'
       };
       let expected = {
         result: {
@@ -285,17 +277,13 @@ describe('query-builder', () => {
         ]
       };
 
-      test({ params, parseSuperArgs, expected });
+      test({ params, expected });
     });
 
     it('should call registered parser, update pagination and return value (when params.to = _pagination_)', () => {
       let params = {
         source: { page: 2 },
         name: 'page',
-        to: '_pagination_'
-      };
-      let parseSuperArgs = {
-        params: 'params',
         to: '_pagination_'
       };
       let expected = {
@@ -306,7 +294,7 @@ describe('query-builder', () => {
         filterCriteria: []
       };
 
-      test({ params, parseSuperArgs, expected });
+      test({ params, expected });
     });
   });
 });
