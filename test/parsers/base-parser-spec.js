@@ -2,6 +2,7 @@ const _ = require('lodash');
 const sinon = require('sinon');
 const should = require('should');
 const testUtil = require('../test-util');
+const ParamsProcessorError = require('../../src/error');
 const BaseParser = require('../../src/parsers/base-parser');
 
 describe('parsers / base-parser', () => {
@@ -9,16 +10,6 @@ describe('parsers / base-parser', () => {
     params.Parser = BaseParser;
     testUtil.registerTest(params);
   }
-
-  describe('static registerCustomErrorType', () => {
-    function test() {
-      BaseParser.registerCustomErrorType(Error);
-    }
-
-    it('should register new Error type', () => {
-      return test();
-    });
-  });
 
   describe('constructor', () => {
     function test({ params, expected }) {
@@ -117,7 +108,7 @@ describe('parsers / base-parser', () => {
       methodName: '_validateRequired',
       testName: 'should throw Error when required is true and val is undefined',
       params: { name: 'login', val: undefined, required: true },
-      expected: new Error('login is required')
+      expected: new ParamsProcessorError('login is required')
     });
 
     registerTest({
@@ -144,7 +135,7 @@ describe('parsers / base-parser', () => {
       methodName: '_validateAllowed',
       testName: 'should throw Error when allowed is defined and does not contain val',
       params: { name: 'login', val: 'u1', allowed: ['u2', 'u3'] },
-      expected: new Error('login is incorrect, must be one of [u2,u3]')
+      expected: new ParamsProcessorError('login is incorrect, must be one of [u2,u3]')
     });
 
     registerTest({
@@ -169,7 +160,7 @@ describe('parsers / base-parser', () => {
     it('should throw Error', () => {
       test({
         message: 'IncorrectParamError',
-        expected: new Error('IncorrectParamError')
+        expected: new ParamsProcessorError('IncorrectParamError')
       });
     });
   });

@@ -1,12 +1,7 @@
 const _ = require('lodash');
-
-let _ErrorType = Error;
+const ParamsProcessorError = require('../error');
 
 class BaseParser {
-  static registerCustomErrorType(ErrorType) {
-    _ErrorType = ErrorType;
-  }
-
   constructor({ val, name, required, def, min, max, allowed } = {}) {
     this.val = val;
     this.name = name;
@@ -47,7 +42,7 @@ class BaseParser {
   }
 
   _throwIncorrectParamError(message) {
-    throw new _ErrorType(message);
+    throw new ParamsProcessorError(message);
   }
 }
 

@@ -3,6 +3,7 @@ const sinon = require('sinon');
 const should = require('should');
 const nassert = require('n-assert');
 const testUtil = require('../test-util');
+const ParamsProcessorError = require('../../src/error');
 const BaseParser = require('../../src/parsers/base-parser');
 const StringParser = require('../../src/parsers/string-parser');
 
@@ -126,7 +127,7 @@ describe('parsers / string-parser', () => {
       methodName: '_validateMin',
       testName: 'should throw error when op.min is defined and provided val.length is less than min',
       params: getParams({ min: 7 }),
-      expected: new Error('login must have at least 7 characters')
+      expected: new ParamsProcessorError('login must have at least 7 characters')
     });
 
     registerTest({
@@ -147,7 +148,7 @@ describe('parsers / string-parser', () => {
       methodName: '_validateMax',
       testName: 'should throw error when op.max is defined and provided val.length is greater than max',
       params: getParams({ max: 3 }),
-      expected: new Error('login must have no more than 3 characters')
+      expected: new ParamsProcessorError('login must have no more than 3 characters')
     });
 
     registerTest({

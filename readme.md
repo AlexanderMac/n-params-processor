@@ -88,10 +88,8 @@ exports.createUser = async (req, res, next) => {
 ### consts
 The constants objects. `OPERATORS` field contains all valid query operators.
 
-### registerCustomErrorType(ErrorType)
-Registers the custom error type. The error of this type will be trown in the case of invalid parameter.
-
-  - `ErrorType`: error type, instance of `Error` object.
+### ParamsProcessorError
+The error object that package throws in the case of error.
 
 ### DataBuilder
 See [DataBuilder](#databuilder-api).

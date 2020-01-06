@@ -3,6 +3,7 @@ const sinon = require('sinon');
 const should = require('should');
 const nassert = require('n-assert');
 const testUtil = require('../../test-util');
+const ParamsProcessorError = require('../../../src/error');
 const BaseParser = require('../../../src/parsers/base-parser');
 const NumberParser = require('../../../src/parsers/number-parsers/number-parser');
 
@@ -152,7 +153,7 @@ describe('parsers / number-parsers / number-parser', () => {
     registerTest({
       methodName: '_validateNumber',
       testName: 'shouldn throw error when val is NaN',
-      expected: new Error('age must be a number'),
+      expected: new ParamsProcessorError('age must be a number'),
       params: getParams({ val: NaN })
     });
 
@@ -168,7 +169,7 @@ describe('parsers / number-parsers / number-parser', () => {
       methodName: '_validateMin',
       testName: 'should throw error when op.min is defined and provided val is less than min',
       params: getParams({ min: 19 }),
-      expected: new Error('age must be greater than or equal to 19')
+      expected: new ParamsProcessorError('age must be greater than or equal to 19')
     });
 
     registerTest({
@@ -189,7 +190,7 @@ describe('parsers / number-parsers / number-parser', () => {
       methodName: '_validateMax',
       testName: 'should throw error when op.min is defined and provided val is greater than max',
       params: getParams({ max: 17 }),
-      expected: new Error('age must be less than or equal to 17')
+      expected: new ParamsProcessorError('age must be less than or equal to 17')
     });
 
     registerTest({

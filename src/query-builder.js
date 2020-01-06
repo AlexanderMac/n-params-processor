@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const ParamsProcessorError = require('./error');
 const BaseBuilder = require('./base-builder');
 
 class QueryBuilder extends BaseBuilder {
@@ -48,7 +49,7 @@ class QueryBuilder extends BaseBuilder {
     let to = '_sorting_';
 
     if (!allowed) {
-      throw new Error('Parameter allowed is required');
+      throw new ParamsProcessorError('Parameter allowed is required');
     }
 
     this.parseString({ source, name: sortByName, az: 'by', to, allowed });

@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const ParamsProcessorError = require('./error');
 const parsers = require('./parsers');
 
 class BaseBuilder {
@@ -46,10 +47,10 @@ class BaseBuilder {
   _validateParseParams({ source, name }) {
     let currentSource = source || this.source;
     if (!currentSource) {
-      throw new Error('Instance.source or params.source must be provided');
+      throw new ParamsProcessorError('Instance.source or params.source must be provided');
     }
     if (!name) {
-      throw new Error('params.name is requred');
+      throw new ParamsProcessorError('params.name is requred');
     }
   }
 
@@ -62,7 +63,7 @@ class BaseBuilder {
     let paramName = az || name;
     let dest = _.isNil(to) ? this.data : this.data[to];
     if (to !== '_temp_' && _.has(dest, paramName)) {
-      throw new Error(`Parameter "${paramName}" is already used. Use another name of remove duplicate`);
+      throw new ParamsProcessorError(`Parameter "${paramName}" is already used. Use another name of remove duplicate`);
     }
     return paramName;
   }

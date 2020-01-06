@@ -3,6 +3,7 @@ const sinon = require('sinon');
 const should = require('should');
 const nassert = require('n-assert');
 const testUtil = require('../../test-util');
+const ParamsProcessorError = require('../../../src/error');
 const BaseParser = require('../../../src/parsers/base-parser');
 const RegexpParser = require('../../../src/parsers/regexp-parsers/regexp-parser');
 
@@ -115,14 +116,14 @@ describe('parsers / regexp-parsers / regexp-parser', () => {
       methodName: '_validate',
       testName: 'should throw error when val is not a string',
       params: getParams({ val: 19 }),
-      expected: new Error('There is no match between regexp and name')
+      expected: new ParamsProcessorError('There is no match between regexp and name')
     });
 
     registerTest({
       methodName: '_validate',
       testName: 'should throw error when there is no match between regexp and name',
       params: getParams({ val: '19' }),
-      expected: new Error('There is no match between regexp and name')
+      expected: new ParamsProcessorError('There is no match between regexp and name')
     });
 
     registerTest({

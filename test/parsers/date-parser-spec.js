@@ -4,6 +4,7 @@ const sinon = require('sinon');
 const should = require('should');
 const nassert = require('n-assert');
 const testUtil = require('../test-util');
+const ParamsProcessorError = require('../../src/error');
 const BaseParser = require('../../src/parsers/base-parser');
 const DateParser = require('../../src/parsers/date-parser');
 
@@ -202,7 +203,7 @@ describe('parsers / date-parser', () => {
       methodName: '_validateMomentDate',
       testName: 'should throw error when val is not a valid date',
       params: getParams({ val: moment('Invalid date', moment.defaultFormat) }),
-      expected: new Error('createdAt must be a valid date')
+      expected: new ParamsProcessorError('createdAt must be a valid date')
     });
 
     registerTest({
@@ -217,7 +218,7 @@ describe('parsers / date-parser', () => {
       methodName: '_validateMin',
       testName: 'should throw error when op.min is defined and provided val is less than min',
       params: getParams({ min: '2018-01-01', val: moment('2017-01-01', 'YYYY-MM-DD') }),
-      expected: new Error('createdAt must be greater than or equal to 2018-01-01')
+      expected: new ParamsProcessorError('createdAt must be greater than or equal to 2018-01-01')
     });
 
     registerTest({
@@ -238,7 +239,7 @@ describe('parsers / date-parser', () => {
       methodName: '_validateMax',
       testName: 'should throw error when op.max is defined and provided val is greater than max',
       params: getParams({ max: '2016-01-01', val: moment('2017-01-01', 'YYYY-MM-DD') }),
-      expected: new Error('createdAt must be less than or equal to 2016-01-01')
+      expected: new ParamsProcessorError('createdAt must be less than or equal to 2016-01-01')
     });
 
     registerTest({

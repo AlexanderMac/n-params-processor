@@ -2,6 +2,7 @@ const _ = require('lodash');
 const sinon = require('sinon');
 const should = require('should');
 const nassert = require('n-assert');
+const ParamsProcessorError = require('../src/error');
 const BaseBuilder = require('../src/base-builder');
 const parsers = require('../src/parsers');
 
@@ -193,7 +194,7 @@ describe('base-builder', () => {
         source: undefined,
         name: 'login'
       };
-      let expected = new Error('Instance.source or params.source must be provided');
+      let expected = new ParamsProcessorError('Instance.source or params.source must be provided');
 
       test({ source, params, expected });
     });
@@ -204,7 +205,7 @@ describe('base-builder', () => {
         source: { login: 'u1' },
         name: undefined
       };
-      let expected = new Error('params.name is requred');
+      let expected = new ParamsProcessorError('params.name is requred');
 
       test({ source, params, expected });
     });
@@ -265,7 +266,7 @@ describe('base-builder', () => {
       let params = {
         name: 'login'
       };
-      let expected = new Error('Parameter "login" is already used. Use another name of remove duplicate');
+      let expected = new ParamsProcessorError('Parameter "login" is already used. Use another name of remove duplicate');
 
       test({ data, params, expected });
     });

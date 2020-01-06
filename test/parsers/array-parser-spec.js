@@ -3,6 +3,7 @@ const sinon = require('sinon');
 const should = require('should');
 const nassert = require('n-assert');
 const testUtil = require('../test-util');
+const ParamsProcessorError = require('../../src/error');
 const BaseParser = require('../../src/parsers/base-parser');
 const IntParser = require('../../src/parsers/number-parsers/int-parser');
 const CustomParser = require('../../src/parsers/custom-parser');
@@ -156,14 +157,14 @@ describe('parsers / array-parser', () => {
       methodName: '_validateItemParser',
       testName: 'should throw error when ItemParser is undefined',
       params: getParams({ itemType: undefined }),
-      expected: new Error('Invalid itemType')
+      expected: new ParamsProcessorError('Invalid itemType')
     });
 
     registerTest({
       methodName: '_validateItemParser',
       testName: 'should throw error when ItemParser is null',
       params: getParams({ itemType: null }),
-      expected: new Error('Invalid itemType')
+      expected: new ParamsProcessorError('Invalid itemType')
     });
 
     registerTest({
@@ -178,7 +179,7 @@ describe('parsers / array-parser', () => {
       methodName: '_validateAllowed',
       testName: 'should throw Error when allowed is defined and val is not subset of it',
       params: { name: 'login', val: ['u1'], allowed: ['u2', 'u3'], itemType: 'string' },
-      expected: new Error('login is incorrect, must be subset of [u2,u3]')
+      expected: new ParamsProcessorError('login is incorrect, must be subset of [u2,u3]')
     });
 
     registerTest({

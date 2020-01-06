@@ -2,6 +2,7 @@ const _ = require('lodash');
 const sinon = require('sinon');
 const should = require('should');
 const nassert = require('n-assert');
+const ParamsProcessorError = require('../../src/error');
 const BaseParser = require('../../src/parsers/base-parser');
 const CustomParser = require('../../src/parsers/custom-parser');
 
@@ -104,7 +105,7 @@ describe('parsers / custom-parser', () => {
     it('should throw Error when handler is not a valid function', () => {
       test({
         params: getParams({ handler: undefined }),
-        expected: new Error('handler must be a function')
+        expected: new ParamsProcessorError('handler must be a function')
       });
     });
   });

@@ -2,6 +2,7 @@ const _ = require('lodash');
 const sinon = require('sinon');
 const should = require('should');
 const nassert = require('n-assert');
+const ParamsProcessorError = require('../../src/error');
 const BaseParser = require('../../src/parsers/base-parser');
 const BoolParser = require('../../src/parsers/bool-parser');
 
@@ -125,14 +126,14 @@ describe('parsers / bool-parser', () => {
     it('should throw Error when val is a string, but not true, false', () => {
       test({
         params: getParams({ val: 'invalid boolean' }),
-        expected: new Error('success must be a valid boolean value')
+        expected: new ParamsProcessorError('success must be a valid boolean value')
       });
     });
 
     it('should throw Error when val is not boolean and string', () => {
       test({
         params: getParams({ val: 155 }),
-        expected: new Error('success must be a valid boolean value')
+        expected: new ParamsProcessorError('success must be a valid boolean value')
       });
     });
   });

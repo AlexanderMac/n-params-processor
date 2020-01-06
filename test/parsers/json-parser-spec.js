@@ -2,6 +2,7 @@ const _ = require('lodash');
 const sinon = require('sinon');
 const should = require('should');
 const nassert = require('n-assert');
+const ParamsProcessorError = require('../../src/error');
 const BaseParser = require('../../src/parsers/base-parser');
 const JsonParser = require('../../src/parsers/json-parser');
 
@@ -104,7 +105,7 @@ describe('parsers / json-parser', () => {
     it('should throw Error when val is an invalid JSON string', () => {
       test({
         params: getParams({ val: 'invalid json' }),
-        expected: new Error('user must be a valid JSON string')
+        expected: new ParamsProcessorError('user must be a valid JSON string')
       });
     });
   });
