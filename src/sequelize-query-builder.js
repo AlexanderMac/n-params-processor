@@ -1,7 +1,5 @@
-'use strict';
-
-const _            = require('lodash');
-const consts       = require('./consts');
+const _ = require('lodash');
+const consts = require('./consts');
 const QueryBuilder = require('./query-builder');
 
 const SEQUELIZE_OPS = consts.OPERATORS.SEQUELIZE_OPS;
@@ -10,7 +8,7 @@ class SequelizeQueryBuilder extends QueryBuilder {
   _buildFilter() {
     return _.reduce(this.data._filter_, (res, paramVal, paramName) => {
       let criterion = _.find(this.filterCriteria, { name: paramName });
-      let dbSpecificOp = (criterion && criterion.op) ? SEQUELIZE_OPS[criterion.op] : null;
+      let dbSpecificOp = criterion && criterion.op ? SEQUELIZE_OPS[criterion.op] : null;
       if (dbSpecificOp) {
         res[paramName] = {
           [dbSpecificOp]: paramVal

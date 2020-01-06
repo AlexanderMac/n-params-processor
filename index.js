@@ -1,5 +1,3 @@
-'use strict';
-
 const BaseParser = require('./src/parsers/base-parser');
 
 module.exports = {

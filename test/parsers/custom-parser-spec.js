@@ -1,10 +1,8 @@
-'use strict';
-
-const _            = require('lodash');
-const sinon        = require('sinon');
-const should       = require('should');
-const nassert      = require('n-assert');
-const BaseParser   = require('../../src/parsers/base-parser');
+const _ = require('lodash');
+const sinon = require('sinon');
+const should = require('should');
+const nassert = require('n-assert');
+const BaseParser = require('../../src/parsers/base-parser');
 const CustomParser = require('../../src/parsers/custom-parser');
 
 describe('parsers / custom-parser', () => {

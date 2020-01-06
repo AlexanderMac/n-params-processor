@@ -1,10 +1,8 @@
-'use strict';
-
-const _            = require('lodash');
-const sinon        = require('sinon');
-const should       = require('should');
-const nassert      = require('n-assert');
-const BaseBuilder  = require('../src/base-builder');
+const _ = require('lodash');
+const sinon = require('sinon');
+const should = require('should');
+const nassert = require('n-assert');
+const BaseBuilder = require('../src/base-builder');
 const QueryBuilder = require('../src/query-builder');
 
 describe('query-builder', () => {
@@ -27,7 +25,7 @@ describe('query-builder', () => {
           _fields_: {},
           _pagination_: {},
           _sorting_: {},
-          _temp_: {},
+          _temp_: {}
         },
         filterCriteria: []
       };
@@ -44,7 +42,7 @@ describe('query-builder', () => {
           _fields_: {},
           _pagination_: {},
           _sorting_: {},
-          _temp_: {},
+          _temp_: {}
         },
         filterCriteria: []
       };
@@ -78,7 +76,7 @@ describe('query-builder', () => {
       let parseArrayArgs = { source: { fields: ['id'] }, name: 'fields', to: '_fields_', allowed, itemType: 'string' };
       let parseStringRes = { val: 'id' };
 
-      test({ params, parseStringArgs, parseArrayArgs, parseStringRes, expected  });
+      test({ params, parseStringArgs, parseArrayArgs, parseStringRes, expected });
     });
 
     it('should return instance.data._fields_ and use provided values when params.source, fieldsName are defined', () => {
@@ -96,7 +94,7 @@ describe('query-builder', () => {
       let parseArrayArgs = { source: { fields: ['id', 'name'] }, name: 'fields', to: '_fields_', allowed, itemType: 'string' };
       let parseStringRes = { val: 'id name' };
 
-      test({ params, parseStringArgs, parseArrayArgs, parseStringRes, expected  });
+      test({ params, parseStringArgs, parseArrayArgs, parseStringRes, expected });
     });
   });
 

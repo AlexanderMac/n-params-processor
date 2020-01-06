@@ -1,9 +1,7 @@
-'use strict';
-
-const _        = require('lodash');
-const sinon    = require('sinon');
-const should   = require('should');
-const nassert  = require('n-assert');
+const _ = require('lodash');
+const sinon = require('sinon');
+const should = require('should');
+const nassert = require('n-assert');
 const testUtil = require('../../test-util');
 const IdParser = require('../../../src/parsers/number-parsers/id-parser');
 

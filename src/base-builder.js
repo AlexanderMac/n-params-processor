@@ -1,6 +1,4 @@
-'use strict';
-
-const _       = require('lodash');
+const _ = require('lodash');
 const parsers = require('./parsers');
 
 class BaseBuilder {

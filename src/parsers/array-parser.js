@@ -1,8 +1,6 @@
-'use strict';
-
-const _          = require('lodash');
+const _ = require('lodash');
 const BaseParser = require('./base-parser');
-const parsers    = require('./');
+const parsers = require('./');
 
 class ArrayParser extends BaseParser {
   static getInstance(params) {

@@ -1,6 +1,4 @@
-'use strict';
-
-const should      = require('should');
+const should = require('should');
 const DataBuilder = require('../src/data-builder');
 
 describe('data-builder', () => {

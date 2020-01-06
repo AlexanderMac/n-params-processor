@@ -1,8 +1,6 @@
-'use strict';
-
-const sinon       = require('sinon');
-const should      = require('should');
-const nassert     = require('n-assert');
+const sinon = require('sinon');
+const should = require('should');
+const nassert = require('n-assert');
 const EmailParser = require('../../../src/parsers/regexp-parsers/email-parser');
 
 describe('parsers / regexp-parsers / email-parser', () => {

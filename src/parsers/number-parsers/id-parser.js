@@ -1,5 +1,3 @@
-'use strict';
-
 const NumberParser = require('./number-parser');
 
 class IdParser extends NumberParser {

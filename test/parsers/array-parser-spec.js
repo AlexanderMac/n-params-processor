@@ -1,14 +1,12 @@
-'use strict';
-
-const _            = require('lodash');
-const sinon        = require('sinon');
-const should       = require('should');
-const nassert      = require('n-assert');
-const testUtil     = require('../test-util');
-const BaseParser   = require('../../src/parsers/base-parser');
-const IntParser    = require('../../src/parsers/number-parsers/int-parser');
+const _ = require('lodash');
+const sinon = require('sinon');
+const should = require('should');
+const nassert = require('n-assert');
+const testUtil = require('../test-util');
+const BaseParser = require('../../src/parsers/base-parser');
+const IntParser = require('../../src/parsers/number-parsers/int-parser');
 const CustomParser = require('../../src/parsers/custom-parser');
-const ArrayParser  = require('../../src/parsers/array-parser');
+const ArrayParser = require('../../src/parsers/array-parser');
 
 describe('parsers / array-parser', () => {
   function registerTest(params) {

@@ -1,11 +1,9 @@
-'use strict';
-
-const _          = require('lodash');
-const moment     = require('moment');
-const sinon      = require('sinon');
-const should     = require('should');
-const nassert    = require('n-assert');
-const testUtil   = require('../test-util');
+const _ = require('lodash');
+const moment = require('moment');
+const sinon = require('sinon');
+const should = require('should');
+const nassert = require('n-assert');
+const testUtil = require('../test-util');
 const BaseParser = require('../../src/parsers/base-parser');
 const DateParser = require('../../src/parsers/date-parser');
 

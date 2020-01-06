@@ -1,6 +1,4 @@
-'use strict';
-
-const should      = require('should');
+const should = require('should');
 const SequelizeQB = require('../src/sequelize-query-builder');
 
 describe('sequelize-query-builder', () => {
@@ -30,7 +28,7 @@ describe('sequelize-query-builder', () => {
       ];
       let expected = {
         id: { $ne: 1 },
-        name: 'u1',
+        name: 'u1'
       };
 
       test({ instanceFilter, filterCriteria, expected });

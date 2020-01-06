@@ -1,6 +1,4 @@
-'use strict';
-
-const _           = require('lodash');
+const _ = require('lodash');
 const BaseBuilder = require('./base-builder');
 
 class QueryBuilder extends BaseBuilder {
@@ -66,7 +64,7 @@ class QueryBuilder extends BaseBuilder {
   build() {
     return {
       filter: this._buildFilter(),
-      fields: this._buildFields() ,
+      fields: this._buildFields(),
       pagination: this._buildPagination(),
       sorting: this._buildSorting()
     };

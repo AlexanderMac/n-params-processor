@@ -1,7 +1,5 @@
-'use strict';
-
-const _          = require('lodash');
-const moment     = require('moment');
+const _ = require('lodash');
+const moment = require('moment');
 const BaseParser = require('./base-parser');
 
 class DateParser extends BaseParser {

@@ -1,5 +1,3 @@
-'use strict';
-
 const ALIASES = {
   eq: 'eq',
   ne: 'ne',

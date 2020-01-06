@@ -1,6 +1,4 @@
-'use strict';
-
-const _          = require('lodash');
+const _ = require('lodash');
 const BaseParser = require('../base-parser');
 
 class NumberParser extends BaseParser {

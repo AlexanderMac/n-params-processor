@@ -1,7 +1,5 @@
-'use strict';
-
-const sinon      = require('sinon');
-const nassert    = require('n-assert');
+const sinon = require('sinon');
+const nassert = require('n-assert');
 const paramsProc = require('../');
 const BaseParser = require('../src/parsers/base-parser');
 

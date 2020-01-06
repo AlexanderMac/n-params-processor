@@ -1,8 +1,6 @@
-'use strict';
-
-const sinon          = require('sinon');
-const should         = require('should');
-const nassert        = require('n-assert');
+const sinon = require('sinon');
+const should = require('should');
+const nassert = require('n-assert');
 const ObjectIdParser = require('../../../src/parsers/regexp-parsers/objectid-parser');
 
 describe('parsers / regexp-parsers / objectid-parser', () => {

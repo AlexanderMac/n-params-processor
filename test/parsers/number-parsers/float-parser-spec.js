@@ -1,10 +1,8 @@
-'use strict';
-
-const _           = require('lodash');
-const sinon       = require('sinon');
-const should      = require('should');
-const nassert     = require('n-assert');
-const testUtil    = require('../../test-util');
+const _ = require('lodash');
+const sinon = require('sinon');
+const should = require('should');
+const nassert = require('n-assert');
+const testUtil = require('../../test-util');
 const FloatParser = require('../../../src/parsers/number-parsers/float-parser');
 
 describe('parsers / number-parsers / float-parser', () => {

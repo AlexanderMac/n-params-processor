@@ -1,5 +1,3 @@
-'use strict';
-
 const RegexpParser = require('./regexp-parser');
 
 class EmailParser extends RegexpParser {

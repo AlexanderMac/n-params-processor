@@ -1,11 +1,9 @@
-'use strict';
-
-const _           = require('lodash');
-const sinon       = require('sinon');
-const should      = require('should');
-const nassert     = require('n-assert');
+const _ = require('lodash');
+const sinon = require('sinon');
+const should = require('should');
+const nassert = require('n-assert');
 const BaseBuilder = require('../src/base-builder');
-const parsers     = require('../src/parsers');
+const parsers = require('../src/parsers');
 
 describe('base-builder', () => {
   function validateRegisteredParseFunctions(instance) {
