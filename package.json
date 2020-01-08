@@ -1,6 +1,6 @@
 {
   "name": "n-params-processor",
-  "version": "4.1.1",
+  "version": "5.0.0",
   "description": "Node.js parameters parser/validator mongodb/sequelize filter builder",
   "main": "index.js",
   "files": [

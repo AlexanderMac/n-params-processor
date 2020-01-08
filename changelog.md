@@ -1,13 +1,18 @@
+# <sub>v5.0.0</sub>
+#### _Jan. 8, 2020_
+  * Use an internal error object and throw it in the package instead of the object registered in `registerCustomErrorType`.
+  * Create typings file.
+
 # <sub>v4.1.1</sub>
-#### _Sep_. 24, 2019_
+#### _Sep. 24, 2019_
   * Fix bug in arrayParser, that prevented using the such items as `ObjectId`.
 
 # <sub>v4.1.0</sub>
-#### _Jun_. 18, 2019_
+#### _Jun. 18, 2019_
   * Add `pattern` parameter in regexp parser.
 
 # <sub>v4.0.2</sub>
-#### _Apr_. 6, 2019_
+#### _Apr. 6, 2019_
   * Update packages to the last versions.
 
 # <sub>v4.0.1</sub>
