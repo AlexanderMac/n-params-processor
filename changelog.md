@@ -2,6 +2,7 @@
 #### _Jan. 8, 2020_
   * Use an internal error object and throw it in the package instead of the object registered in `registerCustomErrorType`.
   * Create typings file.
+  * Drop support for Node v6.
 
 # <sub>v4.1.1</sub>
 #### _Sep. 24, 2019_
