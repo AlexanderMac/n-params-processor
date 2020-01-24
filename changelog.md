@@ -14,7 +14,7 @@
 
 # <sub>v4.0.2</sub>
 #### _Apr. 6, 2019_
-  * Update packages to the last versions.
+  * Update packages.
 
 # <sub>v4.0.1</sub>
 #### Dec. 7, 2018_
@@ -61,7 +61,6 @@
 
 # <sub>v2.1.0</sub>
 #### _Feb. 12, 2018_
-
   * Add `formatRes` parameter to `parseDate` method. If this parameter is provided, the final date result converted to `Date` object or to string.
   * Add support for `like` query operator. For mongoose queries it's replacing to `$eq`, for sequelize to `$like`.
   * Change `def` parameter behavior, it's using when the value is not undefined.
@@ -69,7 +68,6 @@
 
 # <sub>v2.0.0</sub>
 #### _Feb. 11, 2018_
-
   * Devide parameters processor class into three classes: `BaseBuilder` and two its successors `QueryBuilder` and `DataBuilder`.
   * `QueryBuilder` has two successors `MongooseQueryBuilder` and `SequelizeQueryBuilder`. So in v2 `n-params-processor` can be used for creating queries for two databases.
   * Move all parsers to own classes.
@@ -80,17 +78,14 @@
 
 # <sub>v1.1.1</sub>
 #### _Nov. 26, 2017_
-
   * Fix package.json, add `src` folder to `files` section.
 
 # <sub>v1.1.0</sub>
 #### _Nov. 25, 2017_
-
  * Create the complete readme.
  * Cover by tests all the functionality.
  * Refactor and improve a lot of things.
  
 # <sub>v1.0.0</sub>
 #### _Apr. 6, 2017_
-
  * Release the first version.
