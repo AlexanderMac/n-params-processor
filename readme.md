@@ -117,7 +117,8 @@ Common parameters of `parseType` method.
   - `name`: parameter name. 
   - `az`: new name, *optional*.
   - `def`: default value, is used when parameter value is nil, *optional*.
-  - `required` - indicates that parameter value is mandatory, *optional*.
+  - `required`: indicates that parameter value is mandatory, *optional*.
+  - `to`: object that should be used to save parsed value, *optional*.
 
 ### parseString(params)
 Parses, converts to `String` and validates parameter value.
@@ -125,7 +126,7 @@ Parses, converts to `String` and validates parameter value.
 - `params` is an object with the same fields as for [parseType](#parsetype), except:
   - `min`: the lowest possible string length, *optional*.
   - `max`: the largest possible string length, *optional*.
-  - `allowed` - validates that `allowed` array includes parameter value, *optional*.
+  - `allowed`: validates that `allowed` array includes parameter value, *optional*.
 
 ### parseDate(params, output)
 Parses, converts to `Date` and validates parameter value.
@@ -152,7 +153,7 @@ Parses, converts to `Number` and validates parameter value.
 - `params` is an object with the same fields as for [parseType](#parsetype), except:
   - `min`: the lowest possible value, *optional*.
   - `max`: the largest possible value, *optional*.
-  - `allowed` - validates that `allowed` array includes parameter value, *optional*.
+  - `allowed`: validates that `allowed` array includes parameter value, *optional*.
 
 ### parseInt(params)
 Parses, converts to `IntegerNumber` and validates parameter.
@@ -192,7 +193,7 @@ Parses, converts to `itemType` and validates parameter.
 - `params` is an object with the same fields as for [parseType](#parsetype), except:
   - `itemType` the array item type (on of the registered parser types: `Int`, `String`, `Bool`, etc).
   - `itemHandler` the handler for custom item type.
-  - `allowed` - validates that parameter value is subset of `allowed` array, *optional*.
+  - `allowed`: validates that parameter value is subset of `allowed` array, *optional*.
 
 ## <a name="databuilder-api"></a> DataBuilder API
 Should be used for creating a plain data object, to use in create and update operations.
@@ -218,8 +219,8 @@ Parses, converts and validates fields parameter. Validated parameter value must 
 - `params` is an object with the following fields:
   - `source`: source object, if not defined `instance.source` is used.
   - `fieldsName`: the name of `fields` parameter, if not provided `fields` is used, *optional*.
-  - `allowed` - space separated string of allowed fields.
-  - `def` - space separated string of default fields.
+  - `allowed`: space separated string of allowed fields.
+  - `def`: space separated string of default fields.
 
 ### parsePagination(params)
 Parses, converts and validates pagination parameters. By default pagination object is null.
