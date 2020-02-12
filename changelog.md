@@ -1,3 +1,7 @@
+# <sub>v5.0.1</sub>
+#### _Feb. 12, 2020_
+  * Improve validation for null item in `ArrayParser`.
+
 # <sub>v5.0.0</sub>
 #### _Jan. 8, 2020_
   * Use an internal error object and throw it in the package instead of the object registered in `registerCustomErrorType`.
