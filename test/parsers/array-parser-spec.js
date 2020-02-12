@@ -200,8 +200,16 @@ describe('parsers / array-parser', () => {
       let parserParams = getParams(parserParamsEx);
       let instance = new ArrayParser(parserParams);
 
-      let actual = instance._parseItem(params);
-      should(actual).eql(expected);
+      try {
+        let actual = instance._parseItem(params);
+        should(actual).eql(expected);
+      } catch (err) {
+        if (_.isError(expected)) {
+          should(err).eql(expected);
+        } else {
+          throw err;
+        }
+      }
 
       nassert.assertFn({ inst: IntParser, fnName: 'parse', expectedArgs: expectedIntParsersArgs });
       nassert.assertFn({ inst: CustomParser, fnName: 'parse', expectedArgs: expectedCustomParsersArgs });
@@ -217,13 +225,19 @@ describe('parsers / array-parser', () => {
       CustomParser.parse.restore();
     });
 
+    it('should throw error when val is null', () => {
+      let params = null;
+      let expected = new ParamsProcessorError('clients must contain only Ints');
+
+      test({ params, expected });
+    });
+
     it('should build params and return result of the parser.parse call', () => {
       let params = 1;
       let expected = 1;
       let expectedIntParsersArgs = {
         val: 1,
-        name: 'item',
-        required: true
+        name: 'item'
       };
 
       test({ params, expected, expectedIntParsersArgs });
@@ -239,8 +253,7 @@ describe('parsers / array-parser', () => {
       let expectedCustomParsersArgs = {
         val: 1,
         name: 'item',
-        handler: parserParamsEx.itemHandler,
-        required: true
+        handler: parserParamsEx.itemHandler
       };
 
       test({ parserParamsEx, params, expected, expectedCustomParsersArgs });

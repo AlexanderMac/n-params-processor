@@ -44,11 +44,13 @@ class ArrayParser extends BaseParser {
   }
 
   _parseItem(item) {
+    if (_.isNil(item)) {
+      this._throwIncorrectParamError(`${this.name} must contain only ${this.itemType}s`);
+    }
     return this.ItemParser.parse({
       val: item,
       name: 'item',
-      handler: this.itemHandler,
-      required: true
+      handler: this.itemHandler
     });
   }
 }
