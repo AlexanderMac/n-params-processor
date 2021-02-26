@@ -4,7 +4,6 @@
     "es2020": true
   },
   "parserOptions": {
-    "ecmaVersion": 2020,
     "sourceType": "module",
     "ecmaFeatures": {
       "impliedStrict": true
@@ -54,7 +53,7 @@
     "prefer-rest-params": "error",
     "prefer-spread": "error",
     "require-await": "warn",
-    "semi": ["error", "always"],
+    "semi": ["warn", "never"],
     "space-infix-ops": "error",
     "space-unary-ops": "error",
     "strict": "error",
