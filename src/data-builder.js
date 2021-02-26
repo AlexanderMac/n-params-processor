@@ -1,10 +1,10 @@
-const _ = require('lodash');
-const BaseBuilder = require('./base-builder');
+const _ = require('lodash')
+const BaseBuilder = require('./base-builder')
 
 class DataBuilder extends BaseBuilder {
   build() {
-    return _.omit(this.data, '_temp_');
+    return _.omit(this.data, '_temp_')
   }
 }
 
-module.exports = DataBuilder;
+module.exports = DataBuilder

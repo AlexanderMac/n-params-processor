@@ -1,10 +1,10 @@
-const _ = require('lodash');
-const sinon = require('sinon');
-const should = require('should');
-const nassert = require('n-assert');
-const ParamsProcessorError = require('../src/error');
-const BaseBuilder = require('../src/base-builder');
-const parsers = require('../src/parsers');
+const _ = require('lodash')
+const sinon = require('sinon')
+const should = require('should')
+const nassert = require('n-assert')
+const ParamsProcessorError = require('../src/error')
+const BaseBuilder = require('../src/base-builder')
+const parsers = require('../src/parsers')
 
 describe('base-builder', () => {
   function validateRegisteredParseFunctions(instance) {
@@ -12,113 +12,113 @@ describe('base-builder', () => {
       .keys()
       .filter(name => _.isFunction(instance[name]) && _.startsWith(name, 'parse'))
       .value()
-      .length;
-    should(instanceParseFnCount).equal(13);
-    should(_.isFunction(instance.parseString)).equal(true);
-    should(_.isFunction(instance.parseDate)).equal(true);
-    should(_.isFunction(instance.parseJson)).equal(true);
-    should(_.isFunction(instance.parseBool)).equal(true);
-    should(_.isFunction(instance.parseNumber)).equal(true);
-    should(_.isFunction(instance.parseInt)).equal(true);
-    should(_.isFunction(instance.parseFloat)).equal(true);
-    should(_.isFunction(instance.parseRegexp)).equal(true);
-    should(_.isFunction(instance.parseObjectId)).equal(true);
-    should(_.isFunction(instance.parseEmail)).equal(true);
-    should(_.isFunction(instance.parseCustom)).equal(true);
-    should(_.isFunction(instance.parseArray)).equal(true);
+      .length
+    should(instanceParseFnCount).equal(13)
+    should(_.isFunction(instance.parseString)).equal(true)
+    should(_.isFunction(instance.parseDate)).equal(true)
+    should(_.isFunction(instance.parseJson)).equal(true)
+    should(_.isFunction(instance.parseBool)).equal(true)
+    should(_.isFunction(instance.parseNumber)).equal(true)
+    should(_.isFunction(instance.parseInt)).equal(true)
+    should(_.isFunction(instance.parseFloat)).equal(true)
+    should(_.isFunction(instance.parseRegexp)).equal(true)
+    should(_.isFunction(instance.parseObjectId)).equal(true)
+    should(_.isFunction(instance.parseEmail)).equal(true)
+    should(_.isFunction(instance.parseCustom)).equal(true)
+    should(_.isFunction(instance.parseArray)).equal(true)
   }
 
   describe('constructor', () => {
     function test({ params, expected }) {
-      let instance = new BaseBuilder(params);
-      should(instance.source).eql(expected.source);
-      should(instance.data).eql(expected.data);
-      validateRegisteredParseFunctions(instance);
+      let instance = new BaseBuilder(params)
+      should(instance.source).eql(expected.source)
+      should(instance.data).eql(expected.data)
+      validateRegisteredParseFunctions(instance)
     }
 
     it('should create an instance and set source to undefined, data to empty object when params are not provided', () => {
-      let params = undefined;
+      let params = undefined
       let expected = {
         source: undefined,
         data: { _temp_: {}}
-      };
+      }
 
-      test({ params, expected });
-    });
+      test({ params, expected })
+    })
 
     it('should create an instance and set source to params.source, data to empty object when only params.source is provided', () => {
       let params = {
         source: { login: 'u1' }
-      };
+      }
       let expected = {
         source: { login: 'u1' },
         data: { _temp_: {}}
-      };
+      }
 
-      test({ params, expected });
-    });
+      test({ params, expected })
+    })
 
     it('should create an instance and set source to params.source, data to params.data when all params are provided', () => {
       let params = {
         source: { login: 'u1' },
         data: { id: 1 }
-      };
+      }
       let expected = {
         source: { login: 'u1' },
         data: {
           _temp_: {},
           id: 1
         }
-      };
+      }
 
-      test({ params, expected });
-    });
-  });
+      test({ params, expected })
+    })
+  })
 
   describe('_registerParseFunctions', () => {
     function test() {
-      let instance = new BaseBuilder();
-      validateRegisteredParseFunctions(instance);
+      let instance = new BaseBuilder()
+      validateRegisteredParseFunctions(instance)
     }
 
     it('should register parse<ParserName> function for each Parser', () => {
-      test();
-    });
-  });
+      test()
+    })
+  })
 
   describe('_registerOneParseFunction', () => {
     function test({ parserName, expected }) {
-      let instance = new BaseBuilder();
+      let instance = new BaseBuilder()
 
-      let actual = instance._registerOneParseFunction(parserName);
-      should(actual).eql(expected);
-      should(_.isFunction(instance.parseSuper)).equal(true);
+      let actual = instance._registerOneParseFunction(parserName)
+      should(actual).eql(expected)
+      should(_.isFunction(instance.parseSuper)).equal(true)
     }
 
     it('should add new parse<parserName> instance.method and return parse<parser> function name', () => {
-      let parserName = 'SuperParser';
-      let expected = 'parseSuper';
+      let parserName = 'SuperParser'
+      let expected = 'parseSuper'
 
-      test({ parserName, expected });
-    });
-  });
+      test({ parserName, expected })
+    })
+  })
 
   describe('parse<Parser>', () => {
     beforeEach(() => {
-      sinon.stub(parsers.IntParser, 'parse');
-    });
+      sinon.stub(parsers.IntParser, 'parse')
+    })
 
     afterEach(() => {
-      parsers.IntParser.parse.restore();
-    });
+      parsers.IntParser.parse.restore()
+    })
 
     function test({ params, expected, expectedParseArgs }) {
-      let instance = new BaseBuilder();
+      let instance = new BaseBuilder()
 
-      let actual = instance.parseInt(params);
-      should(actual).eql(expected);
+      let actual = instance.parseInt(params)
+      should(actual).eql(expected)
 
-      nassert.assertFn({ inst: parsers.IntParser, fnName: 'parse', expectedArgs: expectedParseArgs });
+      nassert.assertFn({ inst: parsers.IntParser, fnName: 'parse', expectedArgs: expectedParseArgs })
     }
 
     it('should call registered parser, and return null when val is undefined', () => {
@@ -126,15 +126,15 @@ describe('base-builder', () => {
         source: {},
         name: 'age',
         min: 18
-      };
-      let expected = null;
+      }
+      let expected = null
       let expectedParseArgs = {
         val: undefined,
         min: 18
-      };
+      }
 
-      test({ params, expected, expectedParseArgs });
-    });
+      test({ params, expected, expectedParseArgs })
+    })
 
     it('should call registered parser, and return value', () => {
       let params = {
@@ -143,90 +143,90 @@ describe('base-builder', () => {
         az: 'yoa',
         required: true,
         min: 18
-      };
+      }
       let expected = {
         name: 'yoa',
         val: 20
-      };
+      }
       let expectedParseArgs = {
         required: true,
         min: 18,
         val: '20'
-      };
+      }
 
-      parsers.IntParser.parse.returns(20);
+      parsers.IntParser.parse.returns(20)
 
-      test({ params, expected, expectedParseArgs });
-    });
-  });
+      test({ params, expected, expectedParseArgs })
+    })
+  })
 
   describe('_getParseFunctionName', () => {
     function test({ parserName, expected }) {
-      let instance = new BaseBuilder();
+      let instance = new BaseBuilder()
 
-      let actual = instance._getParseFunctionName(parserName);
-      should(actual).eql(expected);
+      let actual = instance._getParseFunctionName(parserName)
+      should(actual).eql(expected)
     }
 
     it('should return correct parse function name', () => {
-      let parserName = 'IntParser';
-      let expected = 'parseInt';
+      let parserName = 'IntParser'
+      let expected = 'parseInt'
 
-      test({ parserName, expected });
-    });
-  });
+      test({ parserName, expected })
+    })
+  })
 
   describe('_validateParseParams', () => {
     function test({ source, params, expected }) {
-      let instance = new BaseBuilder();
-      instance.source = source;
+      let instance = new BaseBuilder()
+      instance.source = source
 
       if (_.isError(expected)) {
-        should(instance._validateParseParams.bind(instance, params)).throw(expected);
+        should(instance._validateParseParams.bind(instance, params)).throw(expected)
       } else {
-        instance._validateParseParams(params);
+        instance._validateParseParams(params)
       }
     }
 
     it('should throw Error when instance.source and params.source are undefined', () => {
-      let source = undefined;
+      let source = undefined
       let params = {
         source: undefined,
         name: 'login'
-      };
-      let expected = new ParamsProcessorError('Instance.source or params.source must be provided');
+      }
+      let expected = new ParamsProcessorError('Instance.source or params.source must be provided')
 
-      test({ source, params, expected });
-    });
+      test({ source, params, expected })
+    })
 
     it('should throw Error when params.name is undefined', () => {
-      let source = undefined;
+      let source = undefined
       let params = {
         source: { login: 'u1' },
         name: undefined
-      };
-      let expected = new ParamsProcessorError('params.name is requred');
+      }
+      let expected = new ParamsProcessorError('params.name is requred')
 
-      test({ source, params, expected });
-    });
+      test({ source, params, expected })
+    })
 
     it('should not throw Error when both source and name are defined', () => {
-      let source = undefined;
+      let source = undefined
       let params = {
         source: { login: 'u1' },
         name: 'login'
-      };
+      }
 
-      test({ source, params });
-    });
-  });
+      test({ source, params })
+    })
+  })
 
   describe('_getValue', () => {
     function test({ params, source, expected }) {
-      let instance = new BaseBuilder({ source });
+      let instance = new BaseBuilder({ source })
 
-      let actual = instance._getValue(params);
-      nassert.assert(actual, expected, true);
+      let actual = instance._getValue(params)
+      nassert.assert(actual, expected, true)
     }
 
     it('should use instance.source when params.source parameter is undefined', () => {
@@ -234,113 +234,113 @@ describe('base-builder', () => {
         params: { source: undefined, name: 'login' },
         source: { login: 'u2' },
         expected: 'u2'
-      });
-    });
+      })
+    })
 
     it('should use params.source parameter when it is defined', () => {
       test({
         params: { source: { login: 'u1' }, name: 'login' },
         source: { login: 'u2' },
         expected: 'u1'
-      });
-    });
-  });
+      })
+    })
+  })
 
   describe('_getParamName', () => {
     function test({ data, params, expected }) {
-      let instance = new BaseBuilder();
-      instance.data = data;
+      let instance = new BaseBuilder()
+      instance.data = data
 
       if (_.isError(expected)) {
-        should(instance._getParamName.bind(instance, params)).throw(expected);
+        should(instance._getParamName.bind(instance, params)).throw(expected)
       } else {
-        let actual = instance._getParamName(params);
-        should(actual).eql(expected);
+        let actual = instance._getParamName(params)
+        should(actual).eql(expected)
       }
     }
 
     it('should throw Error when paramName is not unique in the scope of instance.data and params.to is undefined', () => {
       let data = {
         login: 'u1'
-      };
+      }
       let params = {
         name: 'login'
-      };
-      let expected = new ParamsProcessorError('Parameter "login" is already used. Use another name of remove duplicate');
+      }
+      let expected = new ParamsProcessorError('Parameter "login" is already used. Use another name of remove duplicate')
 
-      test({ data, params, expected });
-    });
+      test({ data, params, expected })
+    })
 
     it('should not throw Error when paramName is unique in the scope of instance.data.to', () => {
       let data = {
         login: 'u1',
         _filter_: {}
-      };
+      }
       let params = {
         name: 'login',
         to: '_filter_'
-      };
-      let expected = 'login';
+      }
+      let expected = 'login'
 
-      test({ data, params, expected });
-    });
+      test({ data, params, expected })
+    })
 
     it('should not throw Error and return paramName when it is unique in the scope of instance.data', () => {
       let data = {
         login: 'u1',
         _filter_: {}
-      };
+      }
       let params = {
         name: 'login',
         az: 'username'
-      };
-      let expected = 'username';
+      }
+      let expected = 'username'
 
-      test({ data, params, expected });
-    });
-  });
+      test({ data, params, expected })
+    })
+  })
 
   describe('_processResult', () => {
     function test({ data, params, expected }) {
-      let instance = new BaseBuilder();
-      instance.data = data;
+      let instance = new BaseBuilder()
+      instance.data = data
 
-      let actual = instance._processResult(params);
-      should(instance.data).eql(expected.data);
-      should(actual).eql(expected.result);
+      let actual = instance._processResult(params)
+      should(instance.data).eql(expected.data)
+      should(actual).eql(expected.result)
     }
 
     it('should extend instance.data when params.to is undefined', () => {
-      let data = {};
+      let data = {}
       let params = {
         paramName: 'login',
         paramVal: 'user1'
-      };
+      }
       let expected = {
         data: { login: 'user1' },
         result: { name: 'login', val: 'user1' }
-      };
+      }
 
-      test({ data, params, expected });
-    });
+      test({ data, params, expected })
+    })
 
     it('should extend instance.data.to when params.to is defined', () => {
       let data = {
         _filter_: {}
-      };
+      }
       let params = {
         paramName: 'login',
         paramVal: 'user1',
         to: '_filter_'
-      };
+      }
       let expected = {
         data: {
           _filter_: { login: 'user1' }
         },
         result: { name: 'login', val: 'user1' }
-      };
+      }
 
-      test({ data, params, expected });
-    });
-  });
-});
+      test({ data, params, expected })
+    })
+  })
+})

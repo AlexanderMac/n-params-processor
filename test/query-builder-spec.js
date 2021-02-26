@@ -1,23 +1,23 @@
-const _ = require('lodash');
-const sinon = require('sinon');
-const should = require('should');
-const nassert = require('n-assert');
-const BaseBuilder = require('../src/base-builder');
-const QueryBuilder = require('../src/query-builder');
+const _ = require('lodash')
+const sinon = require('sinon')
+const should = require('should')
+const nassert = require('n-assert')
+const BaseBuilder = require('../src/base-builder')
+const QueryBuilder = require('../src/query-builder')
 
 describe('query-builder', () => {
   describe('constructor', () => {
     function test({ params, expected }) {
-      let instance = new QueryBuilder(params);
-      should(instance.source).eql(expected.source);
-      should(instance.data).eql(expected.data);
-      should(instance.filterCriteria).eql(expected.filterCriteria);
+      let instance = new QueryBuilder(params)
+      should(instance.source).eql(expected.source)
+      should(instance.data).eql(expected.data)
+      should(instance.filterCriteria).eql(expected.filterCriteria)
     }
 
     it('should init instance internal fields when filter is not provided', () => {
       let params = {
         source: 'source'
-      };
+      }
       let expected = {
         source: 'source',
         data: {
@@ -28,14 +28,14 @@ describe('query-builder', () => {
           _temp_: {}
         },
         filterCriteria: []
-      };
-      test({ params, expected });
-    });
+      }
+      test({ params, expected })
+    })
 
     it('should init instance internal fields when filter is provided', () => {
       let params = {
         filter: { id: 1 }
-      };
+      }
       let expected = {
         data: {
           _filter_: { id: 1 },
@@ -45,39 +45,39 @@ describe('query-builder', () => {
           _temp_: {}
         },
         filterCriteria: []
-      };
-      test({ params, expected });
-    });
-  });
+      }
+      test({ params, expected })
+    })
+  })
 
   describe('parseFields', () => {
     function test({ params, parseStringArgs, parseArrayArgs, parseStringRes, expected }) {
-      let instance = new QueryBuilder();
-      instance.data._fields_ = 'fieldsData';
-      sinon.stub(instance, 'parseString').returns(parseStringRes);
-      sinon.stub(instance, 'parseArray');
+      let instance = new QueryBuilder()
+      instance.data._fields_ = 'fieldsData'
+      sinon.stub(instance, 'parseString').returns(parseStringRes)
+      sinon.stub(instance, 'parseArray')
 
-      let actual = instance.parseFields(params);
-      should(actual).eql(expected);
-      should(instance.data._fields_).eql(expected);
+      let actual = instance.parseFields(params)
+      should(actual).eql(expected)
+      should(instance.data._fields_).eql(expected)
 
-      nassert.assertFn({ inst: instance, fnName: 'parseString', expectedArgs: parseStringArgs });
-      nassert.assertFn({ inst: instance, fnName: 'parseArray', expectedArgs: parseArrayArgs });
+      nassert.assertFn({ inst: instance, fnName: 'parseString', expectedArgs: parseStringArgs })
+      nassert.assertFn({ inst: instance, fnName: 'parseArray', expectedArgs: parseArrayArgs })
     }
 
     it('should return instance.data._fields_ and use default names when params.source, fieldsName are undefined', () => {
       let params = {
         allowed: 'id name email',
         def: 'id'
-      };
-      let expected = 'fieldsData';
-      let allowed = params.allowed.split(' ');
-      let parseStringArgs = { source: undefined, name: 'fields', az: 'fields', to: '_temp_', def: params.def };
-      let parseArrayArgs = { source: { fields: ['id'] }, name: 'fields', to: '_fields_', allowed, itemType: 'string' };
-      let parseStringRes = { val: 'id' };
+      }
+      let expected = 'fieldsData'
+      let allowed = params.allowed.split(' ')
+      let parseStringArgs = { source: undefined, name: 'fields', az: 'fields', to: '_temp_', def: params.def }
+      let parseArrayArgs = { source: { fields: ['id'] }, name: 'fields', to: '_fields_', allowed, itemType: 'string' }
+      let parseStringRes = { val: 'id' }
 
-      test({ params, parseStringArgs, parseArrayArgs, parseStringRes, expected });
-    });
+      test({ params, parseStringArgs, parseArrayArgs, parseStringRes, expected })
+    })
 
     it('should return instance.data._fields_ and use provided values when params.source, fieldsName are defined', () => {
       let params = {
@@ -87,85 +87,85 @@ describe('query-builder', () => {
         fieldsName: 'attrs',
         allowed: 'id name email',
         def: 'id'
-      };
-      let expected = 'fieldsData';
-      let allowed = params.allowed.split(' ');
-      let parseStringArgs = { source: undefined, name: 'attrs', az: 'fields', to: '_temp_', def: params.def };
-      let parseArrayArgs = { source: { fields: ['id', 'name'] }, name: 'fields', to: '_fields_', allowed, itemType: 'string' };
-      let parseStringRes = { val: 'id name' };
+      }
+      let expected = 'fieldsData'
+      let allowed = params.allowed.split(' ')
+      let parseStringArgs = { source: undefined, name: 'attrs', az: 'fields', to: '_temp_', def: params.def }
+      let parseArrayArgs = { source: { fields: ['id', 'name'] }, name: 'fields', to: '_fields_', allowed, itemType: 'string' }
+      let parseStringRes = { val: 'id name' }
 
-      test({ params, parseStringArgs, parseArrayArgs, parseStringRes, expected });
-    });
-  });
+      test({ params, parseStringArgs, parseArrayArgs, parseStringRes, expected })
+    })
+  })
 
   describe('parsePagination', () => {
     function test({ params, parseIntFirstCallArgs, parseIntScndCallArgs, expected }) {
-      let instance = new QueryBuilder();
-      instance.data._pagination_ = 'paginationData';
-      sinon.stub(instance, 'parseInt');
+      let instance = new QueryBuilder()
+      instance.data._pagination_ = 'paginationData'
+      sinon.stub(instance, 'parseInt')
 
-      let actual = instance.parsePagination(params);
-      should(actual).eql(expected);
-      should(instance.data._pagination_).eql(expected);
+      let actual = instance.parsePagination(params)
+      should(actual).eql(expected)
+      should(instance.data._pagination_).eql(expected)
 
-      should(instance.parseInt.calledTwice).equal(true);
-      should(instance.parseInt.firstCall.calledWithExactly(parseIntFirstCallArgs)).equal(true);
-      should(instance.parseInt.secondCall.calledWithExactly(parseIntScndCallArgs)).equal(true);
+      should(instance.parseInt.calledTwice).equal(true)
+      should(instance.parseInt.firstCall.calledWithExactly(parseIntFirstCallArgs)).equal(true)
+      should(instance.parseInt.secondCall.calledWithExactly(parseIntScndCallArgs)).equal(true)
     }
 
     it('should return instance.data._pagination_ and use default names when params.source, pageName, countName are undefined', () => {
-      let params = {};
-      let expected = 'paginationData';
-      let to = '_pagination_';
-      let parseIntFirstCallArgs = { source: undefined, name: 'page', az: 'page', to, min: 0 };
-      let parseIntScndCallArgs = { source: undefined, name: 'count', az: 'count', to, min: 1, max: 50 };
+      let params = {}
+      let expected = 'paginationData'
+      let to = '_pagination_'
+      let parseIntFirstCallArgs = { source: undefined, name: 'page', az: 'page', to, min: 0 }
+      let parseIntScndCallArgs = { source: undefined, name: 'count', az: 'count', to, min: 1, max: 50 }
 
-      test({ params, expected, parseIntFirstCallArgs, parseIntScndCallArgs });
-    });
+      test({ params, expected, parseIntFirstCallArgs, parseIntScndCallArgs })
+    })
 
     it('should return instance.data._pagination_ and use provided values when params.source, pageName, countName are defined', () => {
       let params = {
         source: 'source',
         pageName: 'nPage',
         countName: 'cnt'
-      };
-      let expected = 'paginationData';
-      let to = '_pagination_';
-      let parseIntFirstCallArgs = { source: 'source', name: 'nPage', az: 'page', to, min: 0 };
-      let parseIntScndCallArgs = { source: 'source', name: 'cnt', az: 'count', to, min: 1, max: 50 };
+      }
+      let expected = 'paginationData'
+      let to = '_pagination_'
+      let parseIntFirstCallArgs = { source: 'source', name: 'nPage', az: 'page', to, min: 0 }
+      let parseIntScndCallArgs = { source: 'source', name: 'cnt', az: 'count', to, min: 1, max: 50 }
 
-      test({ params, expected, parseIntFirstCallArgs, parseIntScndCallArgs });
-    });
-  });
+      test({ params, expected, parseIntFirstCallArgs, parseIntScndCallArgs })
+    })
+  })
 
   describe('parseSorting', () => {
     function test({ params, parseStringArgs, expected }) {
-      let instance = new QueryBuilder();
-      instance.data._sorting_ = 'sortingData';
-      sinon.stub(instance, 'parseString');
+      let instance = new QueryBuilder()
+      instance.data._sorting_ = 'sortingData'
+      sinon.stub(instance, 'parseString')
 
-      let actual = instance.parseSorting(params);
-      should(actual).eql(expected);
-      should(instance.data._sorting_).eql(expected);
+      let actual = instance.parseSorting(params)
+      should(actual).eql(expected)
+      should(instance.data._sorting_).eql(expected)
 
-      should(instance.parseString.calledTwice).equal(true);
-      nassert.assertFn({ inst: instance, fnName: 'parseString', callCount: 2, nCall: 0, expectedArgs: parseStringArgs[0] });
-      nassert.assertFn({ inst: instance, fnName: 'parseString', callCount: 2, nCall: 1, expectedArgs: parseStringArgs[1] });
+      should(instance.parseString.calledTwice).equal(true)
+      nassert.assertFn({ inst: instance, fnName: 'parseString', callCount: 2, nCall: 0, expectedArgs: parseStringArgs[0] })
+      nassert.assertFn({ inst: instance, fnName: 'parseString', callCount: 2, nCall: 1, expectedArgs: parseStringArgs[1] })
     }
 
     it('should return instance.data._sorting_ and use default names when params.source, sortByName, sortDirName are undefined', () => {
       let params = {
         allowed: []
-      };
-      let expected = 'sortingData';
-      let to = '_sorting_';
+      }
+      let expected = 'sortingData'
+      let to = '_sorting_'
       let parseStringArgs = [
         { source: undefined, name: 'sortBy', az: 'by', to },
         { source: undefined, name: 'sortDirection', az: 'direction', to, allowed: ['asc', 'desc'] }
-      ];
+      ]
 
-      test({ params, expected, parseStringArgs });
-    });
+      test({ params, expected, parseStringArgs })
+    })
 
     it('should return instance.data._sorting_ and use provided values when params.source, sortByName, sortDirName are defined', () => {
       let params = {
@@ -173,28 +173,28 @@ describe('query-builder', () => {
         sortByName: 'orderBy',
         sortDirName: 'sortDir',
         allowed: ['orderBy']
-      };
-      let expected = 'sortingData';
-      let to = '_sorting_';
+      }
+      let expected = 'sortingData'
+      let to = '_sorting_'
       let parseStringArgs = [
         { source: 'source', name: 'orderBy', az: 'by', to },
         { source: 'source', name: 'sortDir', az: 'direction', to, allowed: ['asc', 'desc'] }
-      ];
+      ]
 
-      test({ params, expected, parseStringArgs });
-    });
-  });
+      test({ params, expected, parseStringArgs })
+    })
+  })
 
   describe('build', () => {
     function test(expected) {
-      let instance = new QueryBuilder();
-      instance._buildFilter = () => 'builtFilter';
-      instance._buildFields = () => 'builtFields';
-      instance._buildPagination = () => 'builtPagination';
-      instance._buildSorting = () => 'builtSorting';
+      let instance = new QueryBuilder()
+      instance._buildFilter = () => 'builtFilter'
+      instance._buildFields = () => 'builtFields'
+      instance._buildPagination = () => 'builtPagination'
+      instance._buildSorting = () => 'builtSorting'
 
-      let actual = instance.build();
-      should(actual).eql(expected);
+      let actual = instance.build()
+      should(actual).eql(expected)
     }
 
     it('should call related methods and return result', () => {
@@ -203,68 +203,68 @@ describe('query-builder', () => {
         fields: 'builtFields',
         pagination: 'builtPagination',
         sorting: 'builtSorting'
-      };
+      }
 
-      test(expected);
-    });
-  });
+      test(expected)
+    })
+  })
 
   describe('_registerOneParseFunction', () => {
-    let instance;
+    let instance
 
     beforeEach(() => {
-      instance = new QueryBuilder();
+      instance = new QueryBuilder()
       sinon.stub(BaseBuilder.prototype, '_registerOneParseFunction').callsFake(() => {
-        instance.parseSuper = () => {};
-        return 'parseSuper';
-      });
-    });
+        instance.parseSuper = () => {}
+        return 'parseSuper'
+      })
+    })
 
     afterEach(() => {
-      BaseBuilder.prototype._registerOneParseFunction.restore();
-    });
+      BaseBuilder.prototype._registerOneParseFunction.restore()
+    })
 
     function test({ parserName, expected }) {
-      let actual = instance._registerOneParseFunction(parserName);
-      should(actual).eql(expected);
-      should(_.isFunction(instance.parseSuper)).equal(true);
+      let actual = instance._registerOneParseFunction(parserName)
+      should(actual).eql(expected)
+      should(_.isFunction(instance.parseSuper)).equal(true)
     }
 
     it('should add new parse<parserName> instance.method and return parse<parser> function name', () => {
-      let parserName = 'SuperParser';
-      let expected = 'parseSuper';
+      let parserName = 'SuperParser'
+      let expected = 'parseSuper'
 
-      test({ parserName, expected });
-    });
-  });
+      test({ parserName, expected })
+    })
+  })
 
   describe('parse<Parser>', () => {
     function test({ params, expected }) {
-      let instance = new QueryBuilder();
+      let instance = new QueryBuilder()
 
-      let actual = instance.parseString(params);
-      should(actual).eql(expected.result);
-      should(instance.filterCriteria).eql(expected.filterCriteria);
+      let actual = instance.parseString(params)
+      should(actual).eql(expected.result)
+      should(instance.filterCriteria).eql(expected.filterCriteria)
     }
 
     it('should call registered parser, do not update filter and return null when result is null', () => {
       let params = {
         source: {},
         name: 'login'
-      };
+      }
       let expected = {
         result: null,
         filterCriteria: []
-      };
+      }
 
-      test({ params, expected });
-    });
+      test({ params, expected })
+    })
 
     it('should call registered parser, update filter and return value (when params.to is undefined)', () => {
       let params = {
         source: { login: 'u1' },
         name: 'login'
-      };
+      }
       let expected = {
         result: {
           name: 'login',
@@ -273,26 +273,26 @@ describe('query-builder', () => {
         filterCriteria: [
           { name: 'login', op: undefined }
         ]
-      };
+      }
 
-      test({ params, expected });
-    });
+      test({ params, expected })
+    })
 
     it('should call registered parser, update pagination and return value (when params.to = _pagination_)', () => {
       let params = {
         source: { page: 2 },
         name: 'page',
         to: '_pagination_'
-      };
+      }
       let expected = {
         result: {
           name: 'page',
           val: '2'
         },
         filterCriteria: []
-      };
+      }
 
-      test({ params, expected });
-    });
-  });
-});
+      test({ params, expected })
+    })
+  })
+})

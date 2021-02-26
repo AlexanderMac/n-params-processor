@@ -8,7 +8,7 @@ const ALIASES = {
   in: 'in',
   nin: 'nin',
   like: 'like'
-};
+}
 
 const MONGOOSE_OPS = {
   [ALIASES.eq]: '$eq',
@@ -20,7 +20,7 @@ const MONGOOSE_OPS = {
   [ALIASES.in]: '$in',
   [ALIASES.nin]: '$nin',
   [ALIASES.like]: '$eq' // TODO: use $text
-};
+}
 
 const SEQUELIZE_OPS = {
   [ALIASES.eq]: '$eq',
@@ -32,13 +32,13 @@ const SEQUELIZE_OPS = {
   [ALIASES.in]: '$in',
   [ALIASES.nin]: '$notIn',
   [ALIASES.like]: '$like'
-};
+}
 
 module.exports = {
   ALIASES,
   MONGOOSE_OPS,
   SEQUELIZE_OPS
-};
+}
 
 /* eslint max-len: off */
 // MONGOOSE:

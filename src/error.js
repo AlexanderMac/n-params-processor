@@ -1,13 +1,13 @@
 module.exports = class ParamsProcessorError extends Error {
   static get(...params) {
-    return new ParamsProcessorError(...params);
+    return new ParamsProcessorError(...params)
   }
 
   constructor(message) {
-    super(message);
+    super(message)
 
-    this.name = this.constructor.name;
+    this.name = this.constructor.name
 
-    Error.captureStackTrace(this, this.constructor);
+    Error.captureStackTrace(this, this.constructor)
   }
-};
+}

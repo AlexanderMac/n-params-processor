@@ -1,17 +1,17 @@
-const NumberParser = require('./number-parser');
+const NumberParser = require('./number-parser')
 
 class FloatParser extends NumberParser {
   static getInstance(params) {
-    return new FloatParser(params);
+    return new FloatParser(params)
   }
 
   static parse(params) {
-    return FloatParser.getInstance(params).parse();
+    return FloatParser.getInstance(params).parse()
   }
 
   _convert() {
-    this.val = parseFloat(this.val);
+    this.val = parseFloat(this.val)
   }
 }
 
-module.exports = FloatParser;
+module.exports = FloatParser
