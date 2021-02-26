@@ -1,6 +1,6 @@
 {
   "name": "n-params-processor",
-  "version": "5.0.1",
+  "version": "6.0.0",
   "description": "Node.js parameters parser/validator mongodb/sequelize filter builder",
   "main": "index.js",
   "files": [
@@ -9,12 +9,14 @@
     "src"
   ],
   "engines": {
-    "node": ">=8"
+    "node": ">=12",
+    "npm": ">=7"
   },
   "scripts": {
     "lint": "eslint --ext .js index.js src/ test/",
     "test": "NODE_ENV=test mocha",
-    "coverage": "nyc npm test"
+    "coverage": "nyc npm test",
+    "coverage-gh": "nyc --reporter=lcov npm test && codecov"
   },
   "repository": {
     "type": "git",

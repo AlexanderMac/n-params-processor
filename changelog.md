@@ -1,3 +1,8 @@
+# <sub>v6.0.0</sub>
+#### _Feb. 26, 2021_
+  * Drop support for Node versions prior to v12.
+  * Update dependencies.
+
 # <sub>v5.0.1</sub>
 #### _Feb. 12, 2020_
   * Improve validation for null item in `ArrayParser`.
