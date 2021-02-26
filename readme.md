@@ -1,7 +1,7 @@
 # n-params-processor
 Node.js parameters parser/validator and mongodb/sequelize query/data-object builder.
 
-[![Build Status](https://travis-ci.org/AlexanderMac/n-params-processor.svg?branch=master)](https://travis-ci.org/AlexanderMac/n-params-processor)
+[![Build Status](https://github.com/AlexanderMac/n-params-processor/workflows/CI/badge.svg)](https://github.com/AlexanderMac/n-params-processor/actions?query=workflow%3ACI)
 [![Code Coverage](https://codecov.io/gh/AlexanderMac/n-params-processor/branch/master/graph/badge.svg)](https://codecov.io/gh/AlexanderMac/n-params-processor)
 [![npm version](https://badge.fury.io/js/n-params-processor.svg)](https://badge.fury.io/js/n-params-processor)
 
@@ -12,26 +12,26 @@ $ npm i n-params-processor
 
 ## Example of usage
 ```js
-const MongooseQB  = require('n-params-processor').MongooseQB;
-const DataBuilder = require('n-params-processor').DataBuilder;
+const MongooseQB  = require('n-params-processor').MongooseQB
+const DataBuilder = require('n-params-processor').DataBuilder
 
 /* Request:
 - GET /api/users?role=user&fields=firstName%20lastName&users[]=1,2,3&page=5&count=10&sortBy=firstName
 */
 exports.getUsers = async (req, res, next) => {
   try {
-    const ALLOWED_FIELDS = 'id firstName lastName age';
-    const DEFAULT_FIELDS = 'id firstName lastName';
+    const ALLOWED_FIELDS = 'id firstName lastName age'
+    const DEFAULT_FIELDS = 'id firstName lastName'
     let queryBuilder = new MongooseQB({
       source: req.query
-    });
-    queryBuilder.parseString({ name: 'role', az: 'userRole', required: true });
-    queryBuilder.parseArray({ name: 'users', az: 'userId', itemType: 'int', op: 'in' });
-    queryBuilder.parseFields({ allowed: ALLOWED_FIELDS, def: DEFAULT_FIELDS });
-    queryBuilder.parsePagination();
-    queryBuilder.parseSorting();
+    })
+    queryBuilder.parseString({ name: 'role', az: 'userRole', required: true })
+    queryBuilder.parseArray({ name: 'users', az: 'userId', itemType: 'int', op: 'in' })
+    queryBuilder.parseFields({ allowed: ALLOWED_FIELDS, def: DEFAULT_FIELDS })
+    queryBuilder.parsePagination()
+    queryBuilder.parseSorting()
 
-    let query = queryBuilder.build();
+    let query = queryBuilder.build()
     /* query is an object: {
       filter: {
         userRole: { $eq: 'user' },
@@ -41,12 +41,12 @@ exports.getUsers = async (req, res, next) => {
       pagination: { page: 5, count: 10 },
       sorting: { sortBy: 'firstName', sortDirection: 'asc' }
     }*/
-    let users = await usersSrvc.getUsers(query);
-    res.send(users);
+    let users = await usersSrvc.getUsers(query)
+    res.send(users)
   } catch (err) {
-    next(err);
+    next(err)
   }
-};
+}
 
 /* Request:
 - POST /api/users
@@ -61,13 +61,13 @@ exports.createUser = async (req, res, next) => {
     let dataBuilder = new DataBuilder({
       source: req.body,
       data: { creator: req.user.userId }
-    });
-    dataBuilder.parseString({ name: 'firstName', max: 10, required: true });
-    dataBuilder.parseString({ name: 'lastName', max: 20, def: 'not prodived' });
-    dataBuilder.parseInt({ name: 'age', min: 18, max: 55, required: true });
-    dataBuilder.parseArray({ name: 'roles', allowed: ['user', 'admin', 'owner'], itemType: 'string' });
+    })
+    dataBuilder.parseString({ name: 'firstName', max: 10, required: true })
+    dataBuilder.parseString({ name: 'lastName', max: 20, def: 'not prodived' })
+    dataBuilder.parseInt({ name: 'age', min: 18, max: 55, required: true })
+    dataBuilder.parseArray({ name: 'roles', allowed: ['user', 'admin', 'owner'], itemType: 'string' })
 
-    let userData = dataBuilder.build();
+    let userData = dataBuilder.build()
     /* userData is an object: {
       creator: '58ea5b07973ab04f88def3fa', // base value
       firstName: 'John',
@@ -75,12 +75,12 @@ exports.createUser = async (req, res, next) => {
       age: 25, // age converted to Number
       roles: ['user']
     }*/
-    let user = await usersSrvc.createUser(userData);
-    res.send(user);
+    let user = await usersSrvc.createUser(userData)
+    res.send(user)
   } catch (err) {
-    next(err);
+    next(err)
   }
-};
+}
 ```
 
 ## API
