@@ -5,12 +5,12 @@ Node.js parameters parser/validator and mongodb/sequelize query/data-object buil
 [![Code Coverage](https://codecov.io/gh/AlexanderMac/n-params-processor/branch/master/graph/badge.svg)](https://codecov.io/gh/AlexanderMac/n-params-processor)
 [![npm version](https://badge.fury.io/js/n-params-processor.svg)](https://badge.fury.io/js/n-params-processor)
 
-## Installation
+### Install
 ```bash
 $ npm i n-params-processor
 ```
 
-## Example of usage
+### Usage
 ```js
 const MongooseQB  = require('n-params-processor').MongooseQB
 const DataBuilder = require('n-params-processor').DataBuilder
@@ -83,33 +83,33 @@ exports.createUser = async (req, res, next) => {
 }
 ```
 
-## API
+### API
 
-### consts
+#### consts
 The constants objects. `OPERATORS` field contains all valid query operators.
 
-### ParamsProcessorError
+#### ParamsProcessorError
 The error object that package throws in the case of error.
 
-### DataBuilder
+#### DataBuilder
 See [DataBuilder](#databuilder-api).
 
-### MongooseQB
+#### MongooseQB
 See [QueryBuilder](#querybuilder-api).
 
-### SequelizeQB
+#### SequelizeQB
 See [QueryBuilder](#querybuilder-api).
 
-## BaseBuilder API
+#### BaseBuilder API
 - This is a base builder class, an object of this class shouldn't be used directly. Instead of this inherit of `QueryBuilder` or `DataBuilder` must be used.
 
-### <a name="basebuilder"></a> constructor(params)
+##### <a name="basebuilder"></a> constructor(params)
 
 - `params` is an object with the following fields:
   - `source`: base source object, can be `req.body` for example. Parsers will use this source if custom is not provided, *optional*.
   - `data`: base data object, can include some common fields: `{ currentUser: req.user }` for example, *optional*.
 
-### <a name="parsetype"></a> parseType(params)
+##### <a name="parsetype"></a> parseType(params)
 Common parameters of `parseType` method.
 
 - `params` is an object with the following fields:
@@ -120,7 +120,7 @@ Common parameters of `parseType` method.
   - `required`: indicates that parameter value is mandatory, *optional*.
   - `to`: object that should be used to save parsed value, *optional*.
 
-### parseString(params)
+##### parseString(params)
 Parses, converts to `String` and validates parameter value.
 
 - `params` is an object with the same fields as for [parseType](#parsetype), except:
@@ -128,7 +128,7 @@ Parses, converts to `String` and validates parameter value.
   - `max`: the largest possible string length, *optional*.
   - `allowed`: validates that `allowed` array includes parameter value, *optional*.
 
-### parseDate(params, output)
+##### parseDate(params, output)
 Parses, converts to `Date` and validates parameter value.
 
 - `params` is an object with the same fields as for [parseType](#parsetype), except:
@@ -137,17 +137,17 @@ Parses, converts to `Date` and validates parameter value.
   - `min`: the lowest possible date, *optional*.
   - `max`: the largest possible date, *optional*.
 
-### parseJson(params)
+##### parseJson(params)
 Parses, converts to `JSON` and validates parameter value.
 
 - `params` is an object with the same fields as for [parseType](#parsetype).
 
-### parseBool(params)
+##### parseBool(params)
 Parses, converts to `Boolean` and validates parameter value.
 
 - `params` is an object with the same fields as for [parseType](#parsetype).
 
-### <a name="parsenumber"></a> parseNumber(params)
+##### <a name="parsenumber"></a> parseNumber(params)
 Parses, converts to `Number` and validates parameter value.
 
 - `params` is an object with the same fields as for [parseType](#parsetype), except:
@@ -155,39 +155,39 @@ Parses, converts to `Number` and validates parameter value.
   - `max`: the largest possible value, *optional*.
   - `allowed`: validates that `allowed` array includes parameter value, *optional*.
 
-### parseInt(params)
+##### parseInt(params)
 Parses, converts to `IntegerNumber` and validates parameter.
 
 - `params` is an object with the same fields as for [parseNumber](#parsenumber).
 
-### parseFloat(params)
+##### parseFloat(params)
 Parses, converts to `FloatNumber` and validates parameter.
 
 - `params` is an object with the same fields as for [parseNumber](#parsenumber).
 
-### parseRegexp(params)
+##### parseRegexp(params)
 Parses and validates parameter.
 
 - `params` is an object with the same fields as for [parseType](#parsetype), except:
   - `pattern`: Regular expression that should be used to test parameter value.
 
-### parseObjectId(params)
+##### parseObjectId(params)
 Parses, converts to `ObjectId` and validates parameter.
 
 - `params` is an object with the same fields as for [parseType](#parsetype).
 
-### parseEmail(params)
+##### parseEmail(params)
 Parses and validates email parameter.
 
 - `params` is an object with the same fields as for [parseType](#parsetype).
 
-### parseCustom(params)
+##### parseCustom(params)
 Parses and validates parameters using custom handler.
 
 - `params` is an object with the same fields as for [parseType](#parsetype), except:
   - `handler`: the function that accepts value and returns some result, *required*.
 
-### parseArray(params)
+##### parseArray(params)
 Parses, converts to `itemType` and validates parameter.
 
 - `params` is an object with the same fields as for [parseType](#parsetype), except:
@@ -195,25 +195,25 @@ Parses, converts to `itemType` and validates parameter.
   - `itemHandler` the handler for custom item type.
   - `allowed`: validates that parameter value is subset of `allowed` array, *optional*.
 
-## <a name="databuilder-api"></a> DataBuilder API
+#### <a name="databuilder-api"></a> DataBuilder API
 Should be used for creating a plain data object, to use in create and update operations.
 
-### constructor(params)
+##### constructor(params)
 
 - `params` is an object with the same fields as for [BaseBuilder.constructor](#basebuilder).
 
-### build()
+##### build()
 Returns a final data object.
 
-## <a name="querybuilder-api"></a> QueryBuilder (MongooseQueryBuilder, SequelizeQueryBuilder) API
+#### <a name="querybuilder-api"></a> QueryBuilder (MongooseQueryBuilder, SequelizeQueryBuilder) API
 Should be used for generating database query.
 
-### constructor(params)
+##### constructor(params)
 
 - `params` is an object with the same fields as for [BaseBuilder.constructor](#basebuilder), except:
   - `filter`: base filter, can include some common parameters, *optional*.
 
-### parseFields(params)
+##### parseFields(params)
 Parses, converts and validates fields parameter. Validated parameter value must be space separated string of values.
 
 - `params` is an object with the following fields:
@@ -222,7 +222,7 @@ Parses, converts and validates fields parameter. Validated parameter value must 
   - `allowed`: space separated string of allowed fields.
   - `def`: space separated string of default fields.
 
-### parsePagination(params)
+##### parsePagination(params)
 Parses, converts and validates pagination parameters. By default pagination object is null.
 
 - `params` is an object with the following fields:
@@ -230,7 +230,7 @@ Parses, converts and validates pagination parameters. By default pagination obje
   - `pageName`: the name of `page` parameter, if not provided `page` is used, *optional*.
   - `countName`: the name of `count` parameter, if not provided `count` is used, *optional*.
 
-### parseSorting(params)
+##### parseSorting(params)
 Parses, converts and validates sorting parameters. By default sorting object is null.
 
 - `params` is an object with the following fields:
@@ -238,11 +238,11 @@ Parses, converts and validates sorting parameters. By default sorting object is 
   - `sortByName`: the name of `sortBy` parameter, if not provided `sortBy` is used, *optional*.
   - `sortDirName`: the name of `sortDirection` parameter, if not provided `sortDirection` is used, *optional*.
 
-### build()
+##### build()
 Returns a final query with `filter`, `fields`, `pagination` and `sorting` fields.
 
-## Author
-Alexander Mac
-
-## License
+### License
 Licensed under the MIT license.
+
+### Author
+Alexander Mac
