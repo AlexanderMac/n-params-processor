@@ -1,4 +1,6 @@
 # n-params-processor
+## WARNING :warning:: This repo is not maintained anymore.
+
 Node.js parameters parser/validator and mongodb/sequelize query/data-object builder.
 
 [![Build Status](https://github.com/AlexanderMac/n-params-processor/workflows/CI/badge.svg)](https://github.com/AlexanderMac/n-params-processor/actions?query=workflow%3ACI)
